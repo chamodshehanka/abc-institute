@@ -11,9 +11,8 @@ addResponseIntecepter(apiInstance);
 
 apiInstance.interceptors.request.use(
   async function (config) {
-    // config.baseURL = ConfigService.API.MAIN;
     config.baseURL =
-      "https://github3olabsbodimak-api-6wpxwvhtpq-uc.a.run.app/api/v1";
+      "https://localhost/api/v1";
     return config;
   },
   function (error) {
