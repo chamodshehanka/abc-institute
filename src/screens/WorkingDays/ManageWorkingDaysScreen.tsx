@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { Container, Card, Toolbar, Grid } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import { getAllWorkingDays } from '../../api/working-days/working.days.request';
+import { WorkingDays } from '../../models/WorkingDays';
 
 export interface ManageWorkingDaysScreenProps {}
 
 const ManageWorkingDaysScreen: React.SFC<ManageWorkingDaysScreenProps> = () => {
   const [searchText, setSearchText] = useState('');
-  const [tempData, settempData] = useState([
+  // const array: WorkingDays[] = getAllWorkingDays();
+
+  // console.log(array);
+  const [tempData] = useState([
     {
       id: 1,
       name: 'working-days-1',
