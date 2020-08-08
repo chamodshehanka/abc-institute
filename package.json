@@ -92,6 +92,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hot-loader": "^4.12.21",
+    "react-query": "^2.5.13",
     "react-router-dom": "^5.2.0"
   }
 }
