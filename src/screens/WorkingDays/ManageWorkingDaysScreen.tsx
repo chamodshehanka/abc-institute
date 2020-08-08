@@ -9,7 +9,7 @@ export interface ManageWorkingDaysScreenProps {}
 const ManageWorkingDaysScreen: React.SFC<ManageWorkingDaysScreenProps> = () => {
   const [searchText, setSearchText] = useState('');
   const array = useGetWorkingDays();
-  console.log(array);
+  console.log("Array check",array.data);
 
   const [tempData] = useState([
     {
@@ -69,12 +69,12 @@ const ManageWorkingDaysScreen: React.SFC<ManageWorkingDaysScreenProps> = () => {
                   <th></th>
                 </thead>
                 <tbody>
-                  {tempData.map((item) => (
-                    <tr key={item.id}>
-                      <td>{item.id}</td>
-                      <td>{item.name}</td>
-                      <td>{item.noOfWorkingDays}</td>
-                      <td>{item.noOfWorkingHours}</td>
+                  {tempData.map((item: any) => (
+                    <tr key={item?.id}>
+                      <td>{item?.id}</td>
+                      <td>{item?.name}</td>
+                      <td>{item?.noOfWorkingDays}</td>
+                      <td>{item?.noOfWorkingHours}</td>
                       <td>
                         <MenuIcon />
                       </td>
