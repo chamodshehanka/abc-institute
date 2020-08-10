@@ -6,9 +6,9 @@ import {
   Toolbar,
   Grid,
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import { WorkingDays } from '../../models/WorkingDays';
+import { Alert } from '@material-ui/lab';
 import { useGetWorkingDays } from '../../queries/useGetWorkingDays';
+import ManageWorkingDaysTable from '../../components/WorkingDays/WorkingDaysTable';
 
 export interface ManageWorkingDaysScreenProps {}
 
@@ -23,27 +23,6 @@ const ManageWorkingDaysScreen: React.SFC<ManageWorkingDaysScreenProps> = () => {
 
   const noData = status === 'success' && data?.length === 0;
   const hasData = status === 'success' && data?.length !== 0;
-
-  const [tempData] = useState([
-    {
-      id: 1,
-      name: 'working-days-1',
-      noOfWorkingDays: 3,
-      noOfWorkingHours: 5,
-    },
-    {
-      id: 2,
-      name: 'working-days-2',
-      noOfWorkingDays: 3,
-      noOfWorkingHours: 5,
-    },
-    {
-      id: 3,
-      name: 'working-days-3',
-      noOfWorkingDays: 2,
-      noOfWorkingHours: 5,
-    },
-  ]);
 
   return (
     <>
@@ -81,28 +60,15 @@ const ManageWorkingDaysScreen: React.SFC<ManageWorkingDaysScreenProps> = () => {
         <Card>
           <Toolbar style={{ paddingLeft: 0 }}>
             <div className='container'>
-              <table className='table table-light table-striped table-hover'>
-                <thead>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>No of working Days</th>
-                  <th>No of working Hours</th>
-                  <th></th>
-                </thead>
-                <tbody>
-                  {tempData.map((item: any) => (
-                    <tr key={item?.id}>
-                      <td>{item?.id}</td>
-                      <td>{item?.name}</td>
-                      <td>{item?.noOfWorkingDays}</td>
-                      <td>{item?.noOfWorkingHours}</td>
-                      <td>
-                        <MenuIcon />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              {status === 'error' && (
+                <Alert severity='error'>Error loading Working Days Data</Alert>
+              )}
+              {noData && (
+                <Alert severity='info'>
+                  You have no registries in this project.
+                </Alert>
+              )}
+              {hasData && <ManageWorkingDaysTable workingDays={data} />}
             </div>
           </Toolbar>
         </Card>
