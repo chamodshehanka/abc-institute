@@ -85,6 +85,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.8",
     "axios": "^0.19.2",
@@ -92,6 +93,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hot-loader": "^4.12.21",
+    "react-query": "^2.5.13",
     "react-router-dom": "^5.2.0"
   }
 }

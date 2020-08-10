@@ -8,3 +8,5 @@ export interface WorkingDaysListResponse {
   success: Boolean;
   data: WorkingDays[];
 }
+
+// export interface Working

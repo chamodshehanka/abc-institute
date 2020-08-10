@@ -1,30 +1,28 @@
 import React, { useState } from 'react';
-import { Container, Card, Toolbar, Grid } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import { getAllWorkingDays } from '../../api/working-days/working.days.request';
-import { WorkingDays } from '../../models/WorkingDays';
+import {
+  Container,
+  Card,
+  LinearProgress,
+  Toolbar,
+  Grid,
+} from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import { useGetWorkingDays } from '../../queries/useGetWorkingDays';
+import ManageWorkingDaysTable from '../../components/WorkingDays/WorkingDaysTable';
 
 export interface ManageWorkingDaysScreenProps {}
 
 const ManageWorkingDaysScreen: React.SFC<ManageWorkingDaysScreenProps> = () => {
   const [searchText, setSearchText] = useState('');
-  // const array: WorkingDays[] = getAllWorkingDays();
 
-  // console.log(array);
-  const [tempData] = useState([
-    {
-      id: 1,
-      name: 'working-days-1',
-      noOfWorkingDays: 3,
-      noOfWorkingHours: 5,
-    },
-    {
-      id: 2,
-      name: 'working-days-2',
-      noOfWorkingDays: 3,
-      noOfWorkingHours: 5,
-    },
-  ]);
+  const { data = [], status, refetch } = useGetWorkingDays();
+
+  function refetchData() {
+    refetch();
+  }
+
+  const noData = status === 'success' && data?.length === 0;
+  const hasData = status === 'success' && data?.length !== 0;
 
   return (
     <>
@@ -44,6 +42,8 @@ const ManageWorkingDaysScreen: React.SFC<ManageWorkingDaysScreenProps> = () => {
         </div>
       </div>
 
+      {status === 'loading' && <LinearProgress />}
+
       <div className='row mb-3'>
         <div className='col-9'></div>
         <div className='col-2'>
@@ -60,28 +60,15 @@ const ManageWorkingDaysScreen: React.SFC<ManageWorkingDaysScreenProps> = () => {
         <Card>
           <Toolbar style={{ paddingLeft: 0 }}>
             <div className='container'>
-              <table className='table table-light table-striped table-hover'>
-                <thead>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>No of working Days</th>
-                  <th>No of working Hours</th>
-                  <th></th>
-                </thead>
-                <tbody>
-                  {tempData.map((item) => (
-                    <tr>
-                      <td>{item.id}</td>
-                      <td>{item.name}</td>
-                      <td>{item.noOfWorkingDays}</td>
-                      <td>{item.noOfWorkingHours}</td>
-                      <td>
-                        <MenuIcon />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              {status === 'error' && (
+                <Alert severity='error'>Error loading Working Days Data</Alert>
+              )}
+              {noData && (
+                <Alert severity='info'>
+                  You have no registries in this project.
+                </Alert>
+              )}
+              {hasData && <ManageWorkingDaysTable workingDays={data} />}
             </div>
           </Toolbar>
         </Card>
