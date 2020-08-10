@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Container, Card, Toolbar, Grid } from '@material-ui/core';
+import {
+  Container,
+  Card,
+  LinearProgress,
+  Toolbar,
+  Grid,
+} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { WorkingDays } from '../../models/WorkingDays';
 import { useGetWorkingDays } from '../../queries/useGetWorkingDays';
@@ -8,8 +14,15 @@ export interface ManageWorkingDaysScreenProps {}
 
 const ManageWorkingDaysScreen: React.SFC<ManageWorkingDaysScreenProps> = () => {
   const [searchText, setSearchText] = useState('');
-  const array = useGetWorkingDays();
-  console.log("Array check",array.data);
+
+  const { data = [], status, refetch } = useGetWorkingDays();
+
+  function refetchData() {
+    refetch();
+  }
+
+  const noData = status === 'success' && data?.length === 0;
+  const hasData = status === 'success' && data?.length !== 0;
 
   const [tempData] = useState([
     {
@@ -22,6 +35,12 @@ const ManageWorkingDaysScreen: React.SFC<ManageWorkingDaysScreenProps> = () => {
       id: 2,
       name: 'working-days-2',
       noOfWorkingDays: 3,
+      noOfWorkingHours: 5,
+    },
+    {
+      id: 3,
+      name: 'working-days-3',
+      noOfWorkingDays: 2,
       noOfWorkingHours: 5,
     },
   ]);
@@ -43,6 +62,8 @@ const ManageWorkingDaysScreen: React.SFC<ManageWorkingDaysScreenProps> = () => {
           <button className='btn btn-primary'>Create</button>
         </div>
       </div>
+
+      {status === 'loading' && <LinearProgress />}
 
       <div className='row mb-3'>
         <div className='col-9'></div>
