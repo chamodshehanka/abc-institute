@@ -30,6 +30,11 @@ const useStyles = makeStyles((theme) => ({
     width: 300,
     height:180
   },
+  text:{
+    fontSize: 33,
+    color:'white',
+    padding: 10
+  }
   }));
 
 
@@ -40,13 +45,13 @@ export default function StudentHomecard() {
     return (
       <div className={classes.root} >
       <Paper elevation={3} className={classes.card1}>
-        <h4>sadfsdfsdf</h4>
+        <p className={classes.text}>Acedemic Year & Semester</p>
       </Paper>
       <Paper elevation={3} className={classes.card2}>
-        <h4>sadfsdfsdf</h4>
+      <p className={classes.text}>Programme</p>
       </Paper>
       <Paper elevation={3} className={classes.card3}>
-        <h4>sadfsdfsdf</h4>
+      <p className={classes.text}>Student Group</p>
       </Paper>
     </div>
     )
