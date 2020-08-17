@@ -25,6 +25,16 @@ export async function updateWorkingDays(requestData: WorkingDaysUpdateData) {
   }
 }
 
+export async function deleteWorkingDays(id: string) {
+  try {
+    const res = await apiInstance.delete('/working-days/delete/' + id);
+    const apiRes = res.data;
+    return apiRes.success;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export async function getAllWorkingDays() {
   try {
     const res = await apiInstance.get('/working-days/list');
