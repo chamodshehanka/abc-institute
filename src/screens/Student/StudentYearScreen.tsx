@@ -7,6 +7,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Portal from '@material-ui/core/Portal';
+import StudentYearTable from '../../components/Student/StudentYearTable';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,7 +51,7 @@ const StudentYearScreen = () => {
                        <div>
                        <Container fixed>
                             <Typography component="div" style={{ backgroundColor: '#cfe8fc', height: 550, borderRadius: 30 }} >
-                              
+                              <StudentYearTable />
                             </Typography>
                     </Container>
 
