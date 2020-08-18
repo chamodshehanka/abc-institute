@@ -1,9 +1,7 @@
-import React from 'react';
-import Test from '../components/Home/Test';
+import React from "react";
+import Test from "../components/Home/Test";
 
-export interface TestPageProps {}
-
-const TestPage: React.SFC<TestPageProps> = () => {
+const TestPage: React.SFC = () => {
   return (
     <>
       <Test />

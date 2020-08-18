@@ -26,11 +26,11 @@
  * ```
  */
 
-import './index.css';
-import ReactDOM from 'react-dom';
+import "./index.css";
+import ReactDOM from "react-dom";
 // eslint-disable-next-line import/no-unresolved
-import * as React from 'react';
+import * as React from "react";
 // eslint-disable-next-line import/no-unresolved
-import App from './App';
+import App from "./App";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById("root"));

@@ -1,5 +1,5 @@
-import React from 'react';
-import { WorkingDays } from '../../models/WorkingDays';
+import React from "react";
+import { WorkingDays } from "../../models/WorkingDays";
 import {
   TableContainer,
   Table,
@@ -8,8 +8,8 @@ import {
   TableCell,
   TableHead,
   Chip,
-} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
+} from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/Menu";
 
 export interface ManageWorkingDaysTableProps {
   workingDays: WorkingDays[];
@@ -18,19 +18,19 @@ export interface ManageWorkingDaysTableProps {
 const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
   workingDays,
 }: ManageWorkingDaysTableProps) => {
-//   const getNoOfWorkingDays = (s) => (number) => {
-//     console.log(s);
-//     return 77;
-//   };
+  //   const getNoOfWorkingDays = (s) => (number) => {
+  //     console.log(s);
+  //     return 77;
+  //   };
 
   return (
     <>
-      <TableContainer className='table-container expandable-table-container'>
+      <TableContainer className="table-container expandable-table-container">
         <Table
-          size='small'
+          size="small"
           stickyHeader
-          aria-label='sticky table'
-          className='table-first-cell-padded'
+          aria-label="sticky table"
+          className="table-first-cell-padded"
         >
           <TableHead>
             <TableCell>Name</TableCell>
@@ -44,13 +44,13 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
                 <TableCell>{w.name}</TableCell>
                 <TableCell>
                   <Chip
-                    size='small'
-                    color='primary'
-                    label={<span>{w.selectedDays.friday ? '3' : '5'}</span>}
+                    size="small"
+                    color="primary"
+                    label={<span>{w.selectedDays.friday ? "3" : "5"}</span>}
                   />
                 </TableCell>
                 <TableCell>
-                  <Chip size='small' color='secondary' label={<span>5</span>} />
+                  <Chip size="small" color="secondary" label={<span>5</span>} />
                 </TableCell>
                 <TableCell>
                   <MenuIcon />
