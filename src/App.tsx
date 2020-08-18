@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { hot } from 'react-hot-loader';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { routes } from './routes/AppRoutes';
+import * as React from "react";
+import { hot } from "react-hot-loader";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import { routes } from "./routes/AppRoutes";
 
 function App(): React.ReactElement {
   return (

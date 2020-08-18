@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { AxiosInstance, AxiosRequestConfig } from 'axios';
+import { AxiosInstance, AxiosRequestConfig } from "axios";
 
 interface RequestConfig extends AxiosRequestConfig {
   metadata?: { skipHeaderAdd?: boolean; startTime?: number };
