@@ -1,19 +1,53 @@
 import React, { useState } from 'react';
 import { TextField, Grid, Button } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
+import { useForm } from 'react-hook-form';
+import { addWorkingDays } from '../../api/working-days/working.days.request';
+import { WorkingDaysCreateData } from '../../api/interfaces';
 
 export interface WorkingDaysAddEditScreenProps {}
 
 const WorkingDaysAddEditScreen: React.SFC<WorkingDaysAddEditScreenProps> = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [noOfWorkingDays, setNoOfWorkingDays] = useState(0);
+  const { register, handleSubmit, errors } = useForm();
+
+  const onSubmit = (data: any) => {
+    console.log(data);
+    const workingDays: WorkingDaysCreateData = {
+      name: data?.name,
+      workingHours: {
+        hours: parseInt(data?.hours),
+        mins: parseInt(data?.mins),
+      },
+      selectedDays: {
+        monday: data?.monday,
+        tuesday: data?.tuesday,
+        wednesday: data?.wednesday,
+        thursday: data?.thursday,
+        friday: data?.friday,
+        saturday: data?.saturday,
+        sunday: data?.sunday,
+      },
+      prefferedTimeSlots: {
+        thirty: data?.thirty,
+        sixty: data?.sixty,
+      },
+    };
+
+    addWorkingDays(workingDays)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.error(err));
+  };
 
   return (
     <>
       <h4 className='title'>{isEdit ? 'Update' : 'Create'} Working Days</h4>
 
       <div className='container mt-3'>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2} className='form-row'>
             <Grid item xs={7}>
               <div>
@@ -26,6 +60,7 @@ const WorkingDaysAddEditScreen: React.SFC<WorkingDaysAddEditScreenProps> = () =>
                   id='txtName'
                   aria-describedby='emailHelp'
                   name='name'
+                  ref={register}
                 />
               </div>
             </Grid>
@@ -55,8 +90,9 @@ const WorkingDaysAddEditScreen: React.SFC<WorkingDaysAddEditScreenProps> = () =>
                 <input
                   className='form-check-input'
                   type='checkbox'
-                  value=''
                   id='cbMonday'
+                  name='monday'
+                  ref={register}
                 />
                 <label className='form-check-label' htmlFor='cbMonday'>
                   Monday
@@ -67,8 +103,9 @@ const WorkingDaysAddEditScreen: React.SFC<WorkingDaysAddEditScreenProps> = () =>
                 <input
                   className='form-check-input'
                   type='checkbox'
-                  value=''
                   id='cbTuesday'
+                  name='tuesday'
+                  ref={register}
                 />
                 <label className='form-check-label' htmlFor='cbTuesday'>
                   Tuesday
@@ -79,8 +116,9 @@ const WorkingDaysAddEditScreen: React.SFC<WorkingDaysAddEditScreenProps> = () =>
                 <input
                   className='form-check-input'
                   type='checkbox'
-                  value=''
                   id='cbWednesday'
+                  name='wednesday'
+                  ref={register}
                 />
                 <label className='form-check-label' htmlFor='cbWednesday'>
                   Wednesday
@@ -91,8 +129,9 @@ const WorkingDaysAddEditScreen: React.SFC<WorkingDaysAddEditScreenProps> = () =>
                 <input
                   className='form-check-input'
                   type='checkbox'
-                  value=''
                   id='cbThursday'
+                  name='thursday'
+                  ref={register}
                 />
                 <label className='form-check-label' htmlFor='cbThursday'>
                   Thursday
@@ -106,8 +145,9 @@ const WorkingDaysAddEditScreen: React.SFC<WorkingDaysAddEditScreenProps> = () =>
                 <input
                   className='form-check-input'
                   type='checkbox'
-                  value=''
                   id='cbFriday'
+                  name='friday'
+                  ref={register}
                 />
                 <label className='form-check-label' htmlFor='cbFriday'>
                   Friday
@@ -118,8 +158,9 @@ const WorkingDaysAddEditScreen: React.SFC<WorkingDaysAddEditScreenProps> = () =>
                 <input
                   className='form-check-input'
                   type='checkbox'
-                  value=''
                   id='cbSaturday'
+                  name='saturday'
+                  ref={register}
                 />
                 <label className='form-check-label' htmlFor='cbSaturday'>
                   Saturday
@@ -130,8 +171,9 @@ const WorkingDaysAddEditScreen: React.SFC<WorkingDaysAddEditScreenProps> = () =>
                 <input
                   className='form-check-input'
                   type='checkbox'
-                  value=''
                   id='cbSunday'
+                  name='sunday'
+                  ref={register}
                 />
                 <label className='form-check-label' htmlFor='cbSunday'>
                   Sunday
@@ -151,7 +193,8 @@ const WorkingDaysAddEditScreen: React.SFC<WorkingDaysAddEditScreenProps> = () =>
                   type='text'
                   className='form-control'
                   id='txtName'
-                  name='name'
+                  name='hours'
+                  ref={register}
                 />
               </div>
             </Grid>
@@ -165,7 +208,8 @@ const WorkingDaysAddEditScreen: React.SFC<WorkingDaysAddEditScreenProps> = () =>
                   type='text'
                   className='form-control'
                   id='txtName'
-                  name='name'
+                  name='mins'
+                  ref={register}
                 />
               </div>
             </Grid>
@@ -186,6 +230,8 @@ const WorkingDaysAddEditScreen: React.SFC<WorkingDaysAddEditScreenProps> = () =>
                   type='checkbox'
                   value=''
                   id='cbThirtyMin'
+                  name='thirty'
+                  ref={register}
                 />
                 <label className='form-check-label' htmlFor='cbThirtyMin'>
                   30 Min
@@ -198,6 +244,8 @@ const WorkingDaysAddEditScreen: React.SFC<WorkingDaysAddEditScreenProps> = () =>
                   type='checkbox'
                   value=''
                   id='cbSixtyMin'
+                  name='sixty'
+                  ref={register}
                 />
                 <label className='form-check-label' htmlFor='cbSixtyMin'>
                   60 Min
@@ -208,7 +256,7 @@ const WorkingDaysAddEditScreen: React.SFC<WorkingDaysAddEditScreenProps> = () =>
             <Grid item xs={9}></Grid>
             <Grid item xs={3}>
               <div className='align-right' style={{ alignContent: 'right' }}>
-                <button type='button' className='btn btn-primary btn-abc'>
+                <button type='submit' className='btn btn-primary btn-abc'>
                   Save
                 </button>{' '}
                 <button type='button' className='btn btn-danger btn-abc'>
