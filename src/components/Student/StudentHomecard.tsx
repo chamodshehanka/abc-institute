@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
     width: 300,
     height:180
   },
+
   text:{
     fontSize: 33,
     color:'white',

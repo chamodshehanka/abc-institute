@@ -35,6 +35,7 @@ export default function StudentHomeScreen() {
                 <h3 style={{textAlign:'center'}}>
                     Student management
                 </h3>
+
                 <h5 style={{marginTop:10, paddingLeft:30}}>Dashboard</h5>
                 <hr style={{width:1000, borderWidth:10, marginLeft: 60}}/> 
                        <div>
@@ -43,6 +44,7 @@ export default function StudentHomeScreen() {
                      
                               <StudentHomecard />  
                               <hr style={{width:1000, borderWidth:10, marginLeft: 60}}/> 
+
                             </Typography>
                     </Container>
 
