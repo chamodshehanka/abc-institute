@@ -47,3 +47,20 @@ export interface WorkingDaysListResponse {
   success: Boolean;
   data: WorkingDays[];
 }
+
+export interface TimetableCreateData {
+  name: string;
+  workingDaysId: string;
+  batch: string;
+  subGroup: string;
+  timetable: [];
+}
+
+export interface TimetableUpdateData {
+  _id: string;
+  name: string;
+  workingDaysId: string;
+  batch: string;
+  subGroup: string;
+  timetable: [];
+}
