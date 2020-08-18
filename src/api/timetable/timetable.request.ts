@@ -1,10 +1,10 @@
-import { apiInstance } from '../apiInstance';
-import { Timetable } from '../../models/Timetable';
-import { TimetableCreateData, TimetableUpdateData } from '../interfaces';
+import { apiInstance } from "../apiInstance";
+import { Timetable } from "../../models/Timetable";
+import { TimetableCreateData, TimetableUpdateData } from "../interfaces";
 
 export async function addTimetable(requestData: TimetableCreateData) {
   try {
-    const res = await apiInstance.post('/timetable/add', requestData);
+    const res = await apiInstance.post("/timetable/add", requestData);
     const apiRes = res.data;
     return apiRes.success;
   } catch (e) {
@@ -15,7 +15,7 @@ export async function addTimetable(requestData: TimetableCreateData) {
 export async function updateTimetable(requestData: TimetableUpdateData) {
   try {
     const res = await apiInstance.put(
-      '/timetable/update/' + requestData._id,
+      "/timetable/update/" + requestData._id,
       requestData
     );
     const apiRes = res.data;
@@ -27,7 +27,7 @@ export async function updateTimetable(requestData: TimetableUpdateData) {
 
 export async function deleteTimetable(id: string) {
   try {
-    const res = await apiInstance.delete('/timetable/delete/' + id);
+    const res = await apiInstance.delete("/timetable/delete/" + id);
     const apiRes = res.data;
     return apiRes.success;
   } catch (e) {
@@ -37,7 +37,7 @@ export async function deleteTimetable(id: string) {
 
 export async function getAllTimetables() {
   try {
-    const res = await apiInstance.get('/timetable/list');
+    const res = await apiInstance.get("/timetable/list");
     const apiRes = res.data;
     return apiRes.data as Timetable[];
   } catch (e) {

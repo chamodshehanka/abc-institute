@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   TableContainer,
   Table,
@@ -6,10 +6,9 @@ import {
   TableRow,
   TableCell,
   TableHead,
-  Chip,
-} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import { Timetable } from '../../models/Timetable';
+} from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/Menu";
+import { Timetable } from "../../models/Timetable";
 
 export interface TimetableTableProps {
   timetables: Timetable[];
@@ -20,12 +19,12 @@ const TimetableTable: React.SFC<TimetableTableProps> = ({
 }: TimetableTableProps) => {
   return (
     <>
-      <TableContainer className='table-container expandable-table-container'>
+      <TableContainer className="table-container expandable-table-container">
         <Table
-          size='small'
+          size="small"
           stickyHeader
-          aria-label='sticky table'
-          className='table-first-cell-padded'
+          aria-label="sticky table"
+          className="table-first-cell-padded"
         >
           <TableHead>
             <TableCell>Name</TableCell>

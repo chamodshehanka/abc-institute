@@ -2,20 +2,20 @@ export interface WorkingDays {
   _id: string;
   name: string;
   workingHours: {
-    hours: Number;
-    mins: Number;
+    hours: number;
+    mins: number;
   };
   selectedDays: {
-    monday: Boolean;
-    tuesday: Boolean;
-    wednesday: Boolean;
-    thursday: Boolean;
-    friday: Boolean;
-    saturday: Boolean;
-    sunday: Boolean;
+    monday: boolean;
+    tuesday: boolean;
+    wednesday: boolean;
+    thursday: boolean;
+    friday: boolean;
+    saturday: boolean;
+    sunday: boolean;
   };
   prefferedTimeSlots: {
-    thirty: Boolean;
-    sixty: Boolean;
+    thirty: boolean;
+    sixty: boolean;
   };
 }
