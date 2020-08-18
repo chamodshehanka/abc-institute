@@ -39,7 +39,7 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
             <TableCell></TableCell>
           </TableHead>
           <TableBody>
-            {workingDays.map((w: WorkingDays) => (
+            {workingDays?.map((w: WorkingDays) => (
               <TableRow key={w._id}>
                 <TableCell>{w.name}</TableCell>
                 <TableCell>

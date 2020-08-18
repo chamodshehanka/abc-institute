@@ -52,9 +52,7 @@ const ManageWorkingDaysScreen: React.SFC = () => {
                 <Alert severity="error">Error loading Working Days Data</Alert>
               )}
               {noData && (
-                <Alert severity="info">
-                  You have no registries in this project.
-                </Alert>
+                <Alert severity="info">You have no saved working days.</Alert>
               )}
               {hasData && <ManageWorkingDaysTable workingDays={data} />}
             </div>
