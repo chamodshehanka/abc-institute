@@ -92,6 +92,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-hook-form": "^6.4.0",
     "react-hot-loader": "^4.12.21",
     "react-query": "^2.5.13",
     "react-router-dom": "^5.2.0"
