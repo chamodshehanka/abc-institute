@@ -111,6 +111,7 @@
     "react-hook-form": "^6.4.0",
     "react-hot-loader": "^4.12.21",
     "react-query": "^2.5.13",
+    "react-query-devtools": "^2.4.3",
     "react-router-dom": "^5.2.0"
   }
 }
