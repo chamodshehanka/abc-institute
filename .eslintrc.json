@@ -23,6 +23,14 @@
     "no-unused-expressions": "error",
     "quotes": ["error", "double"],
     "react/jsx-uses-vars": "error",
-    "react/jsx-uses-react": "error"
+    "react/jsx-uses-react": "error",
+    "@typescript-eslint/explicit-function-return-type": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
   }
 }
