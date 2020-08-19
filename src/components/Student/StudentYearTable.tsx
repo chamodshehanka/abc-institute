@@ -1,19 +1,30 @@
 import React from 'react';
+import { YearSemester } from '../../models/yearSemester';
 import {
-    TableContainer,
-    Table,
-    TableBody,
-    TableRow,
-    TableCell,
-    TableHead,
-    Chip,
-  } from '@material-ui/core';
-  import MenuIcon from '@material-ui/icons/Menu';
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableHead,
+  Chip,
+} from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
 
-const StudentYearTable = () => {
-    return (
-        <div>
-            <>
+export interface ManageYearProps {
+  yearSemester: YearSemester[];
+}
+
+const ManageYearTable: React.SFC<ManageYearProps> = ({
+  yearSemester,
+}: ManageYearProps) => {
+//   const getNoOfWorkingDays = (s) => (number) => {
+//     console.log(s);
+//     return 77;
+//   };
+
+  return (
+    <>
       <TableContainer className='table-container expandable-table-container'>
         <Table
           size='small'
@@ -28,30 +39,21 @@ const StudentYearTable = () => {
             <TableCell></TableCell>
           </TableHead>
           <TableBody>
-            {/* {workingDays.map((w: WorkingDays) => (
+            {yearSemester.map((w: YearSemester) => (
               <TableRow key={w._id}>
-                <TableCell>{w.name}</TableCell>
+                <TableCell>{w.year}</TableCell>
                 <TableCell>
-                  <Chip
-                    size='small'
-                    color='primary'
-                    label={<span>{w.selectedDays.friday ? '3' : '5'}</span>}
-                  />
-                </TableCell>
-                <TableCell>
-                  <Chip size='small' color='secondary' label={<span>5</span>} />
                 </TableCell>
                 <TableCell>
                   <MenuIcon />
                 </TableCell>
               </TableRow>
-            ))} */}
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
     </>
-        </div>
-    );
-}
+  );
+};
 
-export default StudentYearTable;
+export default ManageYearTable;

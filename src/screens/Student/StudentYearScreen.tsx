@@ -1,13 +1,12 @@
-import React from 'react';
+import React, { useState }  from 'react';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Portal from '@material-ui/core/Portal';
-import StudentYearTable from '../../components/Student/StudentYearTable';
+import ManageYearTable from '../../components/Student/StudentYearTable';
+import { useGetYearSemester } from '../../queries/useGetYearSemester';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,13 +28,26 @@ const useStyles = makeStyles((theme) => ({
       },
   }));
 
-const StudentYearScreen = () => {
+  export interface ManageYearProps {}
+
+  const StudentYearScreen: React.SFC<ManageYearProps> = () => {
+    const [searchText, setSearchText] = useState('');
+  
+    const { data = [], status, refetch } = useGetYearSemester();
+  
+    function refetchData() {
+      refetch();
+    }
+  
+    const noData = status === 'success' && data?.length === 0;
+    const hasData = status === 'success' && data?.length !== 0;
+
     const classes = useStyles();
 
     return (
         <div>
 
-<React.Fragment>
+      <React.Fragment>
         <CssBaseline />
             <Container >
                 <h3 style={{textAlign:'center'}}>
@@ -51,8 +63,9 @@ const StudentYearScreen = () => {
                        <div>
                        <Container fixed>
                             <Typography component="div" style={{ backgroundColor: '#cfe8fc', height: 550, borderRadius: 30 }} >
-                              <StudentYearTable />
+                            <ManageYearTable yearSemester={data} />
                             </Typography>
+                           
                     </Container>
 
                        </div>
