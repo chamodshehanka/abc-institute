@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(16),
       height: theme.spacing(16),
     },
+
     alignItems:'center',
     justifyContent:'center'
   },
@@ -48,6 +49,7 @@ export default function StudentHomecard() {
         <p className={classes.text}>Acedemic Year & Semester</p>
       </Paper>
       <Paper elevation={3} className={classes.card2}>
+
       <p className={classes.text}>Programme</p>
       </Paper>
       <Paper elevation={3} className={classes.card3}>
@@ -55,4 +57,5 @@ export default function StudentHomecard() {
       </Paper>
     </div>
     )
+
 }

@@ -1,3 +1,4 @@
+
 import { apiInstance } from '../apiInstance';
 import { YearSemester } from '../../models/yearSemester';
 import { YearSemesterCreateData, YearSemesterUpdateData } from '../interfaces';
