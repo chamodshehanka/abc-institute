@@ -1,15 +1,28 @@
 import React from 'react';
 import { YearSemester } from '../../models/yearSemester';
-import {
-  TableContainer,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableHead,
-  Chip,
-} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+
+
+const useStyles = makeStyles({
+  table: {
+    minWidth: 650,
+  },
+
+  tablerow:{
+    fontWeight:'bolder',
+    fontSize:15, 
+    color:'black'
+  }
+});
 
 export interface ManageYearProps {
   yearSemester: YearSemester[];
@@ -23,35 +36,33 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
 //     return 77;
 //   };
 
+const classes = useStyles();
+
   return (
     <>
-      <TableContainer className='table-container expandable-table-container'>
-        <Table
-          size='small'
-          stickyHeader
-          aria-label='sticky table'
-          className='table-first-cell-padded'
-        >
-          <TableHead>
-            <TableCell>Name</TableCell>
-            <TableCell>No of Wokring Days</TableCell>
-            <TableCell>No of Working Hours</TableCell>
-            <TableCell></TableCell>
-          </TableHead>
-          <TableBody>
-            {yearSemester.map((w: YearSemester) => (
-              <TableRow key={w._id}>
-                <TableCell>{w.year}</TableCell>
-                <TableCell>
-                </TableCell>
-                <TableCell>
-                  <MenuIcon />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+
+<TableContainer component={Paper}>
+      <Table className={classes.table} aria-label="simple table">
+        <TableHead>
+          <TableRow >
+            <TableCell className={classes.tablerow}>Year & Semester</TableCell>
+            <TableCell className={classes.tablerow} align="right">Edit</TableCell>
+            <TableCell className={classes.tablerow} align="right">Delete</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+        {yearSemester.map((w: YearSemester) => (
+            <TableRow key={w._id} >
+              <TableCell component="th" scope="row">
+                {w.year}.{w.semester}
+              </TableCell>
+              <TableCell align="right"><EditIcon /></TableCell>
+              <TableCell align="right"><DeleteIcon /></TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
     </>
   );
 };
