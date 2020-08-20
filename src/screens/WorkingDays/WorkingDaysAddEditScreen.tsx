@@ -4,14 +4,14 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 import { useForm } from "react-hook-form";
 import { addWorkingDays } from "../../api/working-days/working.days.request";
 import { WorkingDaysCreateData } from "../../api/interfaces";
+import { useHistory } from "react-router-dom";
 
 const WorkingDaysAddEditScreen: React.SFC = () => {
-  const [isEdit, setIsEdit] = useState(false);
-  const [noOfWorkingDays, setNoOfWorkingDays] = useState(0);
+  const [isEdit] = useState(false);
+  const [noOfWorkingDays] = useState(0);
   const { register, handleSubmit } = useForm();
 
-  setIsEdit(false);
-  setNoOfWorkingDays(0);
+  const history = useHistory();
 
   const onSubmit = (data: any) => {
     console.log(data);
@@ -39,6 +39,7 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
     addWorkingDays(workingDays)
       .then((res) => {
         console.log(res);
+        history.push("/manage-working-days");
       })
       .catch((err) => console.error(err));
   };
@@ -260,7 +261,13 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
                 <button type="submit" className="btn btn-primary btn-abc">
                   Save
                 </button>{" "}
-                <button type="button" className="btn btn-danger btn-abc">
+                <button
+                  type="button"
+                  className="btn btn-danger btn-abc"
+                  onClick={() => {
+                    history.push("/manage-working-days");
+                  }}
+                >
                   Cancel
                 </button>
               </div>

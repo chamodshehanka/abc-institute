@@ -1,18 +1,18 @@
 import React from "react";
 import { Container, Card, LinearProgress, Toolbar } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { useGetTimetable } from "../../queries/useGetTimetable";
-import TimetableTable from "../../components/Timetable/TimetableTable";
+import { useGetLecturers } from "../../queries/useGetLecturers";
+import ManageLecturersTable from "../../components/Lecturers/LecturersTable";
 
-const TimetableScreen: React.SFC = () => {
-  const { data = [], status } = useGetTimetable();
+const ManageLecturersScreen: React.FC = () => {
+  const { data = [], status } = useGetLecturers();
 
   const noData = status === "success" && data?.length === 0;
   const hasData = status === "success" && data?.length !== 0;
 
   return (
     <>
-      <h4 className="title">Manage Timetables</h4>
+      <h4 className="title">Manage Lecturers</h4>
 
       <div className="row mb-3">
         <div className="col-1"></div>
@@ -47,14 +47,14 @@ const TimetableScreen: React.SFC = () => {
           <Toolbar style={{ paddingLeft: 0 }}>
             <div className="container">
               {status === "error" && (
-                <Alert severity="error">Error loading Working Days Data</Alert>
+                <Alert severity="error">Error Loading Lecturers Data</Alert>
               )}
               {noData && (
                 <Alert severity="info">
-                  You have not created any timetables.
+                  You have no registries in this project.
                 </Alert>
               )}
-              {hasData && <TimetableTable timetables={data} />}
+              {hasData && <ManageLecturersTable lecturers={data} />}
             </div>
           </Toolbar>
         </Card>
@@ -63,4 +63,4 @@ const TimetableScreen: React.SFC = () => {
   );
 };
 
-export default TimetableScreen;
+export default ManageLecturersScreen;

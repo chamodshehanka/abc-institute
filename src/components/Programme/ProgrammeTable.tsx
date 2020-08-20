@@ -1,5 +1,5 @@
 import React from "react";
-import { YearSemester } from "../../models/yearSemester";
+import { Programme } from "../../models/Programme";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -24,13 +24,13 @@ const useStyles = makeStyles({
   },
 });
 
-export interface ManageYearProps {
-  yearSemester: YearSemester[];
+export interface ManageProgrammeProps {
+  programme: Programme[];
 }
 
-const ManageYearTable: React.SFC<ManageYearProps> = ({
-  yearSemester,
-}: ManageYearProps) => {
+const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
+  programme,
+}: ManageProgrammeProps) => {
   const classes = useStyles();
 
   return (
@@ -51,10 +51,10 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {yearSemester.map((w: YearSemester) => (
+            {programme.map((w: Programme) => (
               <TableRow key={w._id}>
                 <TableCell component="th" scope="row">
-                  {w.year}.{w.semester}
+                  {w.name}
                 </TableCell>
                 <TableCell align="right">
                   <Button>
@@ -76,4 +76,4 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
   );
 };
 
-export default ManageYearTable;
+export default ManageProgrammeTable;

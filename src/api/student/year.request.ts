@@ -1,8 +1,41 @@
-import { apiInstance } from "../apiInstance";
-import { YearSemester } from "../../models/yearSemester";
+import { apiInstance } from '../apiInstance';
+import { YearSemester } from '../../models/yearSemester';
+import { YearSemesterCreateData, YearSemesterUpdateData } from '../interfaces';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export async function getAllYearSemester() {
+export async function addYearSemester(requestData: YearSemesterCreateData) {
+  try {
+    const res = await apiInstance.post('/yearSemester/add', requestData);
+    const apiRes = res.data;
+    return apiRes.success;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function updateYearSemester(requestData: YearSemesterUpdateData) {
+  try {
+    const res = await apiInstance.put(
+      '/yearSemester/update/' + requestData._id,
+      requestData
+    );
+    const apiRes = res.data;
+    return apiRes.success;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function deleteYearSemester(id: string) {
+  try {
+    const res = await apiInstance.delete('/yearSemester/delete/' + id);
+    const apiRes = res.data;
+    return apiRes.success;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function getYearSemesterList() {
   try {
     const res = await apiInstance.get("/yearSemester/list");
     const apiRes = res.data;

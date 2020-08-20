@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { WorkingDays } from "../../models/WorkingDays";
 import {
   TableContainer,
@@ -8,8 +8,21 @@ import {
   TableCell,
   TableHead,
   Chip,
+  Button,
+  Menu,
+  MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  TextField,
+  DialogActions,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import { deleteWorkingDays } from "../../api/working-days/working.days.request";
 
 export interface ManageWorkingDaysTableProps {
   workingDays: WorkingDays[];
@@ -18,10 +31,56 @@ export interface ManageWorkingDaysTableProps {
 const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
   workingDays,
 }: ManageWorkingDaysTableProps) => {
-  //   const getNoOfWorkingDays = (s) => (number) => {
-  //     console.log(s);
-  //     return 77;
-  //   };
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [view, setView] = useState(false);
+  const [update, setUpdate] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [workingDay, setWorkingDay] = useState<WorkingDays>(Object);
+
+  const handleWorkingDay = (i) => {
+    setWorkingDay(workingDays[i]);
+  };
+
+  const handleViewOpen = () => {
+    setView(true);
+  };
+
+  const handleViewClose = () => {
+    setView(false);
+  };
+
+  const handleUpdateOpen = () => {
+    setUpdate(true);
+  };
+
+  const handleUpdateClose = () => {
+    setUpdate(false);
+  };
+
+  const handleDeleteDialogOpen = () => {
+    setDeleteDialog(true);
+  };
+
+  const handleDeleteDialogClose = () => {
+    setDeleteDialog(false);
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+    handleWorkingDay(event.currentTarget.value);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDeleteAction = () => {
+    deleteWorkingDays(workingDay?._id)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.error(err));
+  };
 
   return (
     <>
@@ -39,7 +98,7 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
             <TableCell></TableCell>
           </TableHead>
           <TableBody>
-            {workingDays?.map((w: WorkingDays) => (
+            {workingDays?.map((w: WorkingDays, index: number) => (
               <TableRow key={w._id}>
                 <TableCell>{w.name}</TableCell>
                 <TableCell>
@@ -50,15 +109,153 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
                   />
                 </TableCell>
                 <TableCell>
-                  <Chip size="small" color="secondary" label={<span>5</span>} />
+                  <Chip
+                    size="small"
+                    color="secondary"
+                    label={w?.workingHours?.hours}
+                  />
                 </TableCell>
                 <TableCell>
-                  <MenuIcon />
+                  <Button
+                    value={index}
+                    aria-controls="simple-menu"
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                  >
+                    <MenuIcon />
+                  </Button>
+                  <Menu
+                    key={index}
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <MenuItem
+                      onClick={handleViewOpen}
+                      style={{ color: "green" }}
+                    >
+                      <VisibilityIcon style={{ color: "green" }} />
+                      &nbsp;&nbsp;View
+                    </MenuItem>
+                    <MenuItem
+                      onClick={handleUpdateOpen}
+                      style={{ color: "orange" }}
+                    >
+                      <EditIcon style={{ color: "orange" }} />
+                      &nbsp;&nbsp;Update
+                    </MenuItem>
+                    <MenuItem
+                      onClick={handleDeleteDialogOpen}
+                      style={{ color: "red" }}
+                    >
+                      <DeleteIcon style={{ color: "red" }} />
+                      &nbsp;&nbsp;Delete
+                    </MenuItem>
+                  </Menu>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
+
+        <Dialog
+          open={view}
+          onClose={handleViewClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Working Days  Details"}
+          </DialogTitle>
+
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              <Table aria-label="simple table">
+                <TableBody>
+                  <TableRow>
+                    <TableCell>
+                      <b>Name</b>
+                    </TableCell>
+                    <TableCell>{workingDay?.name}</TableCell>
+                  </TableRow>
+
+                  <TableRow>
+                    <TableCell>
+                      <b>Working Hours </b>
+                    </TableCell>
+                    <TableCell>
+                      {workingDay?.workingHours?.hours +
+                        " hours and " +
+                        workingDay?.workingHours?.mins +
+                        "mins"}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </DialogContentText>
+          </DialogContent>
+
+          <DialogActions>
+            <button className="btn btn-primary" onClick={handleViewClose}>
+              Close
+            </button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog
+          open={update}
+          onClose={handleUpdateClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Update Working Day"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              <form noValidate autoComplete="off">
+                <TableContainer>
+                  <Table>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>
+                          <TextField></TextField>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </form>
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog
+          open={deleteDialog}
+          onClose={handleDeleteDialogClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Delete Working Day"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Are you sure to delete {workingDay?.name} ?
+            </DialogContentText>
+          </DialogContent>
+
+          <DialogActions>
+            <button className="btn btn-primary" onClick={handleDeleteAction}>
+              Yes
+            </button>
+            <button className="btn btn-danger" onClick={handleDeleteDialogOpen}>
+              Cancel
+            </button>
+          </DialogActions>
+        </Dialog>
       </TableContainer>
     </>
   );
