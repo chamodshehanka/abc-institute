@@ -4,6 +4,7 @@ import TimetableScreen from "../screens/Timetable/TimetableScreen";
 import StudentHomeScreen from "../screens/Student/StudentHomeScreen";
 import StudentYearScreen from "../screens/Student/StudentYearScreen";
 import ManageLecturersScreen from "../screens/Lecturers/LecturerScreen";
+import ProgrammeScreen from "../screens/Programme/ProgrammeScreen";
 import WorkingDaysAddEditScreen from "../screens/WorkingDays/WorkingDaysAddEditScreen";
 
 export const routes = [
@@ -13,5 +14,6 @@ export const routes = [
   { path: "/student-year-screen", component: StudentYearScreen },
   { path: "/manage-lecturers", component: ManageLecturersScreen },
   { path: "/working-days-add", component: WorkingDaysAddEditScreen },
+  { path: "/programme-screen", component: ProgrammeScreen },
   { path: "/test", component: TestPage },
 ];
