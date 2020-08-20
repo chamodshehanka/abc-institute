@@ -39,6 +39,7 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
     addWorkingDays(workingDays)
       .then((res) => {
         console.log(res);
+        history.push("/manage-working-days");
       })
       .catch((err) => console.error(err));
   };
@@ -264,7 +265,7 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
                   type="button"
                   className="btn btn-danger btn-abc"
                   onClick={() => {
-                    history.push("/manage-timetables");
+                    history.push("/manage-working-days");
                   }}
                 >
                   Cancel

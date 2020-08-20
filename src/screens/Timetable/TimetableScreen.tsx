@@ -51,7 +51,7 @@ const TimetableScreen: React.SFC = () => {
               )}
               {noData && (
                 <Alert severity="info">
-                  You have no registries in this project.
+                  You have not created any timetables.
                 </Alert>
               )}
               {hasData && <TimetableTable timetables={data} />}
