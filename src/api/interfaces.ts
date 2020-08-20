@@ -48,6 +48,17 @@ export interface WorkingDaysListResponse {
   data: WorkingDays[];
 }
 
+export interface YearSemesterCreateData {
+  year: string;
+  semester: string;
+}
+
+export interface YearSemesterUpdateData {
+  _id: string;
+  year: string;
+  semester: string;
+}
+
 export interface TimetableCreateData {
   name: string;
   workingDaysId: string;
