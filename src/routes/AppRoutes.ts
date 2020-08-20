@@ -3,9 +3,10 @@ import ManageWorkingDaysScreen from "../screens/WorkingDays/ManageWorkingDaysScr
 import TimetableScreen from "../screens/Timetable/TimetableScreen";
 import StudentHomeScreen from "../screens/Student/StudentHomeScreen";
 import StudentYearScreen from "../screens/Student/StudentYearScreen";
+import LocationsScreen from "../screens/Locations/LocationScreen";
 
 export const routes = [
-  { path: "", component: ManageWorkingDaysScreen },
+  { path: "", component: LocationsScreen },
   { path: "manage-working-days", component: ManageWorkingDaysScreen },
   { path: "manage-timetables", component: TimetableScreen },
   { path: "StudentHomeScreen", component: StudentHomeScreen },
