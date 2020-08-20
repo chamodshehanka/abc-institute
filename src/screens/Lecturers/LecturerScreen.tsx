@@ -97,9 +97,7 @@ const ManageLecturersScreen: React.FC = () => {
                 <Alert severity="error">Error Loading Lecturers Data</Alert>
               )}
               {noData && (
-                <Alert severity="info">
-                  You have no registries in this project.
-                </Alert>
+                <Alert severity="info">You haven't added lectures.</Alert>
               )}
               {hasData && <ManageLecturersTable lecturers={data} />}
             </div>
@@ -147,6 +145,81 @@ const ManageLecturersScreen: React.FC = () => {
                     name="employeeId"
                     ref={register}
                     value="E003"
+                  />
+                </div>
+              </Grid>
+
+              <Grid item xs={6}>
+                <select
+                  className="form-select"
+                  aria-label="Faculty"
+                  name="faculty"
+                >
+                  <option selected>Faculty</option>
+                  <option value="Computing">Computing</option>
+                  <option value="Business">Business</option>
+                  <option value="Engineering">Engineering</option>
+                </select>
+              </Grid>
+
+              <Grid item xs={6}>
+                <select
+                  className="form-select"
+                  aria-label="Department"
+                  name="department"
+                >
+                  <option selected>Department</option>
+                  <option value="SE">SE</option>
+                  <option value="IT">IT</option>
+                  <option value="DS">DS</option>
+                </select>
+              </Grid>
+
+              <Grid item xs={6}>
+                <select
+                  className="form-select"
+                  aria-label="Center"
+                  name="center"
+                >
+                  <option selected>Center</option>
+                  <option value="Malabe">Malabe</option>
+                  <option value="Kandy">Kandy</option>
+                  <option value="Matara">Matara</option>
+                </select>
+              </Grid>
+
+              <Grid item xs={6}>
+                <select
+                  className="form-select"
+                  aria-label="Building"
+                  name="building"
+                >
+                  <option selected>Building</option>
+                  <option value="New Building">New Building</option>
+                  <option value="Main">Main</option>
+                </select>
+              </Grid>
+
+              <Grid item xs={6}>
+                <select className="form-select" aria-label="Level" name="level">
+                  <option selected>Level</option>
+                  <option value="Prof">Prof</option>
+                  <option value="Lec">Lec</option>
+                </select>
+              </Grid>
+
+              <Grid item xs={6}>
+                <div>
+                  <label htmlFor="txtName" className="form-label">
+                    Rank
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="txtName"
+                    aria-describedby="emailHelp"
+                    name="rank"
+                    ref={register}
                   />
                 </div>
               </Grid>
