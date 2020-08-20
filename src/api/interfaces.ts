@@ -118,3 +118,26 @@ export interface RoomsListResponse {
   success: boolean;
   data: Rooms[];
 }
+
+export interface LecturerCreateData {
+  name: string;
+  employeeId: string;
+  faculty: string;
+  department: string;
+  centre: string;
+  building: string;
+  level: number;
+  rank: string;
+}
+
+export interface LecturerUpdateData {
+  _id: string;
+  name: string;
+  employeeId: string;
+  faculty: string;
+  department: string;
+  centre: string;
+  building: string;
+  level: number;
+  rank: string;
+}

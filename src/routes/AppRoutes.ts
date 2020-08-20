@@ -6,7 +6,6 @@ import StudentYearScreen from "../screens/Student/StudentYearScreen";
 import ManageLecturersScreen from "../screens/Lecturers/LecturerScreen";
 import ProgrammeScreen from "../screens/Programme/ProgrammeScreen";
 import WorkingDaysAddEditScreen from "../screens/WorkingDays/WorkingDaysAddEditScreen";
-
 export const routes = [
   { path: "/manage-working-days", component: ManageWorkingDaysScreen },
   { path: "/manage-timetables", component: TimetableScreen },
