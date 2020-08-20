@@ -1,4 +1,6 @@
 import { WorkingDays } from "../models/WorkingDays";
+import { Buildings } from "../models/Buildings";
+import { Rooms } from "../models/Rooms";
 
 export interface WorkingDaysCreateData {
   name: string;
@@ -83,4 +85,36 @@ export interface TimetableUpdateData {
   batch: string;
   subGroup: string;
   timetable: [];
+}
+
+export interface BuildingsCreateData {
+  name: string;
+}
+
+export interface BuildingUpdateData {
+  _id: string;
+  name: string;
+}
+
+export interface BuildingsListResponse {
+  success: boolean;
+  data: Buildings[];
+}
+
+export interface RoomsCreateData {
+  buildingName: string;
+  roomType: boolean;
+  rooms: string[];
+}
+
+export interface RoomsUpdateData {
+  _id: string;
+  buildingName: string;
+  roomType: boolean;
+  rooms: string[];
+}
+
+export interface RoomsListResponse {
+  success: boolean;
+  data: Rooms[];
 }
