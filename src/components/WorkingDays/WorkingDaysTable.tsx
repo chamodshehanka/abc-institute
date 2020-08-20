@@ -22,6 +22,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import { deleteWorkingDays } from "../../api/working-days/working.days.request";
 
 export interface ManageWorkingDaysTableProps {
   workingDays: WorkingDays[];
@@ -33,6 +34,7 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [view, setView] = useState(false);
   const [update, setUpdate] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState(false);
   const [workingDay, setWorkingDay] = useState<WorkingDays>(Object);
 
   const handleWorkingDay = (i) => {
@@ -55,6 +57,14 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
     setUpdate(false);
   };
 
+  const handleDeleteDialogOpen = () => {
+    setDeleteDialog(true);
+  };
+
+  const handleDeleteDialogClose = () => {
+    setDeleteDialog(false);
+  };
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
     handleWorkingDay(event.currentTarget.value);
@@ -62,6 +72,14 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleDeleteAction = () => {
+    deleteWorkingDays(workingDay?._id)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -91,7 +109,11 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
                   />
                 </TableCell>
                 <TableCell>
-                  <Chip size="small" color="secondary" label={<span>5</span>} />
+                  <Chip
+                    size="small"
+                    color="secondary"
+                    label={w?.workingHours?.hours}
+                  />
                 </TableCell>
                 <TableCell>
                   <Button
@@ -124,7 +146,10 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
                       <EditIcon style={{ color: "orange" }} />
                       &nbsp;&nbsp;Update
                     </MenuItem>
-                    <MenuItem onClick={handleClose} style={{ color: "red" }}>
+                    <MenuItem
+                      onClick={handleDeleteDialogOpen}
+                      style={{ color: "red" }}
+                    >
                       <DeleteIcon style={{ color: "red" }} />
                       &nbsp;&nbsp;Delete
                     </MenuItem>
@@ -205,6 +230,31 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
               </form>
             </DialogContentText>
           </DialogContent>
+        </Dialog>
+
+        <Dialog
+          open={deleteDialog}
+          onClose={handleDeleteDialogClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Delete Working Day"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Are you sure to delete {workingDay?.name} ?
+            </DialogContentText>
+          </DialogContent>
+
+          <DialogActions>
+            <button className="btn btn-primary" onClick={handleDeleteAction}>
+              Yes
+            </button>
+            <button className="btn btn-danger" onClick={handleDeleteDialogOpen}>
+              Cancel
+            </button>
+          </DialogActions>
         </Dialog>
       </TableContainer>
     </>
