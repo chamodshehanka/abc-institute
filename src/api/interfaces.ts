@@ -59,6 +59,15 @@ export interface YearSemesterUpdateData {
   semester: string;
 }
 
+export interface ProgrammeCreateData {
+  name: string;
+}
+
+export interface ProgrammeUpdateData {
+  _id: string;
+  name: string;
+}
+
 export interface TimetableCreateData {
   name: string;
   workingDaysId: string;
