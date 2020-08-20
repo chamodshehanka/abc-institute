@@ -48,7 +48,6 @@ export interface WorkingDaysListResponse {
   data: WorkingDays[];
 }
 
-<<<<<<< student
 export interface YearSemesterCreateData {
   year: string;
   semester: string;
@@ -59,8 +58,7 @@ export interface YearSemesterUpdateData {
   year: string;
   semester: string;
 }
-// export interface Working
-=======
+
 export interface TimetableCreateData {
   name: string;
   workingDaysId: string;
@@ -77,4 +75,3 @@ export interface TimetableUpdateData {
   subGroup: string;
   timetable: [];
 }
->>>>>>> master
