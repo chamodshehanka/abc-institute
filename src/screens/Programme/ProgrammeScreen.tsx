@@ -11,8 +11,8 @@ import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
-import ManageYearTable from "../../components/Student/StudentYearTable";
-import { useGetYearSemester } from "../../queries/useGetYearSemester";
+import ManageProgrammeTable from "../../components/Programme/ProgrammeTable";
+import { useGetProgramme } from "../../queries/useGetProgramme";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,10 +64,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// export interface ManageYearProps {}
-
-const StudentYearScreen: React.SFC = () => {
-  const { data = [] } = useGetYearSemester();
+const ProgrammeScreen: React.SFC = () => {
+  const { data = [] } = useGetProgramme();
 
   const classes = useStyles();
 
@@ -138,7 +136,7 @@ const StudentYearScreen: React.SFC = () => {
                               fontSize: 15,
                             }}
                           >
-                            Add new Acedemic Year & Semester
+                            Add new Programme
                           </p>
                         </div>
                         <div>
@@ -150,16 +148,11 @@ const StudentYearScreen: React.SFC = () => {
                           >
                             <div>
                               <TextField
-                                id="filled-password-input"
-                                label="Acedemic Year"
+                                id="programme"
+                                label="Programme Name"
                                 variant="outlined"
                                 size="small"
-                              />
-                              <TextField
-                                id="filled-password-input"
-                                label="Semester"
-                                variant="outlined"
-                                size="small"
+                                style={{ width: "55ch" }}
                               />
                             </div>
                             <div style={{ marginTop: 15 }}>
@@ -200,7 +193,7 @@ const StudentYearScreen: React.SFC = () => {
                   borderRadius: 30,
                 }}
               >
-                <ManageYearTable yearSemester={data} />
+                <ManageProgrammeTable programme={data} />
               </Typography>
             </Container>
           </div>
@@ -210,4 +203,4 @@ const StudentYearScreen: React.SFC = () => {
   );
 };
 
-export default StudentYearScreen;
+export default ProgrammeScreen;
