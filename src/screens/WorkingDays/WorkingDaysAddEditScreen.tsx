@@ -17,7 +17,7 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.log("histry state : ", location.state);
+    console.log("history state : ", location.state);
     // let stateData;
     // if (location.state !== null || location.state !== undefined) {
     //   const stateData: WorkingDays =  {
