@@ -3,11 +3,13 @@ import { Container, Card, LinearProgress, Toolbar } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { useGetWorkingDays } from "../../queries/useGetWorkingDays";
 import ManageWorkingDaysTable from "../../components/WorkingDays/WorkingDaysTable";
+import { useHistory } from "react-router-dom";
 
 const ManageWorkingDaysScreen: React.SFC = () => {
   // const [searchText, setSearchText] = useState("");
 
   const { data = [], status } = useGetWorkingDays();
+  const history = useHistory();
 
   const noData = status === "success" && data?.length === 0;
   const hasData = status === "success" && data?.length !== 0;
@@ -26,7 +28,14 @@ const ManageWorkingDaysScreen: React.SFC = () => {
           />
         </div>
         <div className="col-3">
-          <button className="btn btn-primary">Create</button>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              history.push("working-days-add");
+            }}
+          >
+            Create
+          </button>
         </div>
       </div>
 

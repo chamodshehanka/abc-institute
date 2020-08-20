@@ -1,6 +1,5 @@
 import React from "react";
 import { Lecturer } from "../../models/Lecturer";
-//import { Portal } from "react-portal";
 import {
   TableContainer,
   Table,
