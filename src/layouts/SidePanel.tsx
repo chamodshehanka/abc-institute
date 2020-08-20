@@ -75,7 +75,7 @@ const SidePanel: React.FC = () => {
                 icon={<SupervisorAccountIcon />}
               />
               <ListItemLink
-                to="/manage-lecturers"
+                to="/student-home-screen"
                 primary="Students"
                 icon={<LocalLibraryIcon />}
               />
