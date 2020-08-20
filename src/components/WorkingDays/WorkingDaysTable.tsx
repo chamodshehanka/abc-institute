@@ -28,6 +28,7 @@ import {
 } from "../../api/working-days/working.days.request";
 import { useForm } from "react-hook-form";
 import { WorkingDaysUpdateData } from "../../api/interfaces";
+import { useHistory } from "react-router-dom";
 
 export interface ManageWorkingDaysTableProps {
   workingDays: WorkingDays[];
@@ -42,6 +43,7 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [workingDay, setWorkingDay] = useState<WorkingDays>(Object);
   const { register, handleSubmit } = useForm();
+  const history = useHistory();
 
   const handleWorkingDay = (i) => {
     setWorkingDay(workingDays[i]);
@@ -56,7 +58,8 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
   };
 
   const handleUpdateOpen = () => {
-    setUpdate(true);
+    // setUpdate(true);
+    history.push({ pathname: "/working-days-add", state: workingDay });
   };
 
   const handleUpdateClose = () => {

@@ -1,17 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { useForm } from "react-hook-form";
 import { addWorkingDays } from "../../api/working-days/working.days.request";
 import { WorkingDaysCreateData } from "../../api/interfaces";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import { WorkingDays } from "../../models/WorkingDays";
 
 const WorkingDaysAddEditScreen: React.SFC = () => {
-  const [isEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const [noOfWorkingDays] = useState(0);
   const { register, handleSubmit } = useForm();
+  // const [editWorkingDay, setEditWorkingDay] = useState<WorkingDays>(Object);
 
   const history = useHistory();
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log("histry state : ", location.state);
+    // let stateData;
+    // if (location.state !== null || location.state !== undefined) {
+    //   const stateData: WorkingDays =  {
+    //     _id: "",
+    //     name: "",
+    //     workingHours: {
+    //       hours: 0,
+    //       mins: 0,
+    //     },
+    //     selectedDays: {
+    //       monday: false,
+    //       tuesday: false,
+    //       wednesday: false,
+    //       thursday: false,
+    //       friday: false,
+    //       saturday: false,
+    //       sunday: false,
+    //     },
+    //     prefferedTimeSlots: {
+    //       thirty: false,
+    //       sixty: false,
+    //     },
+    //   };
+    //   setIsEdit(true);
+    //   setEditWorkingDay(stateData);
+    // } else {
+    //   setIsEdit(false);
+    // }
+  }, [location]);
 
   const onSubmit = (data: any) => {
     console.log(data);
