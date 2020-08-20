@@ -15,14 +15,19 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  TextField,
   DialogActions,
+  Grid,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import { deleteWorkingDays } from "../../api/working-days/working.days.request";
+import {
+  deleteWorkingDays,
+  updateWorkingDays,
+} from "../../api/working-days/working.days.request";
+import { useForm } from "react-hook-form";
+import { WorkingDaysUpdateData } from "../../api/interfaces";
 
 export interface ManageWorkingDaysTableProps {
   workingDays: WorkingDays[];
@@ -36,6 +41,7 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
   const [update, setUpdate] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [workingDay, setWorkingDay] = useState<WorkingDays>(Object);
+  const { register, handleSubmit } = useForm();
 
   const handleWorkingDay = (i) => {
     setWorkingDay(workingDays[i]);
@@ -78,6 +84,39 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
     deleteWorkingDays(workingDay?._id)
       .then((res) => {
         console.log(res);
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const onUpdateAction = (data: any) => {
+    console.log(data);
+
+    const workingDaysData: WorkingDaysUpdateData = {
+      _id: workingDay._id,
+      name: data?.name,
+      workingHours: {
+        hours: parseInt(data?.hours),
+        mins: parseInt(data?.mins),
+      },
+      selectedDays: {
+        monday: data?.monday,
+        tuesday: data?.tuesday,
+        wednesday: data?.wednesday,
+        thursday: data?.thursday,
+        friday: data?.friday,
+        saturday: data?.saturday,
+        sunday: data?.sunday,
+      },
+      prefferedTimeSlots: {
+        thirty: data?.thirty,
+        sixty: data?.sixty,
+      },
+    };
+
+    updateWorkingDays(workingDaysData)
+      .then((res) => {
+        console.log(res);
+        handleUpdateClose();
       })
       .catch((err) => console.error(err));
   };
@@ -215,17 +254,255 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              <form noValidate autoComplete="off">
+              <form onSubmit={handleSubmit(onUpdateAction)} autoComplete="off">
                 <TableContainer>
                   <Table>
                     <TableBody>
                       <TableRow>
                         <TableCell>
-                          <TextField></TextField>
+                          <b>Name </b>
+                        </TableCell>
+
+                        <TableCell>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="txtName"
+                            aria-describedby="emailHelp"
+                            name="name"
+                            ref={register}
+                            value={workingDay?.name}
+                          />
+                        </TableCell>
+                      </TableRow>
+
+                      <TableRow>
+                        <TableCell>
+                          <b>Selected Working Days</b>
+                        </TableCell>
+
+                        <TableCell>
+                          <div className="form-check form-check-inline">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id="cbMonday"
+                              name="monday"
+                              ref={register}
+                              checked={workingDay?.selectedDays?.monday}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="cbMonday"
+                            >
+                              Monday
+                            </label>
+                          </div>
+
+                          <div className="form-check form-check-inline">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id="cbTuesday"
+                              name="tuesday"
+                              ref={register}
+                              checked={workingDay?.selectedDays?.tuesday}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="cbTuesday"
+                            >
+                              Tuesday
+                            </label>
+                          </div>
+
+                          <div className="form-check form-check-inline">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id="cbWednesday"
+                              name="wednesday"
+                              ref={register}
+                              checked={workingDay?.selectedDays?.wednesday}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="cbWednesday"
+                            >
+                              Wednesday
+                            </label>
+                          </div>
+
+                          <div className="form-check form-check-inline">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id="cbThursday"
+                              name="thursday"
+                              ref={register}
+                              checked={workingDay?.selectedDays?.thursday}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="cbThursday"
+                            >
+                              Thursday
+                            </label>
+                          </div>
+
+                          <div className="mt-2"></div>
+
+                          <div className="form-check form-check-inline">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id="cbFriday"
+                              name="friday"
+                              ref={register}
+                              checked={workingDay?.selectedDays?.friday}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="cbFriday"
+                            >
+                              Friday
+                            </label>
+                          </div>
+
+                          <div className="form-check form-check-inline">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id="cbSaturday"
+                              name="saturday"
+                              ref={register}
+                              checked={workingDay?.selectedDays?.saturday}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="cbSaturday"
+                            >
+                              Saturday
+                            </label>
+                          </div>
+
+                          <div className="form-check form-check-inline">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id="cbSunday"
+                              name="sunday"
+                              ref={register}
+                              checked={workingDay?.selectedDays?.sunday}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="cbSunday"
+                            >
+                              Sunday
+                            </label>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+
+                      <TableRow>
+                        <TableCell>
+                          <b>Working Hours per Day</b>
+                        </TableCell>
+                        <TableCell>
+                          <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                              <div>
+                                <label htmlFor="txtName" className="form-label">
+                                  Hours
+                                </label>
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  id="txtName"
+                                  name="hours"
+                                  ref={register}
+                                  value={workingDay?.workingHours?.hours}
+                                />
+                              </div>
+                            </Grid>
+
+                            <Grid item xs={6}>
+                              <div>
+                                <label htmlFor="txtName" className="form-label">
+                                  Mins
+                                </label>
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  id="txtName"
+                                  name="mins"
+                                  ref={register}
+                                  value={workingDay?.workingHours?.mins}
+                                />
+                              </div>
+                            </Grid>
+                          </Grid>
+                        </TableCell>
+                      </TableRow>
+
+                      <TableRow>
+                        <TableCell>
+                          <b> Preffered time slots</b>
+                        </TableCell>
+
+                        <TableCell>
+                          <div className="form-check form-check-inline">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value=""
+                              id="cbThirtyMin"
+                              name="thirty"
+                              ref={register}
+                              checked={workingDay?.prefferedTimeSlots?.thirty}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="cbThirtyMin"
+                            >
+                              30 Min
+                            </label>
+                          </div>
+
+                          <div className="form-check form-check-inline">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value=""
+                              id="cbSixtyMin"
+                              name="sixty"
+                              ref={register}
+                              checked={workingDay?.prefferedTimeSlots?.sixty}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="cbSixtyMin"
+                            >
+                              60 Min
+                            </label>
+                          </div>
                         </TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
+
+                  <div style={{ alignContent: "center" }}>
+                    <button type="submit" className="btn btn-primary btn-abc">
+                      Save
+                    </button>{" "}
+                    <button
+                      className="btn btn-danger"
+                      onClick={handleUpdateClose}
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </TableContainer>
               </form>
             </DialogContentText>

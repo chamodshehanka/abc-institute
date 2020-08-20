@@ -14,10 +14,7 @@ export async function addWorkingDays(requestData: WorkingDaysCreateData) {
 
 export async function updateWorkingDays(requestData: WorkingDaysUpdateData) {
   try {
-    const res = await apiInstance.put(
-      "/working-days/update/" + requestData._id,
-      requestData
-    );
+    const res = await apiInstance.put("/working-days/update/", requestData);
     const apiRes = res.data;
     return apiRes.success;
   } catch (e) {

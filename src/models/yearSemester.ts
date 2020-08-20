@@ -1,6 +1,5 @@
 export interface YearSemester {
-    _id: string;
-    year: string;
-    semester: string;
-  }
-  
+  _id: string;
+  year: string;
+  semester: string;
+}
