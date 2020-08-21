@@ -8,8 +8,10 @@ import ProgrammeScreen from "../screens/Programme/ProgrammeScreen";
 import WorkingDaysAddEditScreen from "../screens/WorkingDays/WorkingDaysAddEditScreen";
 import StatisticScreen from "../screens/Statistics/StatisticScreen";
 import LocationsScreen from "../screens/Locations/LocationScreen";
+import HomeScreen from "../screens/Home/HomeScreen";
 
 export const routes = [
+  { path: "/", component: HomeScreen },
   { path: "/manage-working-days", component: ManageWorkingDaysScreen },
   { path: "/manage-timetables", component: TimetableScreen },
   { path: "/student-home-screen", component: StudentHomeScreen },

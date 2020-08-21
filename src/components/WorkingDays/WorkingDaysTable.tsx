@@ -28,6 +28,8 @@ import {
 } from "../../api/working-days/working.days.request";
 import { useForm } from "react-hook-form";
 import { WorkingDaysUpdateData } from "../../api/interfaces";
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
 
 export interface ManageWorkingDaysTableProps {
   workingDays: WorkingDays[];
@@ -42,6 +44,7 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [workingDay, setWorkingDay] = useState<WorkingDays>(Object);
   const { register, handleSubmit } = useForm();
+  const [openSnackBar, setOpenSnackBar] = React.useState(false);
 
   const handleWorkingDay = (i) => {
     setWorkingDay(workingDays[i]);
@@ -69,6 +72,21 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
 
   const handleDeleteDialogClose = () => {
     setDeleteDialog(false);
+  };
+
+  const handleOpenSnackBar = () => {
+    setOpenSnackBar(true);
+  };
+
+  const handleSnackbarClose = (
+    event?: React.SyntheticEvent,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackBar(false);
   };
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -117,6 +135,7 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
       .then((res) => {
         console.log(res);
         handleUpdateClose();
+        handleOpenSnackBar();
       })
       .catch((err) => console.error(err));
   };
@@ -533,6 +552,16 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
             </button>
           </DialogActions>
         </Dialog>
+
+        <Snackbar
+          open={openSnackBar}
+          autoHideDuration={600}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleSnackbarClose} severity="success">
+            Success message!
+          </Alert>
+        </Snackbar>
       </TableContainer>
     </>
   );

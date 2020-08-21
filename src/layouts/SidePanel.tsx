@@ -40,8 +40,10 @@ function ListItemLink(props: ListItemLinkProps) {
 
   return (
     <li>
-      <ListItem button component={renderLink}>
-        {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+      <ListItem button component={renderLink} style={{ color: "whitesmoke" }}>
+        {icon ? (
+          <ListItemIcon style={{ color: "whitesmoke" }}>{icon}</ListItemIcon>
+        ) : null}
         <ListItemText primary={primary} />
       </ListItem>
     </li>
@@ -50,7 +52,9 @@ function ListItemLink(props: ListItemLinkProps) {
 
 const useStyles = makeStyles({
   root: {
-    width: 290,
+    width: "100%",
+    backgroundColor: "#0065ff",
+    height: "100vh",
   },
 });
 
@@ -63,10 +67,21 @@ const SidePanel: React.FC = () => {
       <MemoryRouter initialEntries={["/manage-working-days"]} initialIndex={0}>
         <div className={classes.root}>
           <Route>{({ location }) => history.push(location.pathname)}</Route>
-          <Paper elevation={0}>
-            <Typography variant="h6" style={{ textAlign: "center" }}>
+          <Paper elevation={0} className={classes.root}>
+            <br />
+            <Typography
+              variant="h6"
+              style={{
+                textAlign: "center",
+                fontFamily: "Playfair Display",
+                fontWeight: "bold",
+              }}
+              className="logo-text-light"
+            >
               ABC Institute
             </Typography>
+            <div className="" style={{ height: "6rem" }}></div>
+
             <List aria-label="main mailbox folders">
               <ListItemLink to="/home" primary="Home" icon={<HomeIcon />} />
               <ListItemLink
