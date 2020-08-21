@@ -1,0 +1,10 @@
+.main {
+  background-color: #0065ff;
+  height: 100%;
+}
+
+.inner-main {
+  background-color: #dee9ff;
+  height: 100%;
+  border-radius: 6rem 0 0 6rem;
+}
