@@ -101,9 +101,13 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
   const handleDeleteAction = () => {
     deleteWorkingDays(workingDay?._id)
       .then((res) => {
+        handleDeleteDialogClose();
         console.log(res);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        handleDeleteDialogClose();
+        console.error(err);
+      });
   };
 
   const onUpdateAction = (data: any) => {
