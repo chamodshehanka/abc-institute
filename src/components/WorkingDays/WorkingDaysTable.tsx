@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { WorkingDays } from "../../models/WorkingDays";
 import {
   TableContainer,
@@ -8,26 +8,15 @@ import {
   TableCell,
   TableHead,
   Chip,
-  Button,
   Menu,
   MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Grid,
+  IconButton,
+  CircularProgress,
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import {
-  deleteWorkingDays,
-  updateWorkingDays,
-} from "../../api/working-days/working.days.request";
-import { useForm } from "react-hook-form";
-import { WorkingDaysUpdateData } from "../../api/interfaces";
-import Snackbar from "@material-ui/core/Snackbar";
+import { deleteWorkingDays } from "../../api/working-days/working.days.request";
 import Alert from "@material-ui/lab/Alert";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import DateRangeIcon from "@material-ui/icons/DateRange";
@@ -35,6 +24,10 @@ import WatchLaterIcon from "@material-ui/icons/WatchLater";
 import "./WorkingDaysTable.css";
 import { useFilterRows } from "../Common/TableViewComponents/useFilterData";
 import { TableFooterPagination } from "../Common/TableViewComponents/TableFooterPagination";
+import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
+import { useDeletePrompt } from "../Common/DeletePrompt/DeletePrompt";
+import { useMutation } from "react-query";
+import { useToast } from "../../hooks/useToast";
 
 export interface ManageWorkingDaysTableProps {
   workingDays: WorkingDays[];
@@ -63,147 +56,22 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
   workingDays,
   searchVal,
 }: ManageWorkingDaysTableProps) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [view, setView] = useState(false);
-  const [update, setUpdate] = useState(false);
-  const [deleteDialog, setDeleteDialog] = useState(false);
-  const [workingDay, setWorkingDay] = useState<WorkingDays>(Object);
-  const { register, handleSubmit } = useForm();
-  const [openSnackBar, setOpenSnackBar] = React.useState(false);
-
   const { pageData, tableFooterProps, noMatchingItems } = useFilterRows(
     searchVal,
     workingDays,
     filterData
   );
 
-  const handleWorkingDay = (i) => {
-    setWorkingDay(workingDays[i]);
-  };
-
-  const handleViewOpen = () => {
-    setView(true);
-  };
-
-  const handleViewClose = () => {
-    setView(false);
-  };
-
-  const handleUpdateOpen = () => {
-    setUpdate(true);
-  };
-
-  const handleUpdateClose = () => {
-    setUpdate(false);
-  };
-
-  const handleDeleteDialogOpen = () => {
-    setDeleteDialog(true);
-  };
-
-  const handleDeleteDialogClose = () => {
-    setDeleteDialog(false);
-  };
-
-  const handleOpenSnackBar = () => {
-    setOpenSnackBar(true);
-  };
-
-  const handleSnackbarClose = (
-    event?: React.SyntheticEvent,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpenSnackBar(false);
-  };
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-    handleWorkingDay(event.currentTarget.value);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleDeleteAction = () => {
-    deleteWorkingDays(workingDay?._id)
-      .then((res) => {
-        handleDeleteDialogClose();
-        console.log(res);
-      })
-      .catch((err) => {
-        handleDeleteDialogClose();
-        console.error(err);
-      });
-  };
-
-  const onUpdateAction = (data: any) => {
-    console.log(data);
-
-    const workingDaysData: WorkingDaysUpdateData = {
-      _id: workingDay._id,
-      name: data?.name,
-      workingHours: {
-        hours: parseInt(data?.hours),
-        mins: parseInt(data?.mins),
-      },
-      selectedDays: {
-        monday: data?.monday,
-        tuesday: data?.tuesday,
-        wednesday: data?.wednesday,
-        thursday: data?.thursday,
-        friday: data?.friday,
-        saturday: data?.saturday,
-        sunday: data?.sunday,
-      },
-      prefferedTimeSlots: {
-        thirty: data?.thirty,
-        sixty: data?.sixty,
-      },
-    };
-
-    updateWorkingDays(workingDaysData)
-      .then((res) => {
-        console.log(res);
-        handleUpdateClose();
-        handleOpenSnackBar();
-      })
-      .catch((err) => console.error(err));
-  };
-
   const getNoOfWorkingDays = (selectedDays: SelectedDays) => {
     let dayCount = 0;
-    if (selectedDays.monday) {
-      dayCount++;
-    }
 
-    if (selectedDays.tuesday) {
-      dayCount++;
-    }
-
-    if (selectedDays.wednesday) {
-      dayCount++;
-    }
-
-    if (selectedDays.thursday) {
-      dayCount++;
-    }
-
-    if (selectedDays.friday) {
-      dayCount++;
-    }
-
-    if (selectedDays.saturday) {
-      dayCount++;
-    }
-
-    if (selectedDays.sunday) {
-      dayCount++;
-    }
+    if (selectedDays.monday) dayCount++;
+    if (selectedDays.tuesday) dayCount++;
+    if (selectedDays.wednesday) dayCount++;
+    if (selectedDays.thursday) dayCount++;
+    if (selectedDays.friday) dayCount++;
+    if (selectedDays.saturday) dayCount++;
+    if (selectedDays.sunday) dayCount++;
 
     return dayCount;
   };
@@ -230,7 +98,7 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {pageData?.map((w: WorkingDays, index: number) => (
+            {pageData?.map((w: WorkingDays) => (
               <TableRow key={w._id} hover={true}>
                 <TableCell>{w.name}</TableCell>
                 <TableCell>
@@ -263,395 +131,15 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
                     style={{ backgroundColor: "#00AD28" }}
                   />
                 </TableCell>
-                <TableCell>
-                  <Button
-                    value={index}
-                    aria-controls="simple-menu"
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                  >
-                    <MoreVertIcon />
-                  </Button>
-                  <Menu
-                    key={index}
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                  >
-                    <MenuItem
-                      onClick={handleViewOpen}
-                      style={{ color: "green" }}
-                    >
-                      <VisibilityIcon style={{ color: "green" }} />
-                      &nbsp;&nbsp;View
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleUpdateOpen}
-                      style={{ color: "orange" }}
-                    >
-                      <EditIcon style={{ color: "orange" }} />
-                      &nbsp;&nbsp;Update
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleDeleteDialogOpen}
-                      style={{ color: "red" }}
-                    >
-                      <DeleteIcon style={{ color: "red" }} />
-                      &nbsp;&nbsp;Delete
-                    </MenuItem>
-                  </Menu>
+                <TableCell style={{ width: "5rem" }}>
+                  <div className="display-flex align-center justify-end">
+                    <WorkingDaysAction workingDays={w} />
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-
-        <Dialog
-          open={view}
-          onClose={handleViewClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {"Working Days  Details"}
-          </DialogTitle>
-
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              <Table aria-label="simple table">
-                <TableBody>
-                  <TableRow>
-                    <TableCell>
-                      <b>Name</b>
-                    </TableCell>
-                    <TableCell>{workingDay?.name}</TableCell>
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell>
-                      <b>Working Hours </b>
-                    </TableCell>
-                    <TableCell>
-                      {workingDay?.workingHours?.hours +
-                        " hours and " +
-                        workingDay?.workingHours?.mins +
-                        "mins"}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </DialogContentText>
-          </DialogContent>
-
-          <DialogActions>
-            <button className="btn btn-primary" onClick={handleViewClose}>
-              Close
-            </button>
-          </DialogActions>
-        </Dialog>
-
-        <Dialog
-          open={update}
-          onClose={handleUpdateClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {"Update Working Day"}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              <form onSubmit={handleSubmit(onUpdateAction)} autoComplete="off">
-                <TableContainer>
-                  <Table>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>
-                          <b>Name </b>
-                        </TableCell>
-
-                        <TableCell>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="txtName"
-                            aria-describedby="emailHelp"
-                            name="name"
-                            ref={register}
-                            value={workingDay?.name}
-                          />
-                        </TableCell>
-                      </TableRow>
-
-                      <TableRow>
-                        <TableCell>
-                          <b>Selected Working Days</b>
-                        </TableCell>
-
-                        <TableCell>
-                          <div className="form-check form-check-inline">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id="cbMonday"
-                              name="monday"
-                              ref={register}
-                              checked={workingDay?.selectedDays?.monday}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="cbMonday"
-                            >
-                              Monday
-                            </label>
-                          </div>
-
-                          <div className="form-check form-check-inline">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id="cbTuesday"
-                              name="tuesday"
-                              ref={register}
-                              checked={workingDay?.selectedDays?.tuesday}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="cbTuesday"
-                            >
-                              Tuesday
-                            </label>
-                          </div>
-
-                          <div className="form-check form-check-inline">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id="cbWednesday"
-                              name="wednesday"
-                              ref={register}
-                              checked={workingDay?.selectedDays?.wednesday}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="cbWednesday"
-                            >
-                              Wednesday
-                            </label>
-                          </div>
-
-                          <div className="form-check form-check-inline">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id="cbThursday"
-                              name="thursday"
-                              ref={register}
-                              checked={workingDay?.selectedDays?.thursday}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="cbThursday"
-                            >
-                              Thursday
-                            </label>
-                          </div>
-
-                          <div className="mt-2"></div>
-
-                          <div className="form-check form-check-inline">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id="cbFriday"
-                              name="friday"
-                              ref={register}
-                              checked={workingDay?.selectedDays?.friday}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="cbFriday"
-                            >
-                              Friday
-                            </label>
-                          </div>
-
-                          <div className="form-check form-check-inline">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id="cbSaturday"
-                              name="saturday"
-                              ref={register}
-                              checked={workingDay?.selectedDays?.saturday}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="cbSaturday"
-                            >
-                              Saturday
-                            </label>
-                          </div>
-
-                          <div className="form-check form-check-inline">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id="cbSunday"
-                              name="sunday"
-                              ref={register}
-                              checked={workingDay?.selectedDays?.sunday}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="cbSunday"
-                            >
-                              Sunday
-                            </label>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-
-                      <TableRow>
-                        <TableCell>
-                          <b>Working Hours per Day</b>
-                        </TableCell>
-                        <TableCell>
-                          <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                              <div>
-                                <label htmlFor="txtName" className="form-label">
-                                  Hours
-                                </label>
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  id="txtName"
-                                  name="hours"
-                                  ref={register}
-                                  value={workingDay?.workingHours?.hours}
-                                />
-                              </div>
-                            </Grid>
-
-                            <Grid item xs={6}>
-                              <div>
-                                <label htmlFor="txtName" className="form-label">
-                                  Mins
-                                </label>
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  id="txtName"
-                                  name="mins"
-                                  ref={register}
-                                  value={workingDay?.workingHours?.mins}
-                                />
-                              </div>
-                            </Grid>
-                          </Grid>
-                        </TableCell>
-                      </TableRow>
-
-                      <TableRow>
-                        <TableCell>
-                          <b> Preffered time slots</b>
-                        </TableCell>
-
-                        <TableCell>
-                          <div className="form-check form-check-inline">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              value=""
-                              id="cbThirtyMin"
-                              name="thirty"
-                              ref={register}
-                              checked={workingDay?.prefferedTimeSlots?.thirty}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="cbThirtyMin"
-                            >
-                              30 Min
-                            </label>
-                          </div>
-
-                          <div className="form-check form-check-inline">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              value=""
-                              id="cbSixtyMin"
-                              name="sixty"
-                              ref={register}
-                              checked={workingDay?.prefferedTimeSlots?.sixty}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="cbSixtyMin"
-                            >
-                              60 Min
-                            </label>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-
-                  <div style={{ alignContent: "center" }}>
-                    <button type="submit" className="btn btn-primary btn-abc">
-                      Save
-                    </button>{" "}
-                    <button
-                      className="btn btn-danger"
-                      onClick={handleUpdateClose}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </TableContainer>
-              </form>
-            </DialogContentText>
-          </DialogContent>
-        </Dialog>
-
-        <Dialog
-          open={deleteDialog}
-          onClose={handleDeleteDialogClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {"Delete Working Day"}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Are you sure to delete {workingDay?.name} ?
-            </DialogContentText>
-          </DialogContent>
-
-          <DialogActions>
-            <button className="btn btn-primary" onClick={handleDeleteAction}>
-              Yes
-            </button>
-            <button className="btn btn-danger" onClick={handleDeleteDialogOpen}>
-              Cancel
-            </button>
-          </DialogActions>
-        </Dialog>
-
-        <Snackbar
-          open={openSnackBar}
-          autoHideDuration={600}
-          onClose={handleClose}
-        >
-          <Alert onClose={handleSnackbarClose} severity="success">
-            Success message!
-          </Alert>
-        </Snackbar>
       </TableContainer>
 
       {noMatchingItems && (
@@ -663,3 +151,81 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
 };
 
 export default ManageWorkingDaysTable;
+
+export interface WorkingDaysActionProps {
+  workingDays: WorkingDays;
+}
+
+const WorkingDaysAction: React.FC<WorkingDaysActionProps> = (props) => {
+  const displayToast = useToast();
+  const confirmDelete = useDeletePrompt({
+    resourceType: "working days",
+    textType: "name",
+    textToMatch: props.workingDays.name,
+  });
+
+  const [remove, { status: removeStatus }] = useMutation(deleteWorkingDays, {
+    onError() {
+      console.log("errrrrrrrr");
+      displayToast(
+        `Working Days ${props.workingDays.name} remove failed` || "Hi ",
+        "default"
+      );
+    },
+    onSuccess() {
+      console.log("Elaaaaa");
+      displayToast(
+        `Working Days ${props.workingDays.name}  removed`,
+        "default"
+      );
+    },
+  });
+
+  const showMenuButton = removeStatus === "error" || removeStatus === "idle";
+
+  return (
+    <>
+      <PopupState variant="popover" popupId="demo-popup-menu">
+        {(popupState) => (
+          <>
+            {removeStatus === "loading" && <CircularProgress size={25} />}
+            {showMenuButton && (
+              <IconButton {...bindTrigger(popupState)}>
+                <MoreVertIcon />
+              </IconButton>
+            )}
+
+            <Menu {...bindMenu(popupState)}>
+              <MenuItem style={{ color: "green" }}>
+                <VisibilityIcon style={{ color: "green" }} /> View
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  popupState.close();
+                }}
+                style={{ color: "orange" }}
+              >
+                <EditIcon style={{ color: "orange" }} />
+                Edit
+              </MenuItem>
+              <MenuItem
+                style={{ color: "red" }}
+                onClick={() => {
+                  popupState.close();
+                  confirmDelete()
+                    .then(() => remove(props.workingDays._id))
+                    .catch((err) => {
+                      console.error(err);
+                    });
+                }}
+              >
+                <DeleteIcon style={{ color: "red" }} />
+                Delete
+              </MenuItem>
+            </Menu>
+          </>
+        )}
+      </PopupState>
+    </>
+  );
+};
