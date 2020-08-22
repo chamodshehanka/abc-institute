@@ -41,6 +41,16 @@ export interface ManageWorkingDaysTableProps {
   searchVal: string;
 }
 
+interface SelectedDays {
+  monday: boolean;
+  tuesday: boolean;
+  wednesday: boolean;
+  thursday: boolean;
+  friday: boolean;
+  saturday: boolean;
+  sunday: boolean;
+}
+
 function filterData(tableData: WorkingDays[], searchText = "") {
   if (searchText === "") return tableData;
   return tableData.filter(
@@ -165,6 +175,39 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
       .catch((err) => console.error(err));
   };
 
+  const getNoOfWorkingDays = (selectedDays: SelectedDays) => {
+    let dayCount = 0;
+    if (selectedDays.monday) {
+      dayCount++;
+    }
+
+    if (selectedDays.tuesday) {
+      dayCount++;
+    }
+
+    if (selectedDays.wednesday) {
+      dayCount++;
+    }
+
+    if (selectedDays.thursday) {
+      dayCount++;
+    }
+
+    if (selectedDays.friday) {
+      dayCount++;
+    }
+
+    if (selectedDays.saturday) {
+      dayCount++;
+    }
+
+    if (selectedDays.sunday) {
+      dayCount++;
+    }
+
+    return dayCount;
+  };
+
   return (
     <>
       <TableContainer className="table-container expandable-table-container">
@@ -196,7 +239,7 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
                     color="primary"
                     label={
                       <span>
-                        {w.selectedDays.friday ? "3" : "5"} days{" "}
+                        {getNoOfWorkingDays(w?.selectedDays)} days{" "}
                         <DateRangeIcon />
                       </span>
                     }

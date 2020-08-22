@@ -24,11 +24,6 @@ const ManageWorkingDaysScreen: React.SFC = () => {
       <div className="row mb-3">
         <div className="col-1"></div>
         <div className="col-8">
-          {/* <input
-            type="text"
-            className="form-control"
-            placeholder="Search To Filter"
-          /> */}
           <SearchIcon className="search-icon" />{" "}
           <TableSearchInput onUpdate={setSearchText} />
         </div>
