@@ -3,6 +3,7 @@ import { Container, Card, LinearProgress, Toolbar } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { useGetTimetable } from "../../queries/useGetTimetable";
 import TimetableTable from "../../components/Timetable/TimetableTable";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 const TimetableScreen: React.SFC = () => {
   const { data = [], status } = useGetTimetable();
@@ -24,7 +25,9 @@ const TimetableScreen: React.SFC = () => {
           />
         </div>
         <div className="col-3">
-          <button className="btn btn-primary">Create</button>
+          <button className="btn btn-primary">
+            Create <AddCircleIcon />
+          </button>
         </div>
       </div>
 

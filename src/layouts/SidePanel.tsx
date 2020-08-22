@@ -44,7 +44,10 @@ function ListItemLink(props: ListItemLinkProps) {
         {icon ? (
           <ListItemIcon style={{ color: "whitesmoke" }}>{icon}</ListItemIcon>
         ) : null}
-        <ListItemText primary={primary} />
+        <ListItemText
+          primary={primary}
+          style={{ fontFamily: "Varela Round" }}
+        />
       </ListItem>
     </li>
   );
@@ -73,8 +76,9 @@ const SidePanel: React.FC = () => {
               variant="h6"
               style={{
                 textAlign: "center",
-                fontFamily: "Playfair Display",
+                fontFamily: "Varela Round",
                 fontWeight: "bold",
+                fontSize: "1.6rem",
               }}
               className="logo-text-light"
             >

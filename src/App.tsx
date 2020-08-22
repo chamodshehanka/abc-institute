@@ -45,7 +45,7 @@ function App(): React.ReactElement {
                     />
                   ))}
 
-                  <Route key={"/home"} exact path={""} component={HomeScreen} />
+                  <Route key={""} exact path={""} component={HomeScreen} />
                 </Switch>
               </div>
             </div>
