@@ -100,7 +100,9 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
           <TableBody>
             {pageData?.map((w: WorkingDays) => (
               <TableRow key={w._id} hover={true}>
-                <TableCell>{w.name}</TableCell>
+                <TableCell style={{ fontFamily: "Varela Round" }}>
+                  {w.name}
+                </TableCell>
                 <TableCell>
                   <Chip
                     size="small"

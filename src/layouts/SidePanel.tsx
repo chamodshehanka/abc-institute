@@ -20,6 +20,7 @@ import LocationCityIcon from "@material-ui/icons/LocationCity";
 import WatchLaterIcon from "@material-ui/icons/WatchLater";
 import TableChartIcon from "@material-ui/icons/TableChart";
 import DateRangeIcon from "@material-ui/icons/DateRange";
+import AvatarSection from "../components/Common/Sidebar/AvatarSection/AvatarSection";
 
 interface ListItemLinkProps {
   icon?: React.ReactElement;
@@ -32,6 +33,7 @@ function ListItemLink(props: ListItemLinkProps) {
 
   const renderLink = React.useMemo(
     () =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       React.forwardRef<any, Omit<RouterLinkProps, "to">>((itemProps, ref) => (
         <RouterLink to={to} ref={ref} {...itemProps} />
       )),
@@ -84,7 +86,10 @@ const SidePanel: React.FC = () => {
             >
               ABC Institute
             </Typography>
-            <div className="" style={{ height: "6rem" }}></div>
+
+            <AvatarSection />
+
+            <div className="" style={{ height: "4rem" }}></div>
 
             <List aria-label="main mailbox folders">
               <ListItemLink to="/home" primary="Home" icon={<HomeIcon />} />
