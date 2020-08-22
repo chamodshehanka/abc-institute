@@ -18,7 +18,6 @@ import {
   DialogActions,
   Grid,
 } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import VisibilityIcon from "@material-ui/icons/Visibility";
@@ -30,13 +29,39 @@ import { useForm } from "react-hook-form";
 import { WorkingDaysUpdateData } from "../../api/interfaces";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import DateRangeIcon from "@material-ui/icons/DateRange";
+import WatchLaterIcon from "@material-ui/icons/WatchLater";
+import "./WorkingDaysTable.css";
+import { useFilterRows } from "../Common/TableViewComponents/useFilterData";
+import { TableFooterPagination } from "../Common/TableViewComponents/TableFooterPagination";
 
 export interface ManageWorkingDaysTableProps {
   workingDays: WorkingDays[];
+  searchVal: string;
+}
+
+interface SelectedDays {
+  monday: boolean;
+  tuesday: boolean;
+  wednesday: boolean;
+  thursday: boolean;
+  friday: boolean;
+  saturday: boolean;
+  sunday: boolean;
+}
+
+function filterData(tableData: WorkingDays[], searchText = "") {
+  if (searchText === "") return tableData;
+  return tableData.filter(
+    (dataObj) =>
+      dataObj.name && dataObj.name.toLowerCase().startsWith(searchText)
+  );
 }
 
 const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
   workingDays,
+  searchVal,
 }: ManageWorkingDaysTableProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [view, setView] = useState(false);
@@ -45,6 +70,12 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
   const [workingDay, setWorkingDay] = useState<WorkingDays>(Object);
   const { register, handleSubmit } = useForm();
   const [openSnackBar, setOpenSnackBar] = React.useState(false);
+
+  const { pageData, tableFooterProps, noMatchingItems } = useFilterRows(
+    searchVal,
+    workingDays,
+    filterData
+  );
 
   const handleWorkingDay = (i) => {
     setWorkingDay(workingDays[i]);
@@ -144,6 +175,39 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
       .catch((err) => console.error(err));
   };
 
+  const getNoOfWorkingDays = (selectedDays: SelectedDays) => {
+    let dayCount = 0;
+    if (selectedDays.monday) {
+      dayCount++;
+    }
+
+    if (selectedDays.tuesday) {
+      dayCount++;
+    }
+
+    if (selectedDays.wednesday) {
+      dayCount++;
+    }
+
+    if (selectedDays.thursday) {
+      dayCount++;
+    }
+
+    if (selectedDays.friday) {
+      dayCount++;
+    }
+
+    if (selectedDays.saturday) {
+      dayCount++;
+    }
+
+    if (selectedDays.sunday) {
+      dayCount++;
+    }
+
+    return dayCount;
+  };
+
   return (
     <>
       <TableContainer className="table-container expandable-table-container">
@@ -154,27 +218,49 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
           className="table-first-cell-padded"
         >
           <TableHead>
-            <TableCell>Name</TableCell>
-            <TableCell>No of Wokring Days</TableCell>
-            <TableCell>No of Working Hours</TableCell>
-            <TableCell></TableCell>
+            <TableRow>
+              <TableCell style={{ fontFamily: "Varela Round" }}>Name</TableCell>
+              <TableCell style={{ fontFamily: "Varela Round" }}>
+                No of Wokring Days
+              </TableCell>
+              <TableCell style={{ fontFamily: "Varela Round" }}>
+                No of Working Hours
+              </TableCell>
+              <TableCell></TableCell>
+            </TableRow>
           </TableHead>
           <TableBody>
-            {workingDays?.map((w: WorkingDays, index: number) => (
-              <TableRow key={w._id}>
+            {pageData?.map((w: WorkingDays, index: number) => (
+              <TableRow key={w._id} hover={true}>
                 <TableCell>{w.name}</TableCell>
                 <TableCell>
                   <Chip
                     size="small"
                     color="primary"
-                    label={<span>{w.selectedDays.friday ? "3" : "5"}</span>}
+                    label={
+                      <span>
+                        {getNoOfWorkingDays(w?.selectedDays)} days{" "}
+                        <DateRangeIcon />
+                      </span>
+                    }
+                    style={{ backgroundColor: "#0065ff" }}
                   />
                 </TableCell>
                 <TableCell>
                   <Chip
                     size="small"
                     color="secondary"
-                    label={w?.workingHours?.hours}
+                    label={
+                      <span>
+                        {w?.workingHours?.hours +
+                          " hours " +
+                          w?.workingHours?.mins +
+                          " mins "}
+
+                        <WatchLaterIcon />
+                      </span>
+                    }
+                    style={{ backgroundColor: "#00AD28" }}
                   />
                 </TableCell>
                 <TableCell>
@@ -184,7 +270,7 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
                     aria-haspopup="true"
                     onClick={handleClick}
                   >
-                    <MenuIcon />
+                    <MoreVertIcon />
                   </Button>
                   <Menu
                     key={index}
@@ -567,6 +653,11 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
           </Alert>
         </Snackbar>
       </TableContainer>
+
+      {noMatchingItems && (
+        <Alert severity="info">No matching Working Days</Alert>
+      )}
+      <TableFooterPagination {...tableFooterProps} />
     </>
   );
 };

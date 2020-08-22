@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Card, LinearProgress, Toolbar } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { useGetWorkingDays } from "../../queries/useGetWorkingDays";
 import ManageWorkingDaysTable from "../../components/WorkingDays/WorkingDaysTable";
 import { useHistory } from "react-router-dom";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import SearchIcon from "@material-ui/icons/Search";
+import { TableSearchInput } from "../../components/Common/TableViewComponents/TableSearchInput";
 
 const ManageWorkingDaysScreen: React.SFC = () => {
-  // const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState("");
 
   const { data = [], status } = useGetWorkingDays();
   const history = useHistory();
@@ -16,16 +19,13 @@ const ManageWorkingDaysScreen: React.SFC = () => {
 
   return (
     <>
-      <h4 className="title">Manage Working Days</h4>
+      <h4 className="title mb-4">Manage Working Days</h4>
 
       <div className="row mb-3">
         <div className="col-1"></div>
         <div className="col-8">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search To Filter"
-          />
+          <SearchIcon className="search-icon" />{" "}
+          <TableSearchInput onUpdate={setSearchText} />
         </div>
         <div className="col-3">
           <button
@@ -34,7 +34,7 @@ const ManageWorkingDaysScreen: React.SFC = () => {
               history.push("working-days-add");
             }}
           >
-            Create
+            Create <AddCircleIcon />
           </button>
         </div>
       </div>
@@ -63,7 +63,12 @@ const ManageWorkingDaysScreen: React.SFC = () => {
               {noData && (
                 <Alert severity="info">You have no saved working days.</Alert>
               )}
-              {hasData && <ManageWorkingDaysTable workingDays={data} />}
+              {hasData && (
+                <ManageWorkingDaysTable
+                  workingDays={data}
+                  searchVal={searchText}
+                />
+              )}
             </div>
           </Toolbar>
         </Card>
