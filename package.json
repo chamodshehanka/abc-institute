@@ -109,6 +109,8 @@
     "electron-squirrel-startup": "^1.0.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
+    "material-ui-popup-state": "^1.6.1",
+    "notistack": "^0.9.17",
     "prettier": "^2.0.5",
     "react": "^16.13.1",
     "react-chartjs-2": "^2.10.0",
