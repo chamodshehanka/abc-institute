@@ -108,6 +108,7 @@
     "chart.js": "^2.9.3",
     "electron-squirrel-startup": "^1.0.0",
     "husky": "^4.2.5",
+    "is-online": "^8.4.0",
     "lint-staged": "^10.2.11",
     "material-ui-popup-state": "^1.6.1",
     "notistack": "^0.9.17",
