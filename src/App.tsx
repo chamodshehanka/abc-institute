@@ -8,6 +8,7 @@ import { Grid } from "@material-ui/core";
 import SidePanel from "./layouts/SidePanel";
 import "./App.css";
 import HomeScreen from "./screens/Home/HomeScreen";
+import { DeletPromptProvider } from "./components/Common/DeletePrompt/DeletePrompt";
 
 /**
  * Create history object to pass into Router,
@@ -35,18 +36,20 @@ function App(): React.ReactElement {
             <div className="main">
               <div className="inner-main">
                 <br />
-                <Switch>
-                  {routes.map((route) => (
-                    <Route
-                      key={route.path}
-                      exact
-                      path={route.path}
-                      component={route.component}
-                    />
-                  ))}
+                <DeletPromptProvider>
+                  <Switch>
+                    {routes.map((route) => (
+                      <Route
+                        key={route.path}
+                        exact
+                        path={route.path}
+                        component={route.component}
+                      />
+                    ))}
 
-                  <Route key={""} exact path={""} component={HomeScreen} />
-                </Switch>
+                    <Route key={""} exact path={""} component={HomeScreen} />
+                  </Switch>
+                </DeletPromptProvider>
               </div>
             </div>
           </Grid>
