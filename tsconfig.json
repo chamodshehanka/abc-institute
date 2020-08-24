@@ -3,7 +3,7 @@
     "target": "es5",
     "jsx": "react",
     "allowJs": true,
-    "module": "commonjs",
+    "module": "esnext",
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
