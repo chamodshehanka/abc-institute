@@ -104,7 +104,7 @@ const SidePanel: React.FC = () => {
                 icon={<LocalLibraryIcon />}
               />
               <ListItemLink
-                to="/manage-lecturers"
+                to="/locations-screen"
                 primary="Locations"
                 icon={<LocationCityIcon />}
               />
