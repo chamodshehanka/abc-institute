@@ -1,6 +1,8 @@
 import { WorkingDays } from "../models/WorkingDays";
+import { YearSemester } from "../models/yearSemester";
 import { Buildings } from "../models/Buildings";
 import { Rooms } from "../models/Rooms";
+
 
 export interface WorkingDaysCreateData {
   name: string;
@@ -61,6 +63,11 @@ export interface YearSemesterUpdateData {
   semester: string;
 }
 
+export interface YearSemesterListResponse {
+  success: boolean;
+  data: YearSemester[];
+}
+
 export interface ProgrammeCreateData {
   name: string;
 }
@@ -87,6 +94,32 @@ export interface TimetableUpdateData {
   timetable: [];
 }
 
+export interface GroupCreateData {
+  number: string;
+}
+
+export interface GroupUpdateData {
+  _id: string;
+  number: string;
+}
+
+export interface SubGroupCreateData {
+  number: string;
+}
+
+export interface SubGroupUpdateData {
+  _id: string;
+  number: string;
+}
+
+export interface TagsCreateData {
+  name: string;
+}
+
+export interface TagsUpdateData {
+  _id: string;
+  name: string;
+=======
 export interface BuildingsCreateData {
   name: string;
 }

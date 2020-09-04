@@ -53,7 +53,25 @@ export default function StudentHomecard() {
       <p className={classes.text}>Programme</p>
       </Paper>
       <Paper elevation={3} className={classes.card3}>
-      <p className={classes.text}>Student Group</p>
+
+        <h3 className={classes.text}>Student Group</h3>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            marginTop: 40,
+          }}
+        >
+          <Button
+            onClick={() => {
+              history.push("group-screen");
+            }}
+          >
+            <GroupIcon htmlColor="#f5f5f5" style={{ fontSize: 50 }} />
+          </Button>
+        </div>
+
       </Paper>
     </div>
     )

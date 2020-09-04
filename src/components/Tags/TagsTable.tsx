@@ -1,5 +1,5 @@
 import React from "react";
-import { YearSemester } from "../../models/yearSemester";
+import { Tags } from "../../models/Tags";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -11,7 +11,7 @@ import Paper from "@material-ui/core/Paper";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
-import { deleteYearSemester } from "../../api/student/year.request";
+import { deleteTags } from "../../api/student/tags.request";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
@@ -26,31 +26,29 @@ const useStyles = makeStyles({
   },
 });
 
-export interface ManageYearProps {
-  yearSemester: YearSemester[];
+export interface ManageTagsProps {
+  tags: Tags[];
 }
 
-const ManageYearTable: React.SFC<ManageYearProps> = ({
-  yearSemester,
-}: ManageYearProps) => {
+const ManageTagsTable: React.SFC<ManageTagsProps> = ({
+  tags,
+}: ManageTagsProps) => {
   const classes = useStyles();
   const history = useHistory();
 
-
   function refreshPage() {
     window.location.reload(false);
+    history.push("tags-screen");
   }
 
   const handleDeleteAction = (e) => {
-    deleteYearSemester(e)
+    deleteTags(e)
       .then((res) => {
         console.log(res);
         refreshPage();
-        history.push("student-year-screen");
       })
       .catch((err) => console.error(err));
   };
-
 
   return (
     <>
@@ -58,9 +56,7 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell className={classes.tablerow}>
-                Year & Semester
-              </TableCell>
+              <TableCell className={classes.tablerow}>Tag Name</TableCell>
               <TableCell className={classes.tablerow} align="right">
                 Edit
               </TableCell>
@@ -70,10 +66,10 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {yearSemester.map((w: YearSemester) => (
+            {tags.map((w: Tags) => (
               <TableRow key={w._id}>
                 <TableCell component="th" scope="row">
-                  {w.year}.{w.semester}
+                  {w.name}
                 </TableCell>
                 <TableCell align="right">
                   <Button>
@@ -82,9 +78,7 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
                 </TableCell>
                 <TableCell align="right">
                   {" "}
-
                   <Button onClick={() => handleDeleteAction(w._id)}>
-
                     <DeleteIcon />
                   </Button>
                 </TableCell>
@@ -97,4 +91,4 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
   );
 };
 
-export default ManageYearTable;
+export default ManageTagsTable;
