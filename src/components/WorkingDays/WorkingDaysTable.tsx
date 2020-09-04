@@ -29,6 +29,7 @@ import { useDeletePrompt } from "../Common/DeletePrompt/DeletePrompt";
 import { useMutation } from "react-query";
 import { useToast } from "../../hooks/useToast";
 import { useHistory } from "react-router-dom";
+import WorkingDaysViewModal from "./ViewModal/WorkingDaysViewModal";
 
 export interface ManageWorkingDaysTableProps {
   workingDays: WorkingDays[];
@@ -162,6 +163,16 @@ export interface WorkingDaysActionProps {
 const WorkingDaysAction: React.FC<WorkingDaysActionProps> = (props) => {
   const displayToast = useToast();
   const history = useHistory();
+  const [openView, setOpenView] = React.useState(false);
+
+  const handleViewClose = () => {
+    setOpenView(false);
+  };
+
+  const handleViewOpen = () => {
+    setOpenView(true);
+  };
+
   const confirmDelete = useDeletePrompt({
     resourceType: "working days",
     textType: "name",
@@ -170,14 +181,12 @@ const WorkingDaysAction: React.FC<WorkingDaysActionProps> = (props) => {
 
   const [remove, { status: removeStatus }] = useMutation(deleteWorkingDays, {
     onError() {
-      console.log("errrrrrrrr");
       displayToast(
-        `Working Days ${props.workingDays.name} remove failed` || "Hi ",
+        `Working Days ${props.workingDays.name} remove failed`,
         "default"
       );
     },
     onSuccess() {
-      console.log("Elaaaaa");
       displayToast(
         `Working Days ${props.workingDays.name}  removed`,
         "default"
@@ -200,7 +209,13 @@ const WorkingDaysAction: React.FC<WorkingDaysActionProps> = (props) => {
             )}
 
             <Menu {...bindMenu(popupState)}>
-              <MenuItem style={{ color: "green" }}>
+              <MenuItem
+                onClick={() => {
+                  popupState.close();
+                  handleViewOpen();
+                }}
+                style={{ color: "green" }}
+              >
                 <VisibilityIcon style={{ color: "green" }} /> View
               </MenuItem>
               <MenuItem
@@ -234,6 +249,12 @@ const WorkingDaysAction: React.FC<WorkingDaysActionProps> = (props) => {
           </>
         )}
       </PopupState>
+
+      <WorkingDaysViewModal
+        workingDays={props.workingDays}
+        isOpen={openView}
+        onClose={handleViewClose}
+      />
     </>
   );
 };
