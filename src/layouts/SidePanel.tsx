@@ -20,6 +20,7 @@ import LocationCityIcon from "@material-ui/icons/LocationCity";
 import WatchLaterIcon from "@material-ui/icons/WatchLater";
 import TableChartIcon from "@material-ui/icons/TableChart";
 import DateRangeIcon from "@material-ui/icons/DateRange";
+import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 
 interface ListItemLinkProps {
   icon?: React.ReactElement;
@@ -78,6 +79,11 @@ const SidePanel: React.FC = () => {
                 to="/student-home-screen"
                 primary="Students"
                 icon={<LocalLibraryIcon />}
+              />
+              <ListItemLink
+                to="/tags-screen"
+                primary="Tags"
+                icon={<LocalOfferIcon />}
               />
               <ListItemLink
                 to="/manage-lecturers"

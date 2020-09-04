@@ -100,7 +100,7 @@ export default function StudentHomecard() {
         >
           <Button
             onClick={() => {
-              history.push("programme-screen");
+              history.push("group-screen");
             }}
           >
             <GroupIcon htmlColor="#f5f5f5" style={{ fontSize: 50 }} />

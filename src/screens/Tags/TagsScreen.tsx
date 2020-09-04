@@ -8,12 +8,12 @@ import AddIcon from "@material-ui/icons/Add";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Portal from "@material-ui/core/Portal";
 import Box from "@material-ui/core/Box";
+import ManageTagsTable from "../../components/Tags/TagsTable";
+import { useGetTags } from "../../queries/useGetTags";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
-import ManageYearTable from "../../components/Student/StudentYearTable";
-import { useGetYearSemester } from "../../queries/useGetYearSemester";
-import { addYearSemester } from "../../api/student/year.request";
-import { YearSemesterCreateData } from "../../api/interfaces";
+import { addTags } from "../../api/student/tags.request";
+import { TagsCreateData } from "../../api/interfaces";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,12 +65,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StudentYearScreen: React.SFC = () => {
-  const { data = [] } = useGetYearSemester();
-  const { register, handleSubmit } = useForm();
+const TagsScreen: React.SFC = () => {
+  const { data = [] } = useGetTags();
 
   const classes = useStyles();
+  const { register, handleSubmit } = useForm();
   const history = useHistory();
+
   const [open, setOpen] = React.useState(false);
 
   const handleClick = () => {
@@ -83,15 +84,14 @@ const StudentYearScreen: React.SFC = () => {
 
   const onSubmit = (data: any) => {
     console.log(data);
-    const yearSemester: YearSemesterCreateData = {
-      year: data?.year,
-      semester: data?.semester,
+    const tags: TagsCreateData = {
+      name: data?.name,
     };
 
-    addYearSemester(yearSemester)
+    addTags(tags)
       .then((res) => {
         console.log(res);
-        history.push("student-year-screen");
+        history.push("tags-screen");
       })
       .catch((err) => console.error(err));
   };
@@ -101,10 +101,8 @@ const StudentYearScreen: React.SFC = () => {
       <React.Fragment>
         <CssBaseline />
         <Container>
-          <h3 style={{ textAlign: "center" }}>Student management</h3>
-          <h5 style={{ marginTop: 50, paddingLeft: 30 }}>
-            Acedemic year & Semester
-          </h5>
+          <h3 style={{ textAlign: "center" }}>Tags</h3>
+          <h5 style={{ marginTop: 50, paddingLeft: 30 }}>Manage tags</h5>
           <hr style={{ width: 1000, borderWidth: 10, marginLeft: 60 }} />
           <ClickAwayListener onClickAway={handleClickAway}>
             <div
@@ -153,34 +151,23 @@ const StudentYearScreen: React.SFC = () => {
                               fontSize: 15,
                             }}
                           >
-                            Add new Acedemic Year & Semester
+                            Add Tag
                           </p>
                         </div>
                         <div>
                           <form
-                            onSubmit={handleSubmit(onSubmit)}
                             style={{ marginTop: 50, textAlign: "center" }}
                             className={classes.root}
                             noValidate
                             autoComplete="off"
+                            onSubmit={handleSubmit(onSubmit)}
                           >
                             <div>
                               <input
-                                id="year"
-                                placeholder="Academic Year"
-                                style={{ width: 250, height: 30 }}
-                                name="year"
-                                ref={register}
-                              />
-                              <input
-                                id="semester"
-                                name="semester"
-                                style={{
-                                  width: 250,
-                                  marginLeft: 30,
-                                  height: 30,
-                                }}
-                                placeholder="Semester"
+                                id="name"
+                                placeholder="Programme Name"
+                                style={{ width: 300, height: 30 }}
+                                name="name"
                                 ref={register}
                               />
                             </div>
@@ -218,7 +205,7 @@ const StudentYearScreen: React.SFC = () => {
                   borderRadius: 30,
                 }}
               >
-                <ManageYearTable yearSemester={data} />
+                <ManageTagsTable tags={data} />
               </Typography>
             </Container>
           </div>
@@ -228,4 +215,4 @@ const StudentYearScreen: React.SFC = () => {
   );
 };
 
-export default StudentYearScreen;
+export default TagsScreen;

@@ -8,11 +8,12 @@ import AddIcon from "@material-ui/icons/Add";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Portal from "@material-ui/core/Portal";
 import Box from "@material-ui/core/Box";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-
 import ManageProgrammeTable from "../../components/Programme/ProgrammeTable";
 import { useGetProgramme } from "../../queries/useGetProgramme";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+import { addProgramme } from "../../api/student/programme.request";
+import { ProgrammeCreateData } from "../../api/interfaces";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,6 +69,8 @@ const ProgrammeScreen: React.SFC = () => {
   const { data = [] } = useGetProgramme();
 
   const classes = useStyles();
+  const { register, handleSubmit } = useForm();
+  const history = useHistory();
 
   const [open, setOpen] = React.useState(false);
 
@@ -77,6 +80,20 @@ const ProgrammeScreen: React.SFC = () => {
 
   const handleClickAway = () => {
     setOpen(false);
+  };
+
+  const onSubmit = (data: any) => {
+    console.log(data);
+    const programme: ProgrammeCreateData = {
+      name: data?.name,
+    };
+
+    addProgramme(programme)
+      .then((res) => {
+        console.log(res);
+        history.push("programme-screen");
+      })
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -145,34 +162,31 @@ const ProgrammeScreen: React.SFC = () => {
                             className={classes.root}
                             noValidate
                             autoComplete="off"
+                            onSubmit={handleSubmit(onSubmit)}
                           >
                             <div>
-                              <TextField
-                                id="programme"
-                                label="Programme Name"
-                                variant="outlined"
-                                size="small"
-                                style={{ width: "55ch" }}
+                              <input
+                                id="name"
+                                placeholder="Programme Name"
+                                style={{ width: 300, height: 30 }}
+                                name="name"
+                                ref={register}
                               />
                             </div>
                             <div style={{ marginTop: 15 }}>
-                              <Button
-                                variant="contained"
-                                size="medium"
-                                color="secondary"
-                                className={classes.btnAdd}
+                              <button
+                                type="submit"
+                                className="btn btn-primary btn-abc"
                               >
                                 Add
-                              </Button>
-                              <Button
-                                variant="contained"
-                                size="medium"
-                                color="secondary"
+                              </button>{" "}
+                              <button
+                                type="button"
+                                className="btn btn-danger btn-abc"
                                 onClick={handleClickAway}
-                                className={classes.btnCanl}
                               >
                                 Cancel
-                              </Button>
+                              </button>
                             </div>
                           </form>
                         </div>

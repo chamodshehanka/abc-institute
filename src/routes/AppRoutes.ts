@@ -6,6 +6,8 @@ import StudentYearScreen from "../screens/Student/StudentYearScreen";
 import ManageLecturersScreen from "../screens/Lecturers/LecturerScreen";
 import ProgrammeScreen from "../screens/Programme/ProgrammeScreen";
 import WorkingDaysAddEditScreen from "../screens/WorkingDays/WorkingDaysAddEditScreen";
+import GroupScreen from "../screens/Group/GroupScreen";
+import TagsScreen from "../screens/Tags/TagsScreen";
 
 export const routes = [
   { path: "/manage-working-days", component: ManageWorkingDaysScreen },
@@ -15,5 +17,7 @@ export const routes = [
   { path: "/manage-lecturers", component: ManageLecturersScreen },
   { path: "/working-days-add", component: WorkingDaysAddEditScreen },
   { path: "/programme-screen", component: ProgrammeScreen },
+  { path: "/group-screen", component: GroupScreen },
+  { path: "/tags-screen", component: TagsScreen },
   { path: "/test", component: TestPage },
 ];
