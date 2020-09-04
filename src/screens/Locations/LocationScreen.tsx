@@ -62,7 +62,7 @@ const LocationsScreen: React.SFC = () => {
           >
             <h4 style={{ marginTop: 10, paddingLeft: 30 }}>Manage Locations</h4>
 
-            <ManageRooms />
+            <ManageRooms buildings={data} />
           </Container>
         </Typography>
       </div>
