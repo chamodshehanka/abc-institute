@@ -38,7 +38,7 @@ const ManageLecturersScreen: React.FC = () => {
       employeeId: data?.employeeId,
       faculty: data?.faculty,
       department: data?.department,
-      centre: data?.centre,
+      centre: data?.center,
       building: data?.building,
       level: data?.level,
       rank: data?.rank,
@@ -137,6 +137,9 @@ const ManageLecturersScreen: React.FC = () => {
                   <label htmlFor="txtName" className="form-label">
                     Employee ID
                   </label>
+                  <label style={{ marginLeft: "110px", color: "#C0C0C0" }}>
+                    000150
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -144,7 +147,6 @@ const ManageLecturersScreen: React.FC = () => {
                     aria-describedby="emailHelp"
                     name="employeeId"
                     ref={register}
-                    value="E003"
                   />
                 </div>
               </Grid>
@@ -154,6 +156,7 @@ const ManageLecturersScreen: React.FC = () => {
                   className="form-select"
                   aria-label="Faculty"
                   name="faculty"
+                  ref={register}
                 >
                   <option selected>Faculty</option>
                   <option value="Computing">Computing</option>
@@ -167,6 +170,7 @@ const ManageLecturersScreen: React.FC = () => {
                   className="form-select"
                   aria-label="Department"
                   name="department"
+                  ref={register}
                 >
                   <option selected>Department</option>
                   <option value="SE">SE</option>
@@ -180,6 +184,7 @@ const ManageLecturersScreen: React.FC = () => {
                   className="form-select"
                   aria-label="Center"
                   name="center"
+                  ref={register}
                 >
                   <option selected>Center</option>
                   <option value="Malabe">Malabe</option>
@@ -193,6 +198,7 @@ const ManageLecturersScreen: React.FC = () => {
                   className="form-select"
                   aria-label="Building"
                   name="building"
+                  ref={register}
                 >
                   <option selected>Building</option>
                   <option value="New Building">New Building</option>
@@ -201,10 +207,20 @@ const ManageLecturersScreen: React.FC = () => {
               </Grid>
 
               <Grid item xs={6}>
-                <select className="form-select" aria-label="Level" name="level">
+                <select
+                  className="form-select"
+                  aria-label="Level"
+                  name="level"
+                  ref={register}
+                >
                   <option selected>Level</option>
-                  <option value="Prof">Prof</option>
-                  <option value="Lec">Lec</option>
+                  <option value="1">Professor</option>
+                  <option value="2">Assistant Professor</option>
+                  <option value="3">Senior Lecturer(HG)</option>
+                  <option value="4">Senior Lecturer</option>
+                  <option value="5">Lecturer</option>
+                  <option value="6">Assistant Lecturer</option>
+                  <option value="7">Instructors</option>
                 </select>
               </Grid>
 
