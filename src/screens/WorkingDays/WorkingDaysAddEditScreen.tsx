@@ -2,46 +2,95 @@ import React, { useState } from "react";
 import { Grid } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { useForm } from "react-hook-form";
-import { addWorkingDays } from "../../api/working-days/working.days.request";
-import { WorkingDaysCreateData } from "../../api/interfaces";
-import { useHistory } from "react-router-dom";
+import {
+  addWorkingDays,
+  updateWorkingDays,
+} from "../../api/working-days/working.days.request";
+import {
+  WorkingDaysCreateData,
+  WorkingDaysUpdateData,
+} from "../../api/interfaces";
+import { useHistory, useLocation } from "react-router-dom";
+import { WorkingDays } from "../../models/WorkingDays";
 
 const WorkingDaysAddEditScreen: React.SFC = () => {
-  const [isEdit] = useState(false);
-  const [noOfWorkingDays] = useState(0);
-  const { register, handleSubmit } = useForm();
-
   const history = useHistory();
+  const location = useLocation();
+
+  const [isEdit] = useState(() => {
+    return location.state !== undefined;
+  });
+  const [noOfWorkingDays] = useState(0);
+
+  const [editWorkingDay] = useState<WorkingDays | undefined>(() => {
+    return location?.state as WorkingDays | undefined;
+  });
+
+  const { register, handleSubmit } = useForm({
+    defaultValues: editWorkingDay,
+  });
 
   const onSubmit = (data: any) => {
-    console.log(data);
-    const workingDays: WorkingDaysCreateData = {
-      name: data?.name,
-      workingHours: {
-        hours: parseInt(data?.hours),
-        mins: parseInt(data?.mins),
-      },
-      selectedDays: {
-        monday: data?.monday,
-        tuesday: data?.tuesday,
-        wednesday: data?.wednesday,
-        thursday: data?.thursday,
-        friday: data?.friday,
-        saturday: data?.saturday,
-        sunday: data?.sunday,
-      },
-      prefferedTimeSlots: {
-        thirty: data?.thirty,
-        sixty: data?.sixty,
-      },
-    };
+    // console.log(data);
 
-    addWorkingDays(workingDays)
-      .then((res) => {
-        console.log(res);
-        history.push("/manage-working-days");
-      })
-      .catch((err) => console.error(err));
+    if (isEdit) {
+      const workingDays: WorkingDaysUpdateData = {
+        _id: editWorkingDay?._id as string,
+        name: data?.name,
+        workingHours: {
+          hours: parseInt(data?.workingHours?.hours),
+          mins: parseInt(data?.workingHours?.mins),
+        },
+        selectedDays: {
+          monday: data?.selectedDays?.monday,
+          tuesday: data?.selectedDays?.tuesday,
+          wednesday: data?.selectedDays?.wednesday,
+          thursday: data?.selectedDays?.thursday,
+          friday: data?.selectedDays?.friday,
+          saturday: data?.selectedDays?.saturday,
+          sunday: data?.selectedDays?.sunday,
+        },
+        prefferedTimeSlots: {
+          thirty: data?.prefferedTimeSlots?.thirty,
+          sixty: data?.prefferedTimeSlots?.sixty,
+        },
+      };
+
+      updateWorkingDays(workingDays)
+        .then((res) => {
+          console.log(res);
+          history.push("/manage-working-days");
+        })
+        .catch((err) => console.error(err));
+    } else {
+      const workingDays: WorkingDaysCreateData = {
+        name: data?.name,
+        workingHours: {
+          hours: parseInt(data?.workingHours?.hours),
+          mins: parseInt(data?.workingHours?.mins),
+        },
+        selectedDays: {
+          monday: data?.selectedDays?.monday,
+          tuesday: data?.selectedDays?.tuesday,
+          wednesday: data?.selectedDays?.wednesday,
+          thursday: data?.selectedDays?.thursday,
+          friday: data?.selectedDays?.friday,
+          saturday: data?.selectedDays?.saturday,
+          sunday: data?.selectedDays?.sunday,
+        },
+        prefferedTimeSlots: {
+          thirty: data?.prefferedTimeSlots?.thirty,
+          sixty: data?.prefferedTimeSlots?.sixty,
+        },
+      };
+
+      addWorkingDays(workingDays)
+        .then((res) => {
+          console.log(res);
+          history.push("/manage-working-days");
+        })
+        .catch((err) => console.error(err));
+    }
   };
 
   return (
@@ -93,7 +142,7 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
                   className="form-check-input"
                   type="checkbox"
                   id="cbMonday"
-                  name="monday"
+                  name="selectedDays.monday"
                   ref={register}
                 />
                 <label className="form-check-label" htmlFor="cbMonday">
@@ -106,7 +155,7 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
                   className="form-check-input"
                   type="checkbox"
                   id="cbTuesday"
-                  name="tuesday"
+                  name="selectedDays.tuesday"
                   ref={register}
                 />
                 <label className="form-check-label" htmlFor="cbTuesday">
@@ -119,7 +168,7 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
                   className="form-check-input"
                   type="checkbox"
                   id="cbWednesday"
-                  name="wednesday"
+                  name="selectedDays.wednesday"
                   ref={register}
                 />
                 <label className="form-check-label" htmlFor="cbWednesday">
@@ -132,7 +181,7 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
                   className="form-check-input"
                   type="checkbox"
                   id="cbThursday"
-                  name="thursday"
+                  name="selectedDays.thursday"
                   ref={register}
                 />
                 <label className="form-check-label" htmlFor="cbThursday">
@@ -148,7 +197,7 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
                   className="form-check-input"
                   type="checkbox"
                   id="cbFriday"
-                  name="friday"
+                  name="selectedDays.friday"
                   ref={register}
                 />
                 <label className="form-check-label" htmlFor="cbFriday">
@@ -161,7 +210,7 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
                   className="form-check-input"
                   type="checkbox"
                   id="cbSaturday"
-                  name="saturday"
+                  name="selectedDays.saturday"
                   ref={register}
                 />
                 <label className="form-check-label" htmlFor="cbSaturday">
@@ -174,7 +223,7 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
                   className="form-check-input"
                   type="checkbox"
                   id="cbSunday"
-                  name="sunday"
+                  name="selectedDays.sunday"
                   ref={register}
                 />
                 <label className="form-check-label" htmlFor="cbSunday">
@@ -195,7 +244,7 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
                   type="text"
                   className="form-control"
                   id="txtName"
-                  name="hours"
+                  name="workingHours.hours"
                   ref={register}
                 />
               </div>
@@ -210,7 +259,7 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
                   type="text"
                   className="form-control"
                   id="txtName"
-                  name="mins"
+                  name="workingHours.mins"
                   ref={register}
                 />
               </div>
@@ -230,9 +279,8 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
                 <input
                   className="form-check-input"
                   type="checkbox"
-                  value=""
                   id="cbThirtyMin"
-                  name="thirty"
+                  name="prefferedTimeSlots.thirty"
                   ref={register}
                 />
                 <label className="form-check-label" htmlFor="cbThirtyMin">
@@ -244,9 +292,8 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
                 <input
                   className="form-check-input"
                   type="checkbox"
-                  value=""
                   id="cbSixtyMin"
-                  name="sixty"
+                  name="prefferedTimeSlots.sixty"
                   ref={register}
                 />
                 <label className="form-check-label" htmlFor="cbSixtyMin">

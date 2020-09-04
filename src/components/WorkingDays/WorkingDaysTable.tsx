@@ -28,6 +28,7 @@ import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 import { useDeletePrompt } from "../Common/DeletePrompt/DeletePrompt";
 import { useMutation } from "react-query";
 import { useToast } from "../../hooks/useToast";
+import { useHistory } from "react-router-dom";
 
 export interface ManageWorkingDaysTableProps {
   workingDays: WorkingDays[];
@@ -160,6 +161,7 @@ export interface WorkingDaysActionProps {
 
 const WorkingDaysAction: React.FC<WorkingDaysActionProps> = (props) => {
   const displayToast = useToast();
+  const history = useHistory();
   const confirmDelete = useDeletePrompt({
     resourceType: "working days",
     textType: "name",
@@ -204,6 +206,10 @@ const WorkingDaysAction: React.FC<WorkingDaysActionProps> = (props) => {
               <MenuItem
                 onClick={() => {
                   popupState.close();
+                  history.push({
+                    pathname: "/working-days-add",
+                    state: props?.workingDays,
+                  });
                 }}
                 style={{ color: "orange" }}
               >
