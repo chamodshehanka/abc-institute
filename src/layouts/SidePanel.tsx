@@ -21,6 +21,7 @@ import WatchLaterIcon from "@material-ui/icons/WatchLater";
 import TableChartIcon from "@material-ui/icons/TableChart";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import LocalOfferIcon from "@material-ui/icons/LocalOffer";
+import AvatarSection from "../components/Common/Sidebar/AvatarSection/AvatarSection";
 
 interface ListItemLinkProps {
   icon?: React.ReactElement;
@@ -33,6 +34,7 @@ function ListItemLink(props: ListItemLinkProps) {
 
   const renderLink = React.useMemo(
     () =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       React.forwardRef<any, Omit<RouterLinkProps, "to">>((itemProps, ref) => (
         <RouterLink to={to} ref={ref} {...itemProps} />
       )),
@@ -41,9 +43,14 @@ function ListItemLink(props: ListItemLinkProps) {
 
   return (
     <li>
-      <ListItem button component={renderLink}>
-        {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
-        <ListItemText primary={primary} />
+      <ListItem button component={renderLink} style={{ color: "whitesmoke" }}>
+        {icon ? (
+          <ListItemIcon style={{ color: "whitesmoke" }}>{icon}</ListItemIcon>
+        ) : null}
+        <ListItemText
+          primary={primary}
+          style={{ fontFamily: "Varela Round" }}
+        />
       </ListItem>
     </li>
   );
@@ -51,7 +58,9 @@ function ListItemLink(props: ListItemLinkProps) {
 
 const useStyles = makeStyles({
   root: {
-    width: 290,
+    width: "100%",
+    backgroundColor: "#0065ff",
+    height: "100vh",
   },
 });
 
@@ -64,10 +73,25 @@ const SidePanel: React.FC = () => {
       <MemoryRouter initialEntries={["/manage-working-days"]} initialIndex={0}>
         <div className={classes.root}>
           <Route>{({ location }) => history.push(location.pathname)}</Route>
-          <Paper elevation={0}>
-            <Typography variant="h6" style={{ textAlign: "center" }}>
+          <Paper elevation={0} className={classes.root}>
+            <br />
+            <Typography
+              variant="h6"
+              style={{
+                textAlign: "center",
+                fontFamily: "Varela Round",
+                fontWeight: "bold",
+                fontSize: "1.6rem",
+              }}
+              className="logo-text-light"
+            >
               ABC Institute
             </Typography>
+
+            <AvatarSection />
+
+            <div className="" style={{ height: "4rem" }}></div>
+
             <List aria-label="main mailbox folders">
               <ListItemLink to="/home" primary="Home" icon={<HomeIcon />} />
               <ListItemLink
@@ -86,7 +110,7 @@ const SidePanel: React.FC = () => {
                 icon={<LocalOfferIcon />}
               />
               <ListItemLink
-                to="/manage-lecturers"
+                to="/locations-screen"
                 primary="Locations"
                 icon={<LocationCityIcon />}
               />

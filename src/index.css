@@ -7,8 +7,24 @@
 
 .title {
   text-align: center;
+  color: #696969;
+  font-size: 1.7rem;
 }
 
 .btn-abc {
   width: 6rem;
+}
+
+.logo-text {
+  color: white;
+  font-family: "Libre Baskerville", serif;
+}
+
+.logo-text-light {
+  color: white;
+  font-family: "Varela Round", sans-serif;
+}
+
+* {
+  font-family: "Varela Round", sans-serif;
 }

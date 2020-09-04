@@ -36,6 +36,7 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
   const classes = useStyles();
   const history = useHistory();
 
+
   function refreshPage() {
     window.location.reload(false);
   }
@@ -49,6 +50,7 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
       })
       .catch((err) => console.error(err));
   };
+
 
   return (
     <>
@@ -80,7 +82,9 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
                 </TableCell>
                 <TableCell align="right">
                   {" "}
+
                   <Button onClick={() => handleDeleteAction(w._id)}>
+
                     <DeleteIcon />
                   </Button>
                 </TableCell>

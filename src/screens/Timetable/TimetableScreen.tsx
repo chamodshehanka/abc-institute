@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Card, LinearProgress, Toolbar } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { useGetTimetable } from "../../queries/useGetTimetable";
 import TimetableTable from "../../components/Timetable/TimetableTable";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import SearchIcon from "@material-ui/icons/Search";
+import { TableSearchInput } from "../../components/Common/TableViewComponents/TableSearchInput";
 
 const TimetableScreen: React.SFC = () => {
+  const [searchText, setSearchText] = useState("");
   const { data = [], status } = useGetTimetable();
 
   const noData = status === "success" && data?.length === 0;
@@ -17,14 +21,13 @@ const TimetableScreen: React.SFC = () => {
       <div className="row mb-3">
         <div className="col-1"></div>
         <div className="col-8">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search To Filter"
-          />
+          <SearchIcon className="search-icon" />{" "}
+          <TableSearchInput onUpdate={setSearchText} />
         </div>
         <div className="col-3">
-          <button className="btn btn-primary">Create</button>
+          <button className="btn btn-primary">
+            Create <AddCircleIcon />
+          </button>
         </div>
       </div>
 
@@ -54,7 +57,9 @@ const TimetableScreen: React.SFC = () => {
                   You have not created any timetables.
                 </Alert>
               )}
-              {hasData && <TimetableTable timetables={data} />}
+              {hasData && (
+                <TimetableTable timetables={data} searchVal={searchText} />
+              )}
             </div>
           </Toolbar>
         </Card>

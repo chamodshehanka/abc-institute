@@ -1,4 +1,3 @@
-
 import { apiInstance } from '../apiInstance';
 import { YearSemester } from '../../models/yearSemester';
 import { YearSemesterCreateData, YearSemesterUpdateData } from '../interfaces';
@@ -38,7 +37,7 @@ export async function deleteYearSemester(id: string) {
 
 export async function getYearSemesterList() {
   try {
-    const res = await apiInstance.get('/yearSemester/list');
+    const res = await apiInstance.get("/yearSemester/list");
     const apiRes = res.data;
     return apiRes.data as YearSemester[];
   } catch (e) {

@@ -1,5 +1,8 @@
 import { WorkingDays } from "../models/WorkingDays";
 import { YearSemester } from "../models/yearSemester";
+import { Buildings } from "../models/Buildings";
+import { Rooms } from "../models/Rooms";
+
 
 export interface WorkingDaysCreateData {
   name: string;
@@ -116,4 +119,58 @@ export interface TagsCreateData {
 export interface TagsUpdateData {
   _id: string;
   name: string;
+=======
+export interface BuildingsCreateData {
+  name: string;
+}
+
+export interface BuildingUpdateData {
+  _id: string;
+  name: string;
+}
+
+export interface BuildingsListResponse {
+  success: boolean;
+  data: Buildings[];
+}
+
+export interface RoomsCreateData {
+  buildingName: string;
+  roomType: boolean;
+  rooms: string[];
+}
+
+export interface RoomsUpdateData {
+  _id: string;
+  buildingName: string;
+  roomType: boolean;
+  rooms: string[];
+}
+
+export interface RoomsListResponse {
+  success: boolean;
+  data: Rooms[];
+}
+
+export interface LecturerCreateData {
+  name: string;
+  employeeId: string;
+  faculty: string;
+  department: string;
+  centre: string;
+  building: string;
+  level: number;
+  rank: string;
+}
+
+export interface LecturerUpdateData {
+  _id: string;
+  name: string;
+  employeeId: string;
+  faculty: string;
+  department: string;
+  centre: string;
+  building: string;
+  level: number;
+  rank: string;
 }

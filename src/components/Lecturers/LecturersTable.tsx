@@ -23,6 +23,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { deleteLecturer } from "../../api/lecturers/lecturers.request";
 
 export interface ManageLecturersTableProps {
   lecturers: Lecturer[];
@@ -131,7 +132,20 @@ const ManageLecturersTable: React.SFC<ManageLecturersTableProps> = ({
                       <EditIcon style={{ color: "orange" }} />
                       &nbsp;&nbsp;Update
                     </MenuItem>
-                    <MenuItem onClick={handleClose} style={{ color: "red" }}>
+                    <MenuItem
+                      onClick={() => {
+                        deleteLecturer(l?._id)
+                          .then((res) => {
+                            console.log(res);
+                            handleClose();
+                          })
+                          .catch((err) => {
+                            console.error(err);
+                            handleClose();
+                          });
+                      }}
+                      style={{ color: "red" }}
+                    >
                       <DeleteIcon style={{ color: "red" }} />
                       &nbsp;&nbsp;Delete
                     </MenuItem>

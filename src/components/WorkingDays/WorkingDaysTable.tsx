@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { WorkingDays } from "../../models/WorkingDays";
 import {
   TableContainer,
@@ -8,78 +8,73 @@ import {
   TableCell,
   TableHead,
   Chip,
-  Button,
   Menu,
   MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  TextField,
-  DialogActions,
+  IconButton,
+  CircularProgress,
 } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import { deleteWorkingDays } from "../../api/working-days/working.days.request";
+import Alert from "@material-ui/lab/Alert";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import DateRangeIcon from "@material-ui/icons/DateRange";
+import WatchLaterIcon from "@material-ui/icons/WatchLater";
+import "./WorkingDaysTable.css";
+import { useFilterRows } from "../Common/TableViewComponents/useFilterData";
+import { TableFooterPagination } from "../Common/TableViewComponents/TableFooterPagination";
+import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
+import { useDeletePrompt } from "../Common/DeletePrompt/DeletePrompt";
+import { useMutation } from "react-query";
+import { useToast } from "../../hooks/useToast";
+import { useHistory } from "react-router-dom";
 
 export interface ManageWorkingDaysTableProps {
   workingDays: WorkingDays[];
+  searchVal: string;
+}
+
+interface SelectedDays {
+  monday: boolean;
+  tuesday: boolean;
+  wednesday: boolean;
+  thursday: boolean;
+  friday: boolean;
+  saturday: boolean;
+  sunday: boolean;
+}
+
+function filterData(tableData: WorkingDays[], searchText = "") {
+  if (searchText === "") return tableData;
+  return tableData.filter(
+    (dataObj) =>
+      dataObj.name && dataObj.name.toLowerCase().startsWith(searchText)
+  );
 }
 
 const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
   workingDays,
+  searchVal,
 }: ManageWorkingDaysTableProps) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [view, setView] = useState(false);
-  const [update, setUpdate] = useState(false);
-  const [deleteDialog, setDeleteDialog] = useState(false);
-  const [workingDay, setWorkingDay] = useState<WorkingDays>(Object);
+  const { pageData, tableFooterProps, noMatchingItems } = useFilterRows(
+    searchVal,
+    workingDays,
+    filterData
+  );
 
-  const handleWorkingDay = (i) => {
-    setWorkingDay(workingDays[i]);
-  };
+  const getNoOfWorkingDays = (selectedDays: SelectedDays) => {
+    let dayCount = 0;
 
-  const handleViewOpen = () => {
-    setView(true);
-  };
+    if (selectedDays.monday) dayCount++;
+    if (selectedDays.tuesday) dayCount++;
+    if (selectedDays.wednesday) dayCount++;
+    if (selectedDays.thursday) dayCount++;
+    if (selectedDays.friday) dayCount++;
+    if (selectedDays.saturday) dayCount++;
+    if (selectedDays.sunday) dayCount++;
 
-  const handleViewClose = () => {
-    setView(false);
-  };
-
-  const handleUpdateOpen = () => {
-    setUpdate(true);
-  };
-
-  const handleUpdateClose = () => {
-    setUpdate(false);
-  };
-
-  const handleDeleteDialogOpen = () => {
-    setDeleteDialog(true);
-  };
-
-  const handleDeleteDialogClose = () => {
-    setDeleteDialog(false);
-  };
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-    handleWorkingDay(event.currentTarget.value);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleDeleteAction = () => {
-    deleteWorkingDays(workingDay?._id)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => console.error(err));
+    return dayCount;
   };
 
   return (
@@ -92,173 +87,153 @@ const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
           className="table-first-cell-padded"
         >
           <TableHead>
-            <TableCell>Name</TableCell>
-            <TableCell>No of Wokring Days</TableCell>
-            <TableCell>No of Working Hours</TableCell>
-            <TableCell></TableCell>
+            <TableRow>
+              <TableCell style={{ fontFamily: "Varela Round" }}>Name</TableCell>
+              <TableCell style={{ fontFamily: "Varela Round" }}>
+                No of Wokring Days
+              </TableCell>
+              <TableCell style={{ fontFamily: "Varela Round" }}>
+                No of Working Hours
+              </TableCell>
+              <TableCell></TableCell>
+            </TableRow>
           </TableHead>
           <TableBody>
-            {workingDays?.map((w: WorkingDays, index: number) => (
-              <TableRow key={w._id}>
-                <TableCell>{w.name}</TableCell>
+            {pageData?.map((w: WorkingDays) => (
+              <TableRow key={w._id} hover={true}>
+                <TableCell style={{ fontFamily: "Varela Round" }}>
+                  {w.name}
+                </TableCell>
                 <TableCell>
                   <Chip
                     size="small"
                     color="primary"
-                    label={<span>{w.selectedDays.friday ? "3" : "5"}</span>}
+                    label={
+                      <span>
+                        {getNoOfWorkingDays(w?.selectedDays)} days{" "}
+                        <DateRangeIcon />
+                      </span>
+                    }
+                    style={{ backgroundColor: "#0065ff" }}
                   />
                 </TableCell>
                 <TableCell>
                   <Chip
                     size="small"
                     color="secondary"
-                    label={w?.workingHours?.hours}
+                    label={
+                      <span>
+                        {w?.workingHours?.hours +
+                          " hours " +
+                          w?.workingHours?.mins +
+                          " mins "}
+
+                        <WatchLaterIcon />
+                      </span>
+                    }
+                    style={{ backgroundColor: "#00AD28" }}
                   />
                 </TableCell>
-                <TableCell>
-                  <Button
-                    value={index}
-                    aria-controls="simple-menu"
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                  >
-                    <MenuIcon />
-                  </Button>
-                  <Menu
-                    key={index}
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                  >
-                    <MenuItem
-                      onClick={handleViewOpen}
-                      style={{ color: "green" }}
-                    >
-                      <VisibilityIcon style={{ color: "green" }} />
-                      &nbsp;&nbsp;View
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleUpdateOpen}
-                      style={{ color: "orange" }}
-                    >
-                      <EditIcon style={{ color: "orange" }} />
-                      &nbsp;&nbsp;Update
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleDeleteDialogOpen}
-                      style={{ color: "red" }}
-                    >
-                      <DeleteIcon style={{ color: "red" }} />
-                      &nbsp;&nbsp;Delete
-                    </MenuItem>
-                  </Menu>
+                <TableCell style={{ width: "5rem" }}>
+                  <div className="display-flex align-center justify-end">
+                    <WorkingDaysAction workingDays={w} />
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-
-        <Dialog
-          open={view}
-          onClose={handleViewClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {"Working Days  Details"}
-          </DialogTitle>
-
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              <Table aria-label="simple table">
-                <TableBody>
-                  <TableRow>
-                    <TableCell>
-                      <b>Name</b>
-                    </TableCell>
-                    <TableCell>{workingDay?.name}</TableCell>
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell>
-                      <b>Working Hours </b>
-                    </TableCell>
-                    <TableCell>
-                      {workingDay?.workingHours?.hours +
-                        " hours and " +
-                        workingDay?.workingHours?.mins +
-                        "mins"}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </DialogContentText>
-          </DialogContent>
-
-          <DialogActions>
-            <button className="btn btn-primary" onClick={handleViewClose}>
-              Close
-            </button>
-          </DialogActions>
-        </Dialog>
-
-        <Dialog
-          open={update}
-          onClose={handleUpdateClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {"Update Working Day"}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              <form noValidate autoComplete="off">
-                <TableContainer>
-                  <Table>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>
-                          <TextField></TextField>
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </form>
-            </DialogContentText>
-          </DialogContent>
-        </Dialog>
-
-        <Dialog
-          open={deleteDialog}
-          onClose={handleDeleteDialogClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {"Delete Working Day"}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Are you sure to delete {workingDay?.name} ?
-            </DialogContentText>
-          </DialogContent>
-
-          <DialogActions>
-            <button className="btn btn-primary" onClick={handleDeleteAction}>
-              Yes
-            </button>
-            <button className="btn btn-danger" onClick={handleDeleteDialogOpen}>
-              Cancel
-            </button>
-          </DialogActions>
-        </Dialog>
       </TableContainer>
+
+      {noMatchingItems && (
+        <Alert severity="info">No matching Working Days</Alert>
+      )}
+      <TableFooterPagination {...tableFooterProps} />
     </>
   );
 };
 
 export default ManageWorkingDaysTable;
+
+export interface WorkingDaysActionProps {
+  workingDays: WorkingDays;
+}
+
+const WorkingDaysAction: React.FC<WorkingDaysActionProps> = (props) => {
+  const displayToast = useToast();
+  const history = useHistory();
+  const confirmDelete = useDeletePrompt({
+    resourceType: "working days",
+    textType: "name",
+    textToMatch: props.workingDays.name,
+  });
+
+  const [remove, { status: removeStatus }] = useMutation(deleteWorkingDays, {
+    onError() {
+      console.log("errrrrrrrr");
+      displayToast(
+        `Working Days ${props.workingDays.name} remove failed` || "Hi ",
+        "default"
+      );
+    },
+    onSuccess() {
+      console.log("Elaaaaa");
+      displayToast(
+        `Working Days ${props.workingDays.name}  removed`,
+        "default"
+      );
+    },
+  });
+
+  const showMenuButton = removeStatus === "error" || removeStatus === "idle";
+
+  return (
+    <>
+      <PopupState variant="popover" popupId="demo-popup-menu">
+        {(popupState) => (
+          <>
+            {removeStatus === "loading" && <CircularProgress size={25} />}
+            {showMenuButton && (
+              <IconButton {...bindTrigger(popupState)}>
+                <MoreVertIcon />
+              </IconButton>
+            )}
+
+            <Menu {...bindMenu(popupState)}>
+              <MenuItem style={{ color: "green" }}>
+                <VisibilityIcon style={{ color: "green" }} /> View
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  popupState.close();
+                  history.push({
+                    pathname: "/working-days-add",
+                    state: props?.workingDays,
+                  });
+                }}
+                style={{ color: "orange" }}
+              >
+                <EditIcon style={{ color: "orange" }} />
+                Edit
+              </MenuItem>
+              <MenuItem
+                style={{ color: "red" }}
+                onClick={() => {
+                  popupState.close();
+                  confirmDelete()
+                    .then(() => remove(props.workingDays._id))
+                    .catch((err) => {
+                      console.error(err);
+                    });
+                }}
+              >
+                <DeleteIcon style={{ color: "red" }} />
+                Delete
+              </MenuItem>
+            </Menu>
+          </>
+        )}
+      </PopupState>
+    </>
+  );
+};

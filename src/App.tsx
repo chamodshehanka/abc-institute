@@ -4,9 +4,12 @@ import { Router, Route, Switch } from "react-router-dom";
 import { routes } from "./routes/AppRoutes";
 import { ReactQueryDevtools } from "react-query-devtools";
 import { createHashHistory } from "history";
-import ManageWorkingDaysScreen from "./screens/WorkingDays/ManageWorkingDaysScreen";
 import { Grid } from "@material-ui/core";
 import SidePanel from "./layouts/SidePanel";
+import "./App.css";
+import HomeScreen from "./screens/Home/HomeScreen";
+import { DeletPromptProvider } from "./components/Common/DeletePrompt/DeletePrompt";
+import { SnackbarProvider } from "notistack";
 
 /**
  * Create history object to pass into Router,
@@ -26,29 +29,32 @@ function App(): React.ReactElement {
       <Router history={history}>
         <ReactQueryDevtools initialIsOpen={false} />
         <Grid container spacing={0}>
-          <Grid item xs={3}>
+          <Grid item xs={3} style={{ margin: 0 }}>
             <SidePanel></SidePanel>
           </Grid>
 
-          <Grid item xs={9}>
-            <br />
-            <Switch>
-              {routes.map((route) => (
-                <Route
-                  key={route.path}
-                  exact
-                  path={route.path}
-                  component={route.component}
-                />
-              ))}
+          <Grid item xs={9} style={{ margin: 0 }}>
+            <div className="main">
+              <div className="inner-main">
+                <br />
+                <DeletPromptProvider>
+                  <SnackbarProvider>
+                    <Switch>
+                      {routes.map((route) => (
+                        <Route
+                          key={route.path}
+                          exact
+                          path={route.path}
+                          component={route.component}
+                        />
+                      ))}
 
-              <Route
-                key={"/home"}
-                exact
-                path={""}
-                component={ManageWorkingDaysScreen}
-              />
-            </Switch>
+                      <Route key={""} exact path={""} component={HomeScreen} />
+                    </Switch>
+                  </SnackbarProvider>
+                </DeletPromptProvider>
+              </div>
+            </div>
           </Grid>
         </Grid>
       </Router>
