@@ -11,6 +11,7 @@ import TagsScreen from "../screens/Tags/TagsScreen";
 import StatisticScreen from "../screens/Statistics/StatisticScreen";
 import LocationsScreen from "../screens/Locations/LocationScreen";
 import HomeScreen from "../screens/Home/HomeScreen";
+import ManageSubjectsScreen from "../screens/Subjects/ManageSubjectsScreen";
 
 export const routes = [
   { path: "/", component: HomeScreen },
@@ -19,6 +20,7 @@ export const routes = [
   { path: "/student-home-screen", component: StudentHomeScreen },
   { path: "/student-year-screen", component: StudentYearScreen },
   { path: "/manage-lecturers", component: ManageLecturersScreen },
+  { path: "/manage-subjects", component: ManageSubjectsScreen },
   { path: "/working-days-add", component: WorkingDaysAddEditScreen },
   { path: "/programme-screen", component: ProgrammeScreen },
   { path: "/group-screen", component: GroupScreen },
