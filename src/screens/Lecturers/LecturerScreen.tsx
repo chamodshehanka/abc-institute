@@ -15,11 +15,17 @@ import ManageLecturersTable from "../../components/Lecturers/LecturersTable";
 import { useForm } from "react-hook-form";
 import { LecturerCreateData } from "../../api/interfaces";
 import { addLecturer } from "../../api/lecturers/lecturers.request";
+import { useToast } from "../../hooks/useToast";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import SearchIcon from "@material-ui/icons/Search";
+import { TableSearchInput } from "../../components/Common/TableViewComponents/TableSearchInput";
 
 const ManageLecturersScreen: React.FC = () => {
+  const [searchText, setSearchText] = useState("");
   const { data = [], status } = useGetLecturers();
   const [addDialog, setAddDialog] = useState(false);
   const { register, handleSubmit } = useForm();
+  const displayToast = useToast();
 
   const noData = status === "success" && data?.length === 0;
   const hasData = status === "success" && data?.length !== 0;
@@ -48,9 +54,17 @@ const ManageLecturersScreen: React.FC = () => {
       .then((res) => {
         console.log(res);
         handleAddDialogClose();
+        displayToast(
+          `Lecturer ${lecturer.name} Succesfully Added` || "Hi ",
+          "default"
+        );
       })
       .catch((err) => {
         handleAddDialogClose();
+        displayToast(
+          `Lecturer ${lecturer.name} Did Not Added` || "Hi ",
+          "default"
+        );
         console.error(err);
       });
   };
@@ -58,19 +72,15 @@ const ManageLecturersScreen: React.FC = () => {
   return (
     <>
       <h4 className="title">Manage Lecturers</h4>
-
       <div className="row mb-3">
         <div className="col-1"></div>
         <div className="col-8">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search To Filter"
-          />
+          <SearchIcon className="search-icon" />{" "}
+          <TableSearchInput onUpdate={setSearchText} />
         </div>
         <div className="col-3">
           <button className="btn btn-primary" onClick={handleAddDialogOpen}>
-            Create
+            Create <AddCircleIcon />
           </button>
         </div>
       </div>
@@ -99,7 +109,9 @@ const ManageLecturersScreen: React.FC = () => {
               {noData && (
                 <Alert severity="info">You haven't added lectures.</Alert>
               )}
-              {hasData && <ManageLecturersTable lecturers={data} />}
+              {hasData && (
+                <ManageLecturersTable lecturers={data} searchVal={searchText} />
+              )}
             </div>
           </Toolbar>
         </Card>
