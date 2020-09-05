@@ -10,7 +10,9 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { Buildings } from "../../models/Buildings";
 import CollapsibleTable from "./CollapsibleTable";
-import { Rooms } from "../../models/Rooms";
+//import { Rooms } from "../../models/Rooms";
+import { useGetRooms } from "../../queries/useGetRooms";
+//import { getRoombyBuilding } from "../../api/rooms/rooms.request"
 
 const useStyles = makeStyles({
   root: {
@@ -29,8 +31,7 @@ const ManageRooms: React.SFC<ManageRoomsProps> = ({
   buildings,
 }: ManageRoomsProps) => {
   const classes = useStyles();
-
-  const tempRooms: Rooms[] = [{ _id: "1", buildingName: "test", rooms: "45" }];
+  const { data = [] } = useGetRooms();
 
   return (
     <TableContainer className={classes.container}>
@@ -45,7 +46,7 @@ const ManageRooms: React.SFC<ManageRoomsProps> = ({
           {buildings?.map((b) => (
             // replace with a funtion like below
             // rooms={getRoomsByBuildingID(b?._id)}
-            <CollapsibleTable building={b} rooms={tempRooms} />
+            <CollapsibleTable building={b} rooms={data} />
           ))}
         </TableBody>
       </Table>

@@ -9,13 +9,14 @@ import {
   Box,
   Typography,
   Table,
-  TableHead,
   TableBody,
 } from "@material-ui/core";
 import { Rooms } from "../../models/Rooms";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-
+import AddRoom from "../../components/Rooms/AddRoom";
+import EditRoom from "../../components/Rooms/EditRoom";
+import DeleteRoom from "../../components/Rooms/DeleteRoom";
 export interface CollapsibleTableProps {
   building: Buildings;
   rooms: Rooms[];
@@ -51,6 +52,9 @@ const CollapsibleTable: React.SFC<CollapsibleTableProps> = ({
         <TableCell component="th" scope="row">
           {building?.name}
         </TableCell>
+        <TableCell style={{ width: 200 }} align="right">
+          <AddRoom buildingName={building.name} />
+        </TableCell>
       </TableRow>
 
       <TableRow>
@@ -64,14 +68,16 @@ const CollapsibleTable: React.SFC<CollapsibleTableProps> = ({
               ></Typography>
 
               <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>Test</TableRow>
-                </TableHead>
-
                 <TableBody>
                   {rooms?.map((r: Rooms) => (
                     <TableRow>
-                      <TableCell>{r?._id}</TableCell>
+                      <TableCell>{r?.name}</TableCell>
+                      <TableCell>
+                        <EditRoom />
+                      </TableCell>
+                      <TableCell>
+                        <DeleteRoom _id={r._id}/>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

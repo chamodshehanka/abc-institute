@@ -21,6 +21,7 @@ import WatchLaterIcon from "@material-ui/icons/WatchLater";
 import TableChartIcon from "@material-ui/icons/TableChart";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import AvatarSection from "../components/Common/Sidebar/AvatarSection/AvatarSection";
+import EqualizerIcon from "@material-ui/icons/Equalizer";
 
 interface ListItemLinkProps {
   icon?: React.ReactElement;
@@ -122,6 +123,11 @@ const SidePanel: React.FC = () => {
                 to="/manage-timetables"
                 primary="Timetables"
                 icon={<TableChartIcon />}
+              />
+              <ListItemLink
+                to="/statistic-screen"
+                primary="Statistics"
+                icon={<EqualizerIcon />}
               />
             </List>
             {/* <Divider />

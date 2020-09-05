@@ -38,11 +38,21 @@ const useStyles = makeStyles({
 const ManageBuilding: React.SFC<ManageBuildingProps> = ({
   buildings,
 }: ManageBuildingProps) => {
-  // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [open, setOpen] = React.useState(false);
-  const [building] = useState<Buildings>(Object);
+  const [building, setBuilding] = useState<Buildings>(Object);
+
+  const handleBuilding = (i) => {
+    setBuilding(buildings[i]);
+    console.log(building);
+  };
 
   const { handleSubmit } = useForm();
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+    handleBuilding(event.currentTarget.value);
+  };
 
   const onSubmit = () => {
     setOpen(false);
@@ -85,7 +95,7 @@ const ManageBuilding: React.SFC<ManageBuildingProps> = ({
                 </TableCell>
               </TableHead>
               <TableBody>
-                {buildings.map((b: Buildings) => (
+                {buildings.map((b: Buildings, index: number) => (
                   <TableRow key={b._id}>
                     <TableCell component="th" scope="row">
                       {b.name}
@@ -95,7 +105,14 @@ const ManageBuilding: React.SFC<ManageBuildingProps> = ({
                       {/* <UpdateBuildingForm /> */}
                     </TableCell>
                     <TableCell style={{ width: 100 }} align="right">
-                      <DeleteOutlineIcon onClick={handleClickOpen} />
+                      <Button
+                        value={index}
+                        aria-controls="simple-menu"
+                        aria-haspopup="true"
+                        onClick={handleClick}
+                      >
+                        <DeleteOutlineIcon onClick={handleClickOpen} />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -6,9 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import { useGetBuildings } from "../../queries/useGetBuildings";
 import AddBuildingForm from "../../components/Buildings/AddBuildingForm";
 
-// import AddRoom from "../../components/Rooms/AddRoom";
-// import EditRoom from "../../components/Rooms/EditRoom";
-// import DeleteRoom from "../../components/Rooms/DeleteRoom";
+
 
 const LocationsScreen: React.SFC = () => {
   const { data = [] } = useGetBuildings();
