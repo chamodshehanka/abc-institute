@@ -1,17 +1,29 @@
 import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import EditIcon from "@material-ui/icons/Edit";
 import TextField from "@material-ui/core/TextField";
 import { useForm } from "react-hook-form";
 import { addBuilding } from "../../api/buildings/buildings.request";
 import { BuildingsCreateData } from "../../api/interfaces";
 
-export default function AddBuildingForm() {
+export interface EditRoomProps {
+  buildingName: string;
+  roomName: string;
+}
+
+const EditRoom: React.SFC<EditRoomProps> = ({
+  buildingName,
+  roomName,
+}: EditRoomProps) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -24,28 +36,17 @@ export default function AddBuildingForm() {
 
   const onSubmit = (data) => {
     console.log(data);
-    const buidling: BuildingsCreateData = {
-      name: data?.name,
-    };
-
-    addBuilding(buidling)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => console.log(err));
-    handleClose();
   };
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
 
   return (
     <React.Fragment>
-      <AddCircleIcon
+      <EditIcon
         onClick={handleClickOpen}
         style={{
-          color: "0075FF",
           float: "right",
-          fontSize: "40",
+          fontSize: "20",
         }}
       />
 
@@ -59,17 +60,37 @@ export default function AddBuildingForm() {
           id="max-width-dialog-title"
           style={{ textAlign: "center" }}
         >
-          Add a Building
+          Edit Room
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>Building Name</DialogContentText>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <DialogContentText>Building Name: {buildingName}</DialogContentText>
+            <RadioGroup
+              row
+              aria-label="position"
+              name="position"
+              defaultValue="top"
+            >
+              <FormControlLabel
+                value="Lecture Hall"
+                control={<Radio color="primary" />}
+                label="Lecture Hall"
+                checked
+              />
+              <FormControlLabel
+                value="Laboratory"
+                control={<Radio color="primary" />}
+                label="Laboratory"
+              />
+            </RadioGroup>
+            <DialogContentText>Room Name</DialogContentText>
             <TextField
-              name="name"
+              name="building"
               inputRef={register}
               variant="outlined"
               fullWidth
               margin="dense"
+              placeholder={roomName}
             ></TextField>
             <DialogActions>
               <Button type="submit" color="primary">
@@ -84,4 +105,6 @@ export default function AddBuildingForm() {
       </Dialog>
     </React.Fragment>
   );
-}
+};
+
+export default EditRoom;
