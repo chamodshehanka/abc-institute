@@ -1,5 +1,4 @@
 import React from "react";
-//import { useState } from "react";
 import ManageBuilding from "../../components/Buildings/ManageBuilding";
 import ManageRooms from "../../components/Rooms/ManageRooms";
 import Container from "@material-ui/core/Container";
@@ -7,9 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import { useGetBuildings } from "../../queries/useGetBuildings";
 import AddBuildingForm from "../../components/Buildings/AddBuildingForm";
 
-// import AddRoom from "../../components/Rooms/AddRoom";
-// import EditRoom from "../../components/Rooms/EditRoom";
-// import DeleteRoom from "../../components/Rooms/DeleteRoom";
+
 
 const LocationsScreen: React.SFC = () => {
   const { data = [] } = useGetBuildings();
@@ -62,7 +59,7 @@ const LocationsScreen: React.SFC = () => {
           >
             <h4 style={{ marginTop: 10, paddingLeft: 30 }}>Manage Locations</h4>
 
-            <ManageRooms />
+            <ManageRooms buildings={data} />
           </Container>
         </Typography>
       </div>

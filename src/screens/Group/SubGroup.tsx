@@ -2,18 +2,17 @@ import React from "react";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Portal from "@material-ui/core/Portal";
 import Box from "@material-ui/core/Box";
 import { useForm } from "react-hook-form";
+import ManageSubGroupTable from "../../components/Group/SubGroupTable";
+import { useGetSubGroup } from "../../queries/useGetSubGroup";
+import { addSubGroup } from "../../api/student/subGroup.request";
+import { SubGroupCreateData } from "../../api/interfaces";
 import { useHistory } from "react-router-dom";
-import ManageYearTable from "../../components/Student/StudentYearTable";
-import { useGetYearSemester } from "../../queries/useGetYearSemester";
-import { addYearSemester } from "../../api/student/year.request";
-import { YearSemesterCreateData } from "../../api/interfaces";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,12 +64,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StudentYearScreen: React.SFC = () => {
-  const { data = [] } = useGetYearSemester();
-  const { register, handleSubmit } = useForm();
+const SubGroup: React.SFC = () => {
+  const { data = [] } = useGetSubGroup();
 
-  const classes = useStyles();
+  const { register, handleSubmit } = useForm();
   const history = useHistory();
+  const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
   const handleClick = () => {
@@ -83,16 +82,15 @@ const StudentYearScreen: React.SFC = () => {
 
   const onSubmit = (data: any) => {
     console.log(data);
-    const yearSemester: YearSemesterCreateData = {
-      year: data?.year,
-      semester: data?.semester,
+    const subgroups: SubGroupCreateData = {
+      number: data?.number,
     };
 
-    addYearSemester(yearSemester)
+    addSubGroup(subgroups)
       .then((res) => {
         console.log(res);
-        history.push("/student-home-screen");
-        history.push("/student-year-screen");
+        history.push("student-home-screen");
+        history.push("group-screen");
       })
       .catch((err) => console.error(err));
   };
@@ -102,11 +100,6 @@ const StudentYearScreen: React.SFC = () => {
       <React.Fragment>
         <CssBaseline />
         <Container>
-          <h3 style={{ textAlign: "center" }}>Student management</h3>
-          <h5 style={{ marginTop: 50, paddingLeft: 30 }}>
-            Acedemic year & Semester
-          </h5>
-          <hr style={{ width: 1000, borderWidth: 10, marginLeft: 60 }} />
           <ClickAwayListener onClickAway={handleClickAway}>
             <div
               style={{
@@ -154,7 +147,7 @@ const StudentYearScreen: React.SFC = () => {
                               fontSize: 15,
                             }}
                           >
-                            Add new Acedemic Year & Semester
+                            Add new Sub groups
                           </p>
                         </div>
                         <div>
@@ -167,21 +160,10 @@ const StudentYearScreen: React.SFC = () => {
                           >
                             <div>
                               <input
-                                id="year"
-                                placeholder="Academic Year"
+                                id="number"
+                                placeholder="Enter Group Number"
                                 style={{ width: 250, height: 30 }}
-                                name="year"
-                                ref={register}
-                              />
-                              <input
-                                id="semester"
-                                name="semester"
-                                style={{
-                                  width: 250,
-                                  marginLeft: 30,
-                                  height: 30,
-                                }}
-                                placeholder="Semester"
+                                name="number"
                                 ref={register}
                               />
                             </div>
@@ -211,16 +193,8 @@ const StudentYearScreen: React.SFC = () => {
           </ClickAwayListener>
           <div>
             <Container fixed>
-              <Typography
-                component="div"
-                style={{
-                  backgroundColor: "#cfe8fc",
-                  height: 550,
-                  borderRadius: 30,
-                }}
-              >
-                <ManageYearTable yearSemester={data} />
-              </Typography>
+              <h5 style={{ textAlign: "center" }}> Manage Sub Group ID</h5>
+              <ManageSubGroupTable subgroup={data} />
             </Container>
           </div>
         </Container>
@@ -229,4 +203,4 @@ const StudentYearScreen: React.SFC = () => {
   );
 };
 
-export default StudentYearScreen;
+export default SubGroup;
