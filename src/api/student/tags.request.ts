@@ -14,10 +14,7 @@ export async function addTags(requestData: TagsCreateData) {
 
 export async function updateTags(requestData: TagsUpdateData) {
   try {
-    const res = await apiInstance.put(
-      "/tags/update/" + requestData._id,
-      requestData
-    );
+    const res = await apiInstance.put("/tags/update/", requestData);
     const apiRes = res.data;
     return apiRes.success;
   } catch (e) {

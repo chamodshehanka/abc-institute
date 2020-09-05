@@ -91,7 +91,8 @@ const StudentYearScreen: React.SFC = () => {
     addYearSemester(yearSemester)
       .then((res) => {
         console.log(res);
-        history.push("student-year-screen");
+        history.push("/student-home-screen");
+        history.push("/student-year-screen");
       })
       .catch((err) => console.error(err));
   };

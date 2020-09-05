@@ -3,7 +3,6 @@ import { YearSemester } from "../models/yearSemester";
 import { Buildings } from "../models/Buildings";
 import { Rooms } from "../models/Rooms";
 
-
 export interface WorkingDaysCreateData {
   name: string;
   workingHours: {
@@ -119,7 +118,8 @@ export interface TagsCreateData {
 export interface TagsUpdateData {
   _id: string;
   name: string;
-=======
+}
+
 export interface BuildingsCreateData {
   name: string;
 }
