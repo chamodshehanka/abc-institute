@@ -11,6 +11,8 @@ import Paper from "@material-ui/core/Paper";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
+import { deleteProgramme } from "../../api/student/programme.request";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   table: {
@@ -32,6 +34,21 @@ const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
   programme,
 }: ManageProgrammeProps) => {
   const classes = useStyles();
+  const history = useHistory();
+
+  function refreshPage() {
+    window.location.reload(false);
+    history.push("student-year-screen");
+  }
+
+  const handleDeleteAction = (e) => {
+    deleteProgramme(e)
+      .then((res) => {
+        console.log(res);
+        refreshPage();
+      })
+      .catch((err) => console.error(err));
+  };
 
   return (
     <>
@@ -39,9 +56,7 @@ const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell className={classes.tablerow}>
-                Year & Semester
-              </TableCell>
+              <TableCell className={classes.tablerow}>Programme Name</TableCell>
               <TableCell className={classes.tablerow} align="right">
                 Edit
               </TableCell>
@@ -63,7 +78,7 @@ const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
                 </TableCell>
                 <TableCell align="right">
                   {" "}
-                  <Button>
+                  <Button onClick={() => handleDeleteAction(w._id)}>
                     <DeleteIcon />
                   </Button>
                 </TableCell>

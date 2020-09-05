@@ -9,6 +9,7 @@ import SidePanel from "./layouts/SidePanel";
 import "./App.css";
 import HomeScreen from "./screens/Home/HomeScreen";
 import { DeletPromptProvider } from "./components/Common/DeletePrompt/DeletePrompt";
+import { SnackbarProvider } from "notistack";
 
 /**
  * Create history object to pass into Router,
@@ -37,18 +38,20 @@ function App(): React.ReactElement {
               <div className="inner-main">
                 <br />
                 <DeletPromptProvider>
-                  <Switch>
-                    {routes.map((route) => (
-                      <Route
-                        key={route.path}
-                        exact
-                        path={route.path}
-                        component={route.component}
-                      />
-                    ))}
+                  <SnackbarProvider>
+                    <Switch>
+                      {routes.map((route) => (
+                        <Route
+                          key={route.path}
+                          exact
+                          path={route.path}
+                          component={route.component}
+                        />
+                      ))}
 
-                    <Route key={""} exact path={""} component={HomeScreen} />
-                  </Switch>
+                      <Route key={""} exact path={""} component={HomeScreen} />
+                    </Switch>
+                  </SnackbarProvider>
                 </DeletPromptProvider>
               </div>
             </div>

@@ -9,11 +9,10 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Portal from "@material-ui/core/Portal";
 import Box from "@material-ui/core/Box";
 import { useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
-import ManageYearTable from "../../components/Student/StudentYearTable";
-import { useGetYearSemester } from "../../queries/useGetYearSemester";
-import { addYearSemester } from "../../api/student/year.request";
-import { YearSemesterCreateData } from "../../api/interfaces";
+import ManageGroupTable from "../../components/Group/GroupTable";
+import { useGetGroup } from "../../queries/useGetGroup";
+import { addGroup } from "../../api/student/group.requets";
+import { GroupCreateData } from "../../api/interfaces";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,12 +64,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StudentYearScreen: React.SFC = () => {
-  const { data = [] } = useGetYearSemester();
+const GroupScreen: React.SFC = () => {
+  const { data = [] } = useGetGroup();
   const { register, handleSubmit } = useForm();
 
   const classes = useStyles();
-  const history = useHistory();
   const [open, setOpen] = React.useState(false);
 
   const handleClick = () => {
@@ -83,15 +81,13 @@ const StudentYearScreen: React.SFC = () => {
 
   const onSubmit = (data: any) => {
     console.log(data);
-    const yearSemester: YearSemesterCreateData = {
-      year: data?.year,
-      semester: data?.semester,
+    const groups: GroupCreateData = {
+      number: data?.number,
     };
 
-    addYearSemester(yearSemester)
+    addGroup(groups)
       .then((res) => {
         console.log(res);
-        history.push("student-year-screen");
       })
       .catch((err) => console.error(err));
   };
@@ -102,9 +98,7 @@ const StudentYearScreen: React.SFC = () => {
         <CssBaseline />
         <Container>
           <h3 style={{ textAlign: "center" }}>Student management</h3>
-          <h5 style={{ marginTop: 50, paddingLeft: 30 }}>
-            Acedemic year & Semester
-          </h5>
+          <h5 style={{ marginTop: 50, paddingLeft: 30 }}>Student Groups</h5>
           <hr style={{ width: 1000, borderWidth: 10, marginLeft: 60 }} />
           <ClickAwayListener onClickAway={handleClickAway}>
             <div
@@ -153,7 +147,7 @@ const StudentYearScreen: React.SFC = () => {
                               fontSize: 15,
                             }}
                           >
-                            Add new Acedemic Year & Semester
+                            Add new Groups and sub groups
                           </p>
                         </div>
                         <div>
@@ -166,21 +160,10 @@ const StudentYearScreen: React.SFC = () => {
                           >
                             <div>
                               <input
-                                id="year"
-                                placeholder="Academic Year"
+                                id="number"
+                                placeholder="Enter Group Number"
                                 style={{ width: 250, height: 30 }}
-                                name="year"
-                                ref={register}
-                              />
-                              <input
-                                id="semester"
-                                name="semester"
-                                style={{
-                                  width: 250,
-                                  marginLeft: 30,
-                                  height: 30,
-                                }}
-                                placeholder="Semester"
+                                name="number"
                                 ref={register}
                               />
                             </div>
@@ -218,7 +201,12 @@ const StudentYearScreen: React.SFC = () => {
                   borderRadius: 30,
                 }}
               >
-                <ManageYearTable yearSemester={data} />
+                <h5 style={{ textAlign: "center", marginTop: 15 }}>
+                  {" "}
+                  Manage Group ID
+                </h5>
+
+                <ManageGroupTable group={data} />
               </Typography>
             </Container>
           </div>
@@ -228,4 +216,4 @@ const StudentYearScreen: React.SFC = () => {
   );
 };
 
-export default StudentYearScreen;
+export default GroupScreen;

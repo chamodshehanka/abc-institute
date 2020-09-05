@@ -1,5 +1,4 @@
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -11,6 +10,8 @@ import React, { useState } from "react";
 import { DeletePromptInfo } from "./DeletePrompt";
 // eslint-disable-next-line import/no-unresolved
 import { TransitionProps } from "@material-ui/core/transitions";
+import "./DeleteModalUI.css";
+import { Alert } from "@material-ui/lab";
 
 const Transition = React.forwardRef(function Transition(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,23 +45,25 @@ export function DeleteModalUI({
       onClose={onClose}
     >
       <div className="dialog-head">
-        <Typography variant="h4">Confirm Delete</Typography>
+        <Typography variant="h5">Confirm Delete</Typography>
       </div>
 
       <DialogContent className="dialog-content">
         <div className="detail">
-          <Typography variant="h5" gutterBottom>
+          <p>
             Are you sure you want to delete {resourceType} <b>{textToMatch}</b>?
-          </Typography>
+          </p>
 
-          <Typography variant="h5" gutterBottom>
+          <Alert severity="warning">
             <small>
               This action will be irreversible and all related details will be
               lost. Please type in the {resourceType} {textType} below to
               confirm.
             </small>
-          </Typography>
+          </Alert>
         </div>
+
+        <br />
 
         <div className="form-field">
           <TextField
@@ -75,17 +78,16 @@ export function DeleteModalUI({
         </div>
       </DialogContent>
       <DialogActions className="dialog-actions">
-        <Button variant="text" onClick={onClose}>
+        <button className="btn" onClick={onClose}>
           Cancel
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
+        </button>
+        <button
+          className="btn btn-danger"
           onClick={onConfirm}
           disabled={textToMatch !== input}
         >
           Delete
-        </Button>
+        </button>
       </DialogActions>
     </Dialog>
   );
