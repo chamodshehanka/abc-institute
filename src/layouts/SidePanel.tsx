@@ -20,6 +20,7 @@ import LocationCityIcon from "@material-ui/icons/LocationCity";
 import WatchLaterIcon from "@material-ui/icons/WatchLater";
 import TableChartIcon from "@material-ui/icons/TableChart";
 import DateRangeIcon from "@material-ui/icons/DateRange";
+import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import AvatarSection from "../components/Common/Sidebar/AvatarSection/AvatarSection";
 import BookIcon from "@material-ui/icons/LibraryBooks";
 
@@ -108,6 +109,11 @@ const SidePanel: React.FC = () => {
                 to="/student-home-screen"
                 primary="Students"
                 icon={<LocalLibraryIcon />}
+              />
+              <ListItemLink
+                to="/tags-screen"
+                primary="Tags"
+                icon={<LocalOfferIcon />}
               />
               <ListItemLink
                 to="/locations-screen"
