@@ -6,6 +6,6 @@ export interface Lecturer {
   department: string;
   centre: string;
   building: string;
-  level: number;
+  level: string;
   rank: string;
 }
