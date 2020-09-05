@@ -22,6 +22,8 @@ import TableChartIcon from "@material-ui/icons/TableChart";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import AvatarSection from "../components/Common/Sidebar/AvatarSection/AvatarSection";
+import EqualizerIcon from "@material-ui/icons/Equalizer";
+import BookIcon from "@material-ui/icons/LibraryBooks";
 
 interface ListItemLinkProps {
   icon?: React.ReactElement;
@@ -100,6 +102,11 @@ const SidePanel: React.FC = () => {
                 icon={<SupervisorAccountIcon />}
               />
               <ListItemLink
+                to="/manage-subjects"
+                primary="Subjects"
+                icon={<BookIcon />}
+              />
+              <ListItemLink
                 to="/student-home-screen"
                 primary="Students"
                 icon={<LocalLibraryIcon />}
@@ -128,6 +135,11 @@ const SidePanel: React.FC = () => {
                 to="/manage-timetables"
                 primary="Timetables"
                 icon={<TableChartIcon />}
+              />
+              <ListItemLink
+                to="/statistic-screen"
+                primary="Statistics"
+                icon={<EqualizerIcon />}
               />
             </List>
             {/* <Divider />

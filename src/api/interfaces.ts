@@ -135,9 +135,9 @@ export interface BuildingsListResponse {
 }
 
 export interface RoomsCreateData {
-  buildingName: string;
+  building: string;
   roomType: boolean;
-  rooms: string[];
+  name: string;
 }
 
 export interface RoomsUpdateData {
@@ -173,4 +173,32 @@ export interface LecturerUpdateData {
   building: string;
   level: number;
   rank: string;
+}
+
+export interface RoomsByBuildingData {
+  success: boolean;
+  data: Rooms[];
+}
+
+export interface SubjectUpdateData {
+  _id: string;
+  subjectName: string;
+  subjectCode: string;
+  offeredYear: string;
+  offeredSemester: string;
+  lectureHours: string;
+  labHours: string;
+  tutorialHours: string;
+  evaluationHours: string;
+}
+
+export interface SubjectCreateData {
+  subjectName: string;
+  subjectCode: string;
+  offeredYear: string;
+  offeredSemester: string;
+  lectureHours: string;
+  labHours: string;
+  tutorialHours: string;
+  evaluationHours: string;
 }
