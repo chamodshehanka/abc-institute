@@ -13,6 +13,7 @@ import {
 } from "@material-ui/core";
 // eslint-disable-next-line import/no-unresolved
 import { TransitionProps } from "@material-ui/core/transitions";
+import Chip from "@material-ui/core/Chip";
 
 const Transition = React.forwardRef(function Transition(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,15 +55,56 @@ const WorkingDaysViewModal: React.SFC<WorkingDaysViewModalProps> = ({
             </TableRow>
 
             <TableRow>
-              <TableCell></TableCell>
+              <TableCell>Working Hours</TableCell>
+              <TableCell>
+                {workingDays?.workingHours?.hours +
+                  " hours " +
+                  workingDays?.workingHours?.mins +
+                  " mins"}
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell>Selected Working Days</TableCell>
+              <TableCell>
+                {workingDays?.selectedDays?.monday && (
+                  <Chip label="Monday" variant="outlined" size="small" />
+                )}{" "}
+                {workingDays?.selectedDays?.tuesday && (
+                  <Chip label="Tuesday" variant="outlined" size="small" />
+                )}{" "}
+                {workingDays?.selectedDays?.wednesday && (
+                  <Chip label="Wednesday" variant="outlined" size="small" />
+                )}{" "}
+                {workingDays?.selectedDays?.thursday && (
+                  <Chip label="Thursday" variant="outlined" size="small" />
+                )}{" "}
+                {workingDays?.selectedDays?.friday && (
+                  <Chip label="Friday" variant="outlined" size="small" />
+                )}{" "}
+                {workingDays?.selectedDays?.saturday && (
+                  <Chip label="Saturday" variant="outlined" size="small" />
+                )}{" "}
+                {workingDays?.selectedDays?.sunday && (
+                  <Chip label="Sunday" variant="outlined" size="small" />
+                )}
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell>Preferred Time Slots</TableCell>
+              <TableCell>
+                {workingDays?.prefferedTimeSlots?.thirty && "30"}{" "}
+                {workingDays?.prefferedTimeSlots?.sixty && "60"}
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </DialogContent>
 
       <DialogActions className="dialog-actions">
-        <button className="btn" onClick={onClose}>
-          Cancel
+        <button className="btn btn-primary" onClick={onClose}>
+          Close
         </button>
       </DialogActions>
     </Dialog>
