@@ -14,10 +14,7 @@ export async function addProgramme(requestData: ProgrammeCreateData) {
 
 export async function updateProgramme(requestData: ProgrammeUpdateData) {
   try {
-    const res = await apiInstance.put(
-      "/programme/update/" + requestData._id,
-      requestData
-    );
+    const res = await apiInstance.put("/programme/update/", requestData);
     const apiRes = res.data;
     return apiRes.success;
   } catch (e) {

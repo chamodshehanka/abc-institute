@@ -13,6 +13,8 @@ import ManageGroupTable from "../../components/Group/GroupTable";
 import { useGetGroup } from "../../queries/useGetGroup";
 import { addGroup } from "../../api/student/group.requets";
 import { GroupCreateData } from "../../api/interfaces";
+import SubGroup from "./SubGroup";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
 const GroupScreen: React.SFC = () => {
   const { data = [] } = useGetGroup();
   const { register, handleSubmit } = useForm();
-
+  const history = useHistory();
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -88,6 +90,8 @@ const GroupScreen: React.SFC = () => {
     addGroup(groups)
       .then((res) => {
         console.log(res);
+        history.push("student-home-screen");
+        history.push("group-screen");
       })
       .catch((err) => console.error(err));
   };
@@ -100,113 +104,140 @@ const GroupScreen: React.SFC = () => {
           <h3 style={{ textAlign: "center" }}>Student management</h3>
           <h5 style={{ marginTop: 50, paddingLeft: 30 }}>Student Groups</h5>
           <hr style={{ width: 1000, borderWidth: 10, marginLeft: 60 }} />
-          <ClickAwayListener onClickAway={handleClickAway}>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-                padding: 10,
-              }}
-            >
-              <Fab
-                size="medium"
-                color="secondary"
-                aria-label="add"
-                className={classes.addbtn}
-                onClick={handleClick}
-              >
-                <AddIcon />
-              </Fab>
-              {open ? (
-                <Portal>
-                  <div className={classes.dropdown}>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Box
-                        boxShadow={15}
-                        bgcolor="background.paper"
-                        m={2}
-                        p={2}
-                        style={{
-                          width: "45rem",
-                          height: "15rem",
-                          borderRadius: 8,
-                        }}
-                      >
-                        <div>
-                          <p
-                            style={{
-                              textAlign: "center",
-                              color: "#020202",
-                              fontSize: 15,
-                            }}
-                          >
-                            Add new Groups and sub groups
-                          </p>
-                        </div>
-                        <div>
-                          <form
-                            onSubmit={handleSubmit(onSubmit)}
-                            style={{ marginTop: 50, textAlign: "center" }}
-                            className={classes.root}
-                            noValidate
-                            autoComplete="off"
-                          >
-                            <div>
-                              <input
-                                id="number"
-                                placeholder="Enter Group Number"
-                                style={{ width: 250, height: 30 }}
-                                name="number"
-                                ref={register}
-                              />
-                            </div>
-                            <div style={{ marginTop: 15 }}>
-                              <button
-                                type="submit"
-                                className="btn btn-primary btn-abc"
-                              >
-                                Add
-                              </button>{" "}
-                              <button
-                                type="button"
-                                className="btn btn-danger btn-abc"
-                                onClick={handleClickAway}
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          </form>
-                        </div>
-                      </Box>
-                    </div>
-                  </div>
-                </Portal>
-              ) : null}
-            </div>
-          </ClickAwayListener>
+
           <div>
             <Container fixed>
               <Typography
                 component="div"
                 style={{
                   backgroundColor: "#cfe8fc",
-                  height: 550,
+                  height: 600,
                   borderRadius: 30,
                 }}
               >
-                <h5 style={{ textAlign: "center", marginTop: 15 }}>
-                  {" "}
-                  Manage Group ID
-                </h5>
-
-                <ManageGroupTable group={data} />
+                <div>
+                  <ClickAwayListener onClickAway={handleClickAway}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        padding: 10,
+                        marginRight: 185,
+                      }}
+                    >
+                      <Fab
+                        size="medium"
+                        color="secondary"
+                        aria-label="add"
+                        className={classes.addbtn}
+                        onClick={handleClick}
+                      >
+                        <AddIcon />
+                      </Fab>
+                      {open ? (
+                        <Portal>
+                          <div className={classes.dropdown}>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                              }}
+                            >
+                              <Box
+                                boxShadow={15}
+                                bgcolor="background.paper"
+                                m={2}
+                                p={2}
+                                style={{
+                                  width: "45rem",
+                                  height: "15rem",
+                                  borderRadius: 8,
+                                }}
+                              >
+                                <div>
+                                  <p
+                                    style={{
+                                      textAlign: "center",
+                                      color: "#020202",
+                                      fontSize: 15,
+                                    }}
+                                  >
+                                    Add new Groups
+                                  </p>
+                                </div>
+                                <div>
+                                  <form
+                                    onSubmit={handleSubmit(onSubmit)}
+                                    style={{
+                                      marginTop: 50,
+                                      textAlign: "center",
+                                    }}
+                                    className={classes.root}
+                                    noValidate
+                                    autoComplete="off"
+                                  >
+                                    <div>
+                                      <input
+                                        id="number"
+                                        placeholder="Enter Group Number"
+                                        style={{ width: 250, height: 30 }}
+                                        name="number"
+                                        ref={register}
+                                      />
+                                    </div>
+                                    <div style={{ marginTop: 15 }}>
+                                      <button
+                                        type="submit"
+                                        className="btn btn-primary btn-abc"
+                                      >
+                                        Add
+                                      </button>{" "}
+                                      <button
+                                        type="button"
+                                        className="btn btn-danger btn-abc"
+                                        onClick={handleClickAway}
+                                      >
+                                        Cancel
+                                      </button>
+                                    </div>
+                                  </form>
+                                </div>
+                              </Box>
+                            </div>
+                          </div>
+                        </Portal>
+                      ) : null}
+                    </div>
+                  </ClickAwayListener>
+                  <h5 style={{ textAlign: "center", marginTop: 15 }}>
+                    {" "}
+                    Manage Group ID
+                  </h5>
+                </div>
+                <div
+                  style={{
+                    width: 500,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    marginLeft: 290,
+                  }}
+                >
+                  <ManageGroupTable group={data} />
+                </div>
+                <div
+                  style={{
+                    width: 500,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    marginLeft: 290,
+                  }}
+                >
+                  <SubGroup />
+                </div>
               </Typography>
             </Container>
           </div>

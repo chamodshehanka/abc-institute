@@ -91,6 +91,7 @@ const ProgrammeScreen: React.SFC = () => {
     addProgramme(programme)
       .then((res) => {
         console.log(res);
+        history.push("student-year-screen");
         history.push("programme-screen");
       })
       .catch((err) => console.error(err));

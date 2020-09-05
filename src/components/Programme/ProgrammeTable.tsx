@@ -1,5 +1,4 @@
-import React from "react";
-import { Programme } from "../../models/Programme";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -11,8 +10,19 @@ import Paper from "@material-ui/core/Paper";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
-import { deleteProgramme } from "../../api/student/programme.request";
-import { useHistory } from "react-router-dom";
+import {
+  deleteProgramme,
+  updateProgramme,
+} from "../../api/student/programme.request";
+import { useHistory, useLocation } from "react-router-dom";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+
+import { ProgrammeUpdateData } from "../../api/interfaces";
+import { Programme } from "../../models/Programme";
+import { useForm } from "react-hook-form";
 
 const useStyles = makeStyles({
   table: {
@@ -36,16 +46,47 @@ const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
   const classes = useStyles();
   const history = useHistory();
 
-  function refreshPage() {
-    window.location.reload(false);
-    history.push("student-year-screen");
-  }
+  const location = useLocation();
+
+  const [update, setUpdate] = React.useState(false);
+
+  const [editTags] = useState<Programme | undefined>(() => {
+    return location?.state as Programme | undefined;
+  });
+
+  const { register, handleSubmit } = useForm({
+    defaultValues: editTags,
+  });
+
+  const onSubmit = (data: any) => {
+    const Programme: ProgrammeUpdateData = {
+      _id: data?._id as string,
+      name: data?.name,
+    };
+    console.log("values2", data);
+    updateProgramme(Programme)
+      .then((res) => {
+        console.log(res);
+        history.push("student-year-screen");
+        history.push("programme-screen");
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const handleUpdateOpen = () => {
+    setUpdate(true);
+  };
+
+  const handleUpdateClose = () => {
+    setUpdate(false);
+  };
 
   const handleDeleteAction = (e) => {
     deleteProgramme(e)
       .then((res) => {
         console.log(res);
-        refreshPage();
+        history.push("student-year-screen");
+        history.push("programme-screen");
       })
       .catch((err) => console.error(err));
   };
@@ -72,7 +113,11 @@ const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
                   {w.name}
                 </TableCell>
                 <TableCell align="right">
-                  <Button>
+                  <Button
+                    onClick={() => {
+                      handleUpdateOpen();
+                    }}
+                  >
                     <EditIcon />
                   </Button>
                 </TableCell>
@@ -86,6 +131,55 @@ const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
             ))}
           </TableBody>
         </Table>
+        <Dialog
+          open={update}
+          onClose={handleUpdateClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Update Tags"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              <form
+                noValidate
+                autoComplete="off"
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <label htmlFor="txtName" className="form-label">
+                  Name
+                </label>
+                <input
+                  type="hidden"
+                  name="_id"
+                  ref={register}
+                  value="5f52cf32bfc0d633b8edc37d"
+                />
+                <input
+                  type="text"
+                  className="form-control"
+                  id="name"
+                  name="name"
+                  ref={register}
+                />
+                <div className="align-right" style={{ alignContent: "right" }}>
+                  <button type="submit" className="btn btn-primary btn-abc">
+                    Save
+                  </button>{" "}
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-abc"
+                    onClick={() => {
+                      history.push("student-year-screen");
+                      history.push("programme-screen");
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
       </TableContainer>
     </>
   );
