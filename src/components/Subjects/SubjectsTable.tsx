@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import { Lecturer } from "../../models/Lecturer";
+import { Subject } from "../../models/Subject";
 import {
   TableContainer,
   Table,
@@ -22,9 +22,9 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import {
-  deleteLecturer,
-  updateLecturer,
-} from "../../api/lecturers/lecturers.request";
+  deleteSubject,
+  updateSubject,
+} from "../../api/subjects/subjects.request";
 import Alert from "@material-ui/lab/Alert";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { useFilterRows } from "../Common/TableViewComponents/useFilterData";
@@ -34,28 +34,29 @@ import { useDeletePrompt } from "../Common/DeletePrompt/DeletePrompt";
 import { useMutation } from "react-query";
 import { useToast } from "../../hooks/useToast";
 import { useForm } from "react-hook-form";
-import { LecturerUpdateData } from "../../api/interfaces";
+import { SubjectUpdateData } from "../../api/interfaces";
 
-export interface ManageLecturerTableProps {
-  lecturers: Lecturer[];
+export interface ManageSubjectsTableProps {
+  subjects: Subject[];
   searchVal: string;
 }
 
-function filterData(tableData: Lecturer[], searchText = "") {
+function filterData(tableData: Subject[], searchText = "") {
   if (searchText === "") return tableData;
   return tableData.filter(
     (dataObj) =>
-      dataObj.name && dataObj.name.toLowerCase().startsWith(searchText)
+      dataObj.subjectName &&
+      dataObj.subjectName.toLowerCase().startsWith(searchText)
   );
 }
 
-const ManageLecturersTable: React.SFC<ManageLecturerTableProps> = ({
-  lecturers,
+const ManageSubjectsTable: React.SFC<ManageSubjectsTableProps> = ({
+  subjects,
   searchVal,
-}: ManageLecturerTableProps) => {
+}: ManageSubjectsTableProps) => {
   const { pageData, tableFooterProps, noMatchingItems } = useFilterRows(
     searchVal,
-    lecturers,
+    subjects,
     filterData
   );
 
@@ -69,24 +70,34 @@ const ManageLecturersTable: React.SFC<ManageLecturerTableProps> = ({
           className="table-first-cell-padded"
         >
           <TableHead>
-            <TableCell>Name</TableCell>
-            <TableCell>Employee Id</TableCell>
-            <TableCell>Faculty</TableCell>
-            <TableCell>Department</TableCell>
-            <TableCell>Centre</TableCell>
-            <TableCell>Options</TableCell>
+            <TableRow>
+              <TableCell style={{ fontFamily: "Varela Round" }}>
+                Subject Name
+              </TableCell>
+              <TableCell style={{ fontFamily: "Varela Round" }}>
+                Subject Code
+              </TableCell>
+              <TableCell style={{ fontFamily: "Varela Round" }}>
+                Offered Year
+              </TableCell>
+              <TableCell style={{ fontFamily: "Varela Round" }}>
+                Offered Semester
+              </TableCell>
+              <TableCell></TableCell>
+            </TableRow>
           </TableHead>
           <TableBody>
-            {lecturers?.map((l: Lecturer) => (
-              <TableRow key={l._id}>
-                <TableCell>{l.name}</TableCell>
-                <TableCell>{l.employeeId}</TableCell>
-                <TableCell>{l.faculty}</TableCell>
-                <TableCell>{l.department}</TableCell>
-                <TableCell>{l.centre}</TableCell>
+            {pageData?.map((s: Subject) => (
+              <TableRow key={s._id} hover={true}>
+                <TableCell style={{ fontFamily: "Varela Round" }}>
+                  {s.subjectName}
+                </TableCell>
+                <TableCell>{s.subjectCode}</TableCell>
+                <TableCell>{s.offeredYear}</TableCell>
+                <TableCell>{s.offeredSemester}</TableCell>
                 <TableCell style={{ width: "5rem" }}>
                   <div className="display-flex align-center justify-end">
-                    <SubjectAction lecturer={l} />
+                    <SubjectAction subject={s} />
                   </div>
                 </TableCell>
               </TableRow>
@@ -103,18 +114,18 @@ const ManageLecturersTable: React.SFC<ManageLecturerTableProps> = ({
   );
 };
 
-export default ManageLecturersTable;
+export default ManageSubjectsTable;
 
-export interface LecturersActionProps {
-  lecturer: Lecturer;
+export interface SubjectsActionProps {
+  subject: Subject;
 }
 
-const SubjectAction: React.FC<LecturersActionProps> = (props) => {
+const SubjectAction: React.FC<SubjectsActionProps> = (props) => {
   const displayToast = useToast();
   const confirmDelete = useDeletePrompt({
-    resourceType: "Lecturer",
-    textType: "Name",
-    textToMatch: props.lecturer.name,
+    resourceType: "Subject",
+    textType: "Code",
+    textToMatch: props.subject.subjectCode,
   });
 
   const [view, setView] = React.useState(false);
@@ -137,60 +148,60 @@ const SubjectAction: React.FC<LecturersActionProps> = (props) => {
     setUpdateDialog(false);
   };
 
-  const [name, setName] = useState(props.lecturer.name);
-  const [code, setempId] = useState(props.lecturer.employeeId);
-  const [faculty, setFaculty] = useState(props.lecturer.faculty);
-  const [department, setDepartment] = useState(props.lecturer.department);
-  const [centre, setCentre] = useState(props.lecturer.centre);
-  const [building, setBuilding] = useState(props.lecturer.building);
-  const [level, setLevel] = useState(props.lecturer.level);
-  const [rank, setRank] = useState(props.lecturer.rank);
+  const [name, setName] = useState(props.subject.subjectName);
+  const [code, setCode] = useState(props.subject.subjectCode);
+  const [year, setYear] = useState(props.subject.offeredYear);
+  const [semester, setSemester] = useState(props.subject.offeredSemester);
+  const [lecture, setLecture] = useState(props.subject.lectureHours);
+  const [lab, setLab] = useState(props.subject.labHours);
+  const [tutorial, setTutorial] = useState(props.subject.tutorialHours);
+  const [evaluation, setEvaluation] = useState(props.subject.evaluationHours);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [id, setId] = useState(props.lecturer._id);
+  const [id, setId] = useState(props.subject._id);
 
   const onSubmit = (data: any) => {
     console.log(data);
-    const lecturer: LecturerUpdateData = {
+    const subject: SubjectUpdateData = {
       _id: id,
-      name: data?.name,
-      employeeId: data?.employeeId,
-      faculty: data?.faculty,
-      department: data?.department,
-      centre: data?.center,
-      building: data?.building,
-      level: data?.level,
-      rank: data?.rank,
+      subjectName: data?.subjectName,
+      subjectCode: data?.subjectCode,
+      offeredYear: data?.offeredYear,
+      offeredSemester: data?.offeredSemester,
+      lectureHours: data?.lectureHours,
+      labHours: data?.labHours,
+      tutorialHours: data?.tutorialHours,
+      evaluationHours: data?.evaluationHours,
     };
 
-    updateLecturer(lecturer)
+    updateSubject(subject)
       .then((res) => {
         console.log(res);
         handleUpdateDialogClose();
         displayToast(
-          `Lecturer ${props.lecturer.name} Succesfully Updated` || "Hi ",
+          `Subject ${props.subject.subjectCode} Succesfully Updated` || "Hi ",
           "default"
         );
       })
       .catch((err) => {
         handleUpdateDialogClose();
         displayToast(
-          `Lecturer ${props.lecturer.name} Updation Failed` || "Hi ",
+          `Subject ${props.subject.subjectCode} Updation Failed` || "Hi ",
           "default"
         );
         console.error(err);
       });
   };
 
-  const [remove, { status: removeStatus }] = useMutation(deleteLecturer, {
+  const [remove, { status: removeStatus }] = useMutation(deleteSubject, {
     onError() {
       console.log("errrrrrrrr");
       displayToast(
-        `Lecturer ${props.lecturer.name} Removing Failed` || "Hi ",
+        `Subject ${props.subject.subjectCode} Removing Failed` || "Hi ",
         "default"
       );
     },
     onSuccess() {
-      displayToast(`Lecturer ${props.lecturer.name}  Removed`, "default");
+      displayToast(`Subject ${props.subject.subjectCode}  Removed`, "default");
     },
   });
 
@@ -208,43 +219,43 @@ const SubjectAction: React.FC<LecturersActionProps> = (props) => {
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle id="alert-dialog-title">
-                {"Lecturer Details"}
+                {"Subject Details"}
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
                   <Table aria-label="simple table">
                     <TableBody>
                       <TableRow>
-                        <TableCell>Name</TableCell>
-                        <TableCell>{props.lecturer.name}</TableCell>
+                        <TableCell>Subject Name</TableCell>
+                        <TableCell>{props.subject.subjectName}</TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Employee Id</TableCell>
-                        <TableCell>{props.lecturer.employeeId}</TableCell>
+                        <TableCell>Subject Code</TableCell>
+                        <TableCell>{props.subject.subjectCode}</TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Faculty</TableCell>
-                        <TableCell>{props.lecturer.faculty}</TableCell>
+                        <TableCell>Offered Year</TableCell>
+                        <TableCell>{props.subject.offeredYear}</TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Department</TableCell>
-                        <TableCell>{props.lecturer.department}</TableCell>
+                        <TableCell>Offered Semester</TableCell>
+                        <TableCell>{props.subject.offeredSemester}</TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>centre</TableCell>
-                        <TableCell>{props.lecturer.centre}</TableCell>
+                        <TableCell>Lecture Hours</TableCell>
+                        <TableCell>{props.subject.lectureHours}</TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Bulding</TableCell>
-                        <TableCell>{props.lecturer.building}</TableCell>
+                        <TableCell>Lab Hours</TableCell>
+                        <TableCell>{props.subject.labHours}</TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Level</TableCell>
-                        <TableCell>{props.lecturer.level}</TableCell>
+                        <TableCell>Tutorial Hours</TableCell>
+                        <TableCell>{props.subject.tutorialHours}</TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Rank</TableCell>
-                        <TableCell>{props.lecturer.rank}</TableCell>
+                        <TableCell>Evaluation Hours</TableCell>
+                        <TableCell>{props.subject.evaluationHours}</TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
@@ -259,7 +270,7 @@ const SubjectAction: React.FC<LecturersActionProps> = (props) => {
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle id="alert-dialog-title">
-                {"Update Lecturer"}
+                {"Update Subject"}
               </DialogTitle>
 
               <DialogContent>
@@ -267,15 +278,15 @@ const SubjectAction: React.FC<LecturersActionProps> = (props) => {
                   <Grid container spacing={2} className="form-row">
                     <Grid item xs={6}>
                       <div>
-                        <label htmlFor="name" className="form-label">
-                          Lecturer Name
+                        <label htmlFor="subjectName" className="form-label">
+                          Subject Name
                         </label>
                         <input
                           type="text"
                           className="form-control"
-                          id="name"
+                          id="subjectName"
                           aria-describedby="emailHelp"
-                          name="name"
+                          name="subjectName"
                           onChange={(e) => setName(e.target.value)}
                           ref={register}
                           value={name}
@@ -288,170 +299,150 @@ const SubjectAction: React.FC<LecturersActionProps> = (props) => {
 
                     <Grid item xs={6}>
                       <div>
-                        <label htmlFor="employeeId" className="form-label">
-                          Employee Id
-                        </label>
-                        <label
-                          style={{ marginLeft: "110px", color: "#C0C0C0" }}
-                        >
-                          000150
+                        <label htmlFor="subjectCode" className="form-label">
+                          Subject Code
                         </label>
                         <input
                           type="text"
                           className="form-control"
-                          id="employeeId"
+                          id="subjectCode"
                           aria-describedby="emailHelp"
-                          name="employeeId"
-                          onChange={(e) => setempId(e.target.value)}
+                          name="subjectCode"
+                          onChange={(e) => setCode(e.target.value)}
                           ref={register}
                           value={code}
                           onFocus={() => {
-                            setempId("");
+                            setCode("");
                           }}
                         />
                       </div>
                     </Grid>
 
                     <Grid item xs={6}>
-                      <label htmlFor="faculty" className="form-label">
-                        Faculty
+                      <label htmlFor="offeredYear" className="form-label">
+                        Offered Year
                       </label>
                       <select
                         className="form-select"
-                        aria-label="Faculty"
-                        name="faculty"
+                        aria-label="offeredYear"
+                        name="offeredYear"
+                        onChange={(e) => setYear(e.target.value)}
                         ref={register}
-                        onChange={(e) => setFaculty(e.target.value)}
-                        value={faculty}
+                        value={year}
                         onFocus={() => {
-                          setFaculty("");
+                          setYear("");
                         }}
                       >
-                        <option selected value="Computing">
-                          Computing
+                        <option selected value="1">
+                          1
                         </option>
-                        <option value="Business">Business</option>
-                        <option value="Engineering">Engineering</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
                       </select>
                     </Grid>
 
                     <Grid item xs={6}>
-                      <label htmlFor="department" className="form-label">
-                        Department
+                      <label htmlFor="offeredSemester" className="form-label">
+                        Offered Semester
                       </label>
                       <select
                         className="form-select"
-                        aria-label="Department"
-                        name="department"
-                        onChange={(e) => setDepartment(e.target.value)}
+                        aria-label="offeredSemester"
+                        name="offeredSemester"
+                        onChange={(e) => setSemester(e.target.value)}
                         ref={register}
-                        value={department}
+                        value={semester}
                         onFocus={() => {
-                          setDepartment("");
+                          setSemester("");
                         }}
                       >
-                        <option selected value="SE">
-                          SE
+                        <option selected value="1">
+                          1
                         </option>
-                        <option value="IT">IT</option>
-                        <option value="DS">DS</option>
+                        <option value="2">2</option>
                       </select>
                     </Grid>
 
                     <Grid item xs={6}>
                       <div>
-                        <label htmlFor="center" className="form-label">
-                          Centre
-                        </label>
-                        <select
-                          className="form-select"
-                          aria-label="Center"
-                          name="center"
-                          onChange={(e) => setCentre(e.target.value)}
-                          ref={register}
-                          value={centre}
-                          onFocus={() => {
-                            setCentre("");
-                          }}
-                        >
-                          <option selected value="Malabe">
-                            Malabe
-                          </option>
-                          <option value="Kandy">Kandy</option>
-                          <option value="Matara">Matara</option>
-                        </select>
-                      </div>
-                    </Grid>
-
-                    <Grid item xs={6}>
-                      <div>
-                        <label htmlFor="building" className="form-label">
-                          Building
-                        </label>
-                        <select
-                          className="form-select"
-                          aria-label="Building"
-                          name="building"
-                          onChange={(e) => setBuilding(e.target.value)}
-                          ref={register}
-                          value={building}
-                          onFocus={() => {
-                            setBuilding("");
-                          }}
-                        >
-                          <option selected value="New Building">
-                            New Building
-                          </option>
-                          <option value="Main">Main</option>
-                        </select>
-                      </div>
-                    </Grid>
-
-                    <Grid item xs={6}>
-                      <div>
-                        <label htmlFor="level" className="form-label">
-                          Level
-                        </label>
-                        <select
-                          className="form-select"
-                          aria-label="Level"
-                          name="level"
-                          onChange={(e) => setLevel(e.target.value)}
-                          ref={register}
-                          value={level}
-                          onFocus={() => {
-                            setLevel("");
-                          }}
-                        >
-                          <option selected value="1">
-                            Professor
-                          </option>
-                          <option value="2">Assistant Professor</option>
-                          <option value="3">Senior Lecturer(HG)</option>
-                          <option value="4">Senior Lecturer</option>
-                          <option value="5">Lecturer</option>
-                          <option value="6">Assistant Lecturer</option>
-                          <option value="7">Instructors</option>
-                        </select>
-                      </div>
-                    </Grid>
-
-                    <Grid item xs={6}>
-                      <div>
-                        <label htmlFor="rank" className="form-label">
-                          Rank
+                        <label htmlFor="lectureHours" className="form-label">
+                          Lecture Hours
                         </label>
                         <input
                           type="text"
                           className="form-control"
-                          id="txtName"
+                          id="lectureHours"
                           aria-describedby="emailHelp"
-                          name="rank"
-                          onChange={(e) => setRank(e.target.value)}
+                          name="lectureHours"
+                          onChange={(e) => setLecture(e.target.value)}
                           ref={register}
-                          value={rank}
+                          value={lecture}
                           onFocus={() => {
-                            setRank("");
+                            setLecture("");
+                          }}
+                        />
+                      </div>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                      <div>
+                        <label htmlFor="labHours" className="form-label">
+                          Lab Hours
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="labHours"
+                          aria-describedby="emailHelp"
+                          name="labHours"
+                          onChange={(e) => setLab(e.target.value)}
+                          ref={register}
+                          value={lab}
+                          onFocus={() => {
+                            setLab("");
+                          }}
+                        />
+                      </div>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                      <div>
+                        <label htmlFor="tutorialHours" className="form-label">
+                          Tutorial Hours
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="tutorialHours"
+                          aria-describedby="emailHelp"
+                          name="tutorialHours"
+                          onChange={(e) => setTutorial(e.target.value)}
+                          ref={register}
+                          value={tutorial}
+                          onFocus={() => {
+                            setTutorial("");
+                          }}
+                        />
+                      </div>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                      <div>
+                        <label htmlFor="evaluationHours" className="form-label">
+                          Evaluation Hours
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="evaluationHours"
+                          aria-describedby="emailHelp"
+                          name="evaluationHours"
+                          onChange={(e) => setEvaluation(e.target.value)}
+                          ref={register}
+                          value={evaluation}
+                          onFocus={() => {
+                            setEvaluation("");
                           }}
                         />
                       </div>
@@ -472,7 +463,6 @@ const SubjectAction: React.FC<LecturersActionProps> = (props) => {
                 </form>
               </DialogContent>
             </Dialog>
-
             {removeStatus === "loading" && <CircularProgress size={25} />}
             {showMenuButton && (
               <IconButton {...bindTrigger(popupState)}>
@@ -485,6 +475,7 @@ const SubjectAction: React.FC<LecturersActionProps> = (props) => {
                 style={{ color: "green" }}
                 onClick={() => {
                   popupState.close();
+                  console.log(props.subject);
                   handleViewOpen();
                 }}
               >
@@ -506,7 +497,7 @@ const SubjectAction: React.FC<LecturersActionProps> = (props) => {
                 onClick={() => {
                   popupState.close();
                   confirmDelete()
-                    .then(() => remove(props.lecturer._id))
+                    .then(() => remove(props.subject._id))
                     .catch((err) => {
                       console.error(err);
                     });

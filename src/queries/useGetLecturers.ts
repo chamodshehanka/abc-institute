@@ -1,6 +1,6 @@
-import { useQuery } from 'react-query';
-import { getAllLecturers, getLecturerById } from '../api/lecturers/lecturers.request';
+import { useQuery } from "react-query";
+import { getAllLecturers } from "../api/lecturers/lecturers.request";
 
 export function useGetLecturers() {
-  return useQuery('lecturers-list', getAllLecturers);
+  return useQuery("lecturers-list", getAllLecturers);
 }

@@ -1,6 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
+import { useHistory } from "react-router-dom";
+import GroupIcon from "@material-ui/icons/Group";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function StudentHomecard() {
   const classes = useStyles();
+  const history = useHistory();
 
   return (
     <div className={classes.root}>
@@ -50,7 +53,23 @@ export default function StudentHomecard() {
         <p className={classes.text}>Programme</p>
       </Paper>
       <Paper elevation={3} className={classes.card3}>
-        <p className={classes.text}>Student Group</p>
+        <h3 className={classes.text}>Student Group</h3>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            marginTop: 40,
+          }}
+        >
+          <button
+            onClick={() => {
+              history.push("group-screen");
+            }}
+          >
+            <GroupIcon htmlColor="#f5f5f5" style={{ fontSize: 50 }} />
+          </button>
+        </div>
       </Paper>
     </div>
   );
