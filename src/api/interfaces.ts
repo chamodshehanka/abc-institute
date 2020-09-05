@@ -141,3 +141,26 @@ export interface LecturerUpdateData {
   level: number;
   rank: string;
 }
+
+export interface SubjectUpdateData {
+  _id: string;
+  subjectName: string;
+  subjectCode: string;
+  offeredYear: string;
+  offeredSemester: string;
+  lectureHours: string;
+  labHours: string;
+  tutorialHours: string;
+  evaluationHours: string;
+}
+
+export interface SubjectCreateData {
+  subjectName: string;
+  subjectCode: string;
+  offeredYear: string;
+  offeredSemester: string;
+  lectureHours: string;
+  labHours: string;
+  tutorialHours: string;
+  evaluationHours: string;
+}

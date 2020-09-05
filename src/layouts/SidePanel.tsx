@@ -21,6 +21,7 @@ import WatchLaterIcon from "@material-ui/icons/WatchLater";
 import TableChartIcon from "@material-ui/icons/TableChart";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import AvatarSection from "../components/Common/Sidebar/AvatarSection/AvatarSection";
+import BookIcon from "@material-ui/icons/LibraryBooks";
 
 interface ListItemLinkProps {
   icon?: React.ReactElement;
@@ -97,6 +98,11 @@ const SidePanel: React.FC = () => {
                 to="/manage-lecturers"
                 primary="Lecturers"
                 icon={<SupervisorAccountIcon />}
+              />
+              <ListItemLink
+                to="/manage-subjects"
+                primary="Subjects"
+                icon={<BookIcon />}
               />
               <ListItemLink
                 to="/student-home-screen"
