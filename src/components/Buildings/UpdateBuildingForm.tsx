@@ -6,24 +6,19 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import EditIcon from "@material-ui/icons/Edit";
 import TextField from "@material-ui/core/TextField";
 import { useForm } from "react-hook-form";
-import { addBuilding } from "../../api/buildings/buildings.request";
-import { BuildingsCreateData } from "../../api/interfaces";
+import { updateBuilding } from "../../api/buildings/buildings.request";
+import { BuildingUpdateData } from "../../api/interfaces";
 
-export interface EditRoomProps {
+export interface UpdateBuildingFormProps {
   buildingName: string;
-  roomName: string;
 }
 
-const EditRoom: React.SFC<EditRoomProps> = ({
+const UpdateBuildingForm: React.SFC<UpdateBuildingFormProps> = ({
   buildingName,
-  roomName,
-}: EditRoomProps) => {
+}: UpdateBuildingFormProps) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -36,6 +31,16 @@ const EditRoom: React.SFC<EditRoomProps> = ({
 
   const onSubmit = (data) => {
     console.log(data);
+    const buidling: BuildingUpdateData = {
+      _id: data?.id,
+      name: data?.name,
+    };
+
+    updateBuilding(buidling)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
   };
 
   const { register, handleSubmit, reset } = useForm();
@@ -46,7 +51,6 @@ const EditRoom: React.SFC<EditRoomProps> = ({
         onClick={handleClickOpen}
         style={{
           float: "right",
-          fontSize: "20",
         }}
       />
 
@@ -60,37 +64,18 @@ const EditRoom: React.SFC<EditRoomProps> = ({
           id="max-width-dialog-title"
           style={{ textAlign: "center" }}
         >
-          Edit Room
+          Edit Building
         </DialogTitle>
         <DialogContent>
+          <DialogContentText>Building Name</DialogContentText>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            <DialogContentText>Building Name: {buildingName}</DialogContentText>
-            <RadioGroup
-              row
-              aria-label="position"
-              name="position"
-              defaultValue="top"
-            >
-              <FormControlLabel
-                value="Lecture Hall"
-                control={<Radio color="primary" />}
-                label="Lecture Hall"
-                checked
-              />
-              <FormControlLabel
-                value="Laboratory"
-                control={<Radio color="primary" />}
-                label="Laboratory"
-              />
-            </RadioGroup>
-            <DialogContentText>Room Name</DialogContentText>
             <TextField
               name="building"
               inputRef={register}
               variant="outlined"
               fullWidth
               margin="dense"
-              placeholder={roomName}
+              placeholder={buildingName}
             ></TextField>
             <DialogActions>
               <Button type="submit" color="primary">
@@ -107,4 +92,4 @@ const EditRoom: React.SFC<EditRoomProps> = ({
   );
 };
 
-export default EditRoom;
+export default UpdateBuildingForm;

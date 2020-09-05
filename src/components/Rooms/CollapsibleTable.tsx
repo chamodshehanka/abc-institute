@@ -73,10 +73,13 @@ const CollapsibleTable: React.SFC<CollapsibleTableProps> = ({
                     <TableRow>
                       <TableCell>{r?.name}</TableCell>
                       <TableCell>
-                        <EditRoom />
+                        <EditRoom
+                          buildingName={building.name}
+                          roomName={r.name}
+                        />
                       </TableCell>
                       <TableCell>
-                        <DeleteRoom _id={r._id}/>
+                        <DeleteRoom _id={r._id} />
                       </TableCell>
                     </TableRow>
                   ))}

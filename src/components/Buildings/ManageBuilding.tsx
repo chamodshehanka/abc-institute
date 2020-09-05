@@ -9,7 +9,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
-//import UpdateBuildingForm from "../../components/Buildings/UpdateBuildingForm";
+import UpdateBuildingForm from "../../components/Buildings/UpdateBuildingForm";
 import { deleteBuilding } from "../../api/buildings/buildings.request";
 import { useForm } from "react-hook-form";
 
@@ -102,7 +102,14 @@ const ManageBuilding: React.SFC<ManageBuildingProps> = ({
                     </TableCell>
 
                     <TableCell style={{ width: 100 }} align="right">
-                      {/* <UpdateBuildingForm /> */}
+                      <Button
+                        value={index}
+                        aria-controls="simple-menu"
+                        aria-haspopup="true"
+                        onClick={handleClick}
+                      >
+                        <UpdateBuildingForm buildingName={b.name} />
+                      </Button>
                     </TableCell>
                     <TableCell style={{ width: 100 }} align="right">
                       <Button
