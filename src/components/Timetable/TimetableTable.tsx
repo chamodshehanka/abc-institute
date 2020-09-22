@@ -35,7 +35,7 @@ function filterData(tableData: Timetable[], searchText = "") {
   );
 }
 
-const TimetableTable: React.SFC<TimetableTableProps> = ({
+const TimetableTable: React.FC<TimetableTableProps> = ({
   timetables,
   searchVal,
 }: TimetableTableProps) => {
@@ -54,8 +54,10 @@ const TimetableTable: React.SFC<TimetableTableProps> = ({
           className="table-first-cell-padded"
         >
           <TableHead>
-            <TableCell style={{ fontFamily: "Varela Round" }}>Name</TableCell>
-            <TableCell></TableCell>
+            <TableRow>
+              <TableCell style={{ fontFamily: "Varela Round" }}>Name</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
           </TableHead>
 
           <TableBody>

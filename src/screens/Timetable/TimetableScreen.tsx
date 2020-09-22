@@ -7,7 +7,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import SearchIcon from "@material-ui/icons/Search";
 import { TableSearchInput } from "../../components/Common/TableViewComponents/TableSearchInput";
 
-const TimetableScreen: React.SFC = () => {
+const TimetableScreen: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const { data = [], status } = useGetTimetable();
 
@@ -16,7 +16,7 @@ const TimetableScreen: React.SFC = () => {
 
   return (
     <>
-      <h4 className="title">Manage Timetables</h4>
+      <h4 className="title mb-4">Manage Timetables</h4>
 
       <div className="row mb-3">
         <div className="col-1"></div>
