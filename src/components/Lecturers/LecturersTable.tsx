@@ -35,6 +35,8 @@ import { useMutation } from "react-query";
 import { useToast } from "../../hooks/useToast";
 import { useForm } from "react-hook-form";
 import { LecturerUpdateData } from "../../api/interfaces";
+import { useHistory } from "react-router-dom";
+import { useGetBuildings } from "../../queries/useGetBuildings";
 
 export interface ManageLecturerTableProps {
   lecturers: Lecturer[];
@@ -58,7 +60,7 @@ const ManageLecturersTable: React.SFC<ManageLecturerTableProps> = ({
     lecturers,
     filterData
   );
-
+  const history = useHistory();
   return (
     <>
       <TableContainer className="table-container expandable-table-container">
@@ -86,7 +88,7 @@ const ManageLecturersTable: React.SFC<ManageLecturerTableProps> = ({
                 <TableCell>{l.centre}</TableCell>
                 <TableCell style={{ width: "5rem" }}>
                   <div className="display-flex align-center justify-end">
-                    <SubjectAction lecturer={l} />
+                    <SubjectAction lecturer={l} history={history} />
                   </div>
                 </TableCell>
               </TableRow>
@@ -107,6 +109,7 @@ export default ManageLecturersTable;
 
 export interface LecturersActionProps {
   lecturer: Lecturer;
+  history: any;
 }
 
 const SubjectAction: React.FC<LecturersActionProps> = (props) => {
@@ -118,6 +121,7 @@ const SubjectAction: React.FC<LecturersActionProps> = (props) => {
   });
 
   const [view, setView] = React.useState(false);
+  const buildings = useGetBuildings().data;
   const handleViewOpen = () => {
     setView(true);
   };
@@ -170,6 +174,8 @@ const SubjectAction: React.FC<LecturersActionProps> = (props) => {
           `Lecturer ${props.lecturer.name} Succesfully Updated` || "Hi ",
           "default"
         );
+        props.history.push("manage-subjects");
+        props.history.push("manage-lecturers");
       })
       .catch((err) => {
         handleUpdateDialogClose();
@@ -188,6 +194,8 @@ const SubjectAction: React.FC<LecturersActionProps> = (props) => {
         `Lecturer ${props.lecturer.name} Removing Failed` || "Hi ",
         "default"
       );
+      props.history.push("manage-subjects");
+      props.history.push("manage-lecturers");
     },
     onSuccess() {
       displayToast(`Lecturer ${props.lecturer.name}  Removed`, "default");
@@ -399,10 +407,9 @@ const SubjectAction: React.FC<LecturersActionProps> = (props) => {
                             setBuilding("");
                           }}
                         >
-                          <option selected value="New Building">
-                            New Building
-                          </option>
-                          <option value="Main">Main</option>
+                          {buildings?.map((b: Buildings) => (
+                            <option value={b.name}>{b.name}</option>
+                          ))}
                         </select>
                       </div>
                     </Grid>

@@ -13,21 +13,21 @@ import { Alert } from "@material-ui/lab";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import SearchIcon from "@material-ui/icons/Search";
 import { TableSearchInput } from "../../components/Common/TableViewComponents/TableSearchInput";
-import ManageSubjectsTable from "../../components/Subjects/SubjectsTable";
-import { useGetSubjects } from "../../queries/useGetSubjects";
-import { SubjectCreateData } from "../../api/interfaces";
-import { addSubject } from "../../api/subjects/subjects.request";
+import ManageSessionsTable from "../../components/Sessions/SessionsTable";
+import { useGetSessions } from "../../queries/useGetSessions";
+import { SessionCreateData } from "../../api/interfaces";
+import { addSession } from "../../api/sessions/sessions.request";
 import { useForm } from "react-hook-form";
 import { useToast } from "../../hooks/useToast";
 import { useHistory } from "react-router-dom";
 
-const ManageSubjectsScreen: React.SFC = () => {
+const ManageSessionsScreen: React.SFC = () => {
   const [searchText, setSearchText] = useState("");
   const [addDialog, setAddDialog] = useState(false);
   const { register, handleSubmit, errors } = useForm();
   const displayToast = useToast();
 
-  const { data = [], status } = useGetSubjects();
+  const { data = [], status } = useGetSessions();
   const history = useHistory();
 
   const handleAddDialogOpen = () => {
@@ -39,32 +39,31 @@ const ManageSubjectsScreen: React.SFC = () => {
   };
 
   const onSubmit = (data: any) => {
-    const subject: SubjectCreateData = {
-      subjectName: data?.subjectName,
+    const session: SessionCreateData = {
+      lecturers: data?.lecturers,
+      tags: data?.tags,
+      studentGroup: data?.studentGroup,
+      subject: data?.subject,
       subjectCode: data?.subjectCode,
-      offeredYear: data?.offeredYear,
-      offeredSemester: data?.offeredSemester,
-      lectureHours: data?.lectureHours,
-      labHours: data?.labHours,
-      tutorialHours: data?.tutorialHours,
-      evaluationHours: data?.evaluationHours,
+      noOfStudents: data?.noOfStudents,
+      duration: data?.duration,
     };
 
-    addSubject(subject)
+    addSession(session)
       .then((res) => {
         console.log(res);
         handleAddDialogClose();
         displayToast(
-          `Subject ${subject.subjectCode} Succesfully Added` || "Hi ",
+          `Session ${session.subject} Succesfully Added` || "Hi ",
           "default"
         );
         history.push("manage-lecturers");
-        history.push("manage-subjects");
+        history.push("manage-sessions");
       })
       .catch((err) => {
         handleAddDialogClose();
         displayToast(
-          `Subject ${subject.subjectCode} Did Not Added` || "Hi ",
+          `Session ${session.subject} Did Not Added` || "Hi ",
           "default"
         );
         console.error(err);
@@ -76,7 +75,7 @@ const ManageSubjectsScreen: React.SFC = () => {
 
   return (
     <>
-      <h4 className="title mb-4">Manage Subject</h4>
+      <h4 className="title mb-4">Manage Sessions</h4>
 
       <div className="row mb-3">
         <div className="col-1"></div>
@@ -110,13 +109,13 @@ const ManageSubjectsScreen: React.SFC = () => {
           <Toolbar style={{ paddingLeft: 0 }}>
             <div className="container">
               {status === "error" && (
-                <Alert severity="error">Error Loading Subjects Data</Alert>
+                <Alert severity="error">Error Loading Session Data</Alert>
               )}
               {noData && (
-                <Alert severity="info">You Have No Saved Subjects.</Alert>
+                <Alert severity="info">You Have No Saved Sessions.</Alert>
               )}
               {hasData && (
-                <ManageSubjectsTable subjects={data} searchVal={searchText} />
+                <ManageSessionsTable sessions={data} searchVal={searchText} />
               )}
             </div>
           </Toolbar>
@@ -135,18 +134,18 @@ const ManageSubjectsScreen: React.SFC = () => {
             <Grid container spacing={2} className="form-row">
               <Grid item xs={6}>
                 <div>
-                  <label htmlFor="subjectName" className="form-label">
+                  <label htmlFor="subject" className="form-label">
                     Subject Name
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="subjectName"
+                    id="subject"
                     aria-describedby="emailHelp"
-                    name="subjectName"
+                    name="subject"
                     ref={register({ required: true })}
                   />
-                  {errors.subjectName && (
+                  {errors.subject && (
                     <span style={{ color: "red" }}>This Field is Required</span>
                   )}
                 </div>
@@ -172,13 +171,13 @@ const ManageSubjectsScreen: React.SFC = () => {
               </Grid>
 
               <Grid item xs={6}>
-                <label htmlFor="offeredYear" className="form-label">
-                  Offered Year
+                <label htmlFor="lecturers" className="form-label">
+                  Lecturers
                 </label>
                 <select
                   className="form-select"
-                  aria-label="offeredYear"
-                  name="offeredYear"
+                  aria-label="lecturers"
+                  name="lecturers"
                   ref={register({ required: true })}
                 >
                   <option selected value="1">
@@ -191,13 +190,13 @@ const ManageSubjectsScreen: React.SFC = () => {
               </Grid>
 
               <Grid item xs={6}>
-                <label htmlFor="offeredSemester" className="form-label">
-                  Offered Semester
+                <label htmlFor="tags" className="form-label">
+                  Tags
                 </label>
                 <select
                   className="form-select"
-                  aria-label="offeredSemester"
-                  name="offeredSemester"
+                  aria-label="tags"
+                  name="tags"
                   ref={register({ required: true })}
                 >
                   <option selected value="1">
@@ -209,18 +208,18 @@ const ManageSubjectsScreen: React.SFC = () => {
 
               <Grid item xs={6}>
                 <div>
-                  <label htmlFor="lectureHours" className="form-label">
-                    Lecture Hours
+                  <label htmlFor="group" className="form-label">
+                    Student Group
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="lectureHours"
+                    id="group"
                     aria-describedby="emailHelp"
-                    name="lectureHours"
+                    name="group"
                     ref={register({ required: true })}
                   />
-                  {errors.lectureHours && (
+                  {errors.group && (
                     <span style={{ color: "red" }}>This Field is Required</span>
                   )}
                 </div>
@@ -228,18 +227,18 @@ const ManageSubjectsScreen: React.SFC = () => {
 
               <Grid item xs={6}>
                 <div>
-                  <label htmlFor="labHours" className="form-label">
-                    Lab Hours
+                  <label htmlFor="noOfStudents" className="form-label">
+                    No of Students
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="labHours"
+                    id="noOfStudents"
                     aria-describedby="emailHelp"
-                    name="labHours"
+                    name="noOfStudents"
                     ref={register({ required: true })}
                   />
-                  {errors.labHours && (
+                  {errors.noOfStudents && (
                     <span style={{ color: "red" }}>This Field is Required</span>
                   )}
                 </div>
@@ -247,37 +246,18 @@ const ManageSubjectsScreen: React.SFC = () => {
 
               <Grid item xs={6}>
                 <div>
-                  <label htmlFor="tutorialHours" className="form-label">
-                    Tutorial Hours
+                  <label htmlFor="duration" className="form-label">
+                    Duration
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="tutorialHours"
+                    id="duration"
                     aria-describedby="emailHelp"
-                    name="tutorialHours"
+                    name="duration"
                     ref={register({ required: true })}
                   />
-                  {errors.tutorialHours && (
-                    <span style={{ color: "red" }}>This Field is Required</span>
-                  )}
-                </div>
-              </Grid>
-
-              <Grid item xs={6}>
-                <div>
-                  <label htmlFor="evaluationHours" className="form-label">
-                    Evaluation Hours
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="evaluationHours"
-                    aria-describedby="emailHelp"
-                    name="evaluationHours"
-                    ref={register({ required: true })}
-                  />
-                  {errors.evaluationHours && (
+                  {errors.duration && (
                     <span style={{ color: "red" }}>This Field is Required</span>
                   )}
                 </div>
@@ -303,4 +283,4 @@ const ManageSubjectsScreen: React.SFC = () => {
   );
 };
 
-export default ManageSubjectsScreen;
+export default ManageSessionsScreen;
