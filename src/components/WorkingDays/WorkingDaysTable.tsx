@@ -54,7 +54,7 @@ function filterData(tableData: WorkingDays[], searchText = "") {
   );
 }
 
-const ManageWorkingDaysTable: React.SFC<ManageWorkingDaysTableProps> = ({
+const ManageWorkingDaysTable: React.FC<ManageWorkingDaysTableProps> = ({
   workingDays,
   searchVal,
 }: ManageWorkingDaysTableProps) => {
