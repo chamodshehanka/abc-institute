@@ -9,6 +9,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  CircularProgress,
 } from "@material-ui/core";
 import { Timetable } from "../../models/Timetable";
 import { useFilterRows } from "../Common/TableViewComponents/useFilterData";
@@ -21,6 +22,10 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import PrintIcon from "@material-ui/icons/Print";
+import { useToast } from "../../hooks/useToast";
+import { useDeletePrompt } from "../Common/DeletePrompt/DeletePrompt";
+import { useMutation } from "react-query";
+import { deleteTimetable } from "../../api/timetable/timetable.request";
 
 export interface TimetableTableProps {
   timetables: Timetable[];
@@ -91,17 +96,40 @@ export interface TimetableActionProps {
 }
 
 const TimetableAction: React.FC<TimetableActionProps> = (props) => {
+  const displayToast = useToast();
+  // const history = useHistory();
+
+  const confirmDelete = useDeletePrompt({
+    resourceType: "timetable",
+    textType: "name",
+    textToMatch: props.timetable.name,
+  });
+
+  const [remove, { status: removeStatus }] = useMutation(deleteTimetable, {
+    onError() {
+      displayToast(
+        `Timetable ${props.timetable.name} remove failed`,
+        "default"
+      );
+    },
+    onSuccess() {
+      displayToast(`Working Days ${props.timetable.name}  removed`, "default");
+    },
+  });
+
+  const showMenuButton = removeStatus === "error" || removeStatus === "idle";
+
   return (
     <>
       <PopupState variant="popover" popupId="demo-popup-menu">
         {(popupState) => (
           <>
-            {/* {removeStatus === "loading" && <CircularProgress size={25} />} */}
-            {
+            {removeStatus === "loading" && <CircularProgress size={25} />}
+            {showMenuButton && (
               <IconButton {...bindTrigger(popupState)}>
                 <MoreVertIcon />
               </IconButton>
-            }
+            )}
 
             <Menu {...bindMenu(popupState)}>
               <MenuItem style={{ color: "green" }}>
@@ -129,11 +157,11 @@ const TimetableAction: React.FC<TimetableActionProps> = (props) => {
                 style={{ color: "red" }}
                 onClick={() => {
                   popupState.close();
-                  // confirmDelete()
-                  //   .then(() => remove(props.workingDays._id))
-                  //   .catch((err) => {
-                  //     console.error(err);
-                  //   });
+                  confirmDelete()
+                    .then(() => remove(props.timetable._id))
+                    .catch((err) => {
+                      console.error(err);
+                    });
                 }}
               >
                 <DeleteIcon style={{ color: "red" }} />
