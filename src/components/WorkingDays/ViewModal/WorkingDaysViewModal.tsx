@@ -29,7 +29,7 @@ export interface WorkingDaysViewModalProps {
   workingDays: WorkingDays;
 }
 
-const WorkingDaysViewModal: React.SFC<WorkingDaysViewModalProps> = ({
+const WorkingDaysViewModal: React.FC<WorkingDaysViewModalProps> = ({
   isOpen,
   onClose,
   workingDays,
