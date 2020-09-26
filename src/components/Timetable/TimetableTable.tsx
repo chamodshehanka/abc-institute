@@ -26,6 +26,7 @@ import { useToast } from "../../hooks/useToast";
 import { useDeletePrompt } from "../Common/DeletePrompt/DeletePrompt";
 import { useMutation } from "react-query";
 import { deleteTimetable } from "../../api/timetable/timetable.request";
+import TimetableViewModal from "./TimetableViewModal/TimetableViewModal";
 
 export interface TimetableTableProps {
   timetables: Timetable[];
@@ -98,6 +99,15 @@ export interface TimetableActionProps {
 const TimetableAction: React.FC<TimetableActionProps> = (props) => {
   const displayToast = useToast();
   // const history = useHistory();
+  const [openView, setOpenView] = React.useState(false);
+
+  const handleViewClose = () => {
+    setOpenView(false);
+  };
+
+  const handleViewOpen = () => {
+    setOpenView(true);
+  };
 
   const confirmDelete = useDeletePrompt({
     resourceType: "timetable",
@@ -132,7 +142,13 @@ const TimetableAction: React.FC<TimetableActionProps> = (props) => {
             )}
 
             <Menu {...bindMenu(popupState)}>
-              <MenuItem style={{ color: "green" }}>
+              <MenuItem
+                onClick={() => {
+                  popupState.close();
+                  handleViewOpen();
+                }}
+                style={{ color: "green" }}
+              >
                 <VisibilityIcon style={{ color: "green" }} /> View
               </MenuItem>
               <MenuItem style={{ color: "blue" }}>
@@ -171,6 +187,12 @@ const TimetableAction: React.FC<TimetableActionProps> = (props) => {
           </>
         )}
       </PopupState>
+
+      <TimetableViewModal
+        timetable={props.timetable}
+        isOpen={openView}
+        onClose={handleViewClose}
+      />
     </>
   );
 };
