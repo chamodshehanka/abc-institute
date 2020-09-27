@@ -17,6 +17,9 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import AddRoom from "../../components/Rooms/AddRoom";
 import EditRoom from "../../components/Rooms/EditRoom";
 import DeleteRoom from "../../components/Rooms/DeleteRoom";
+import UpdateBuildingForm from "../../components/Buildings/UpdateBuildingForm";
+import DeleteBuildingForm from "../../components/Buildings/DeleteBuildingForm";
+
 export interface CollapsibleTableProps {
   building: Buildings;
   rooms: Rooms[];
@@ -35,7 +38,9 @@ const CollapsibleTable: React.SFC<CollapsibleTableProps> = ({
   rooms,
 }: CollapsibleTableProps) => {
   const [open, setOpen] = React.useState(false);
+
   const classes = useRowStyles();
+
   return (
     <>
       <TableRow className={classes.root}>
@@ -51,6 +56,18 @@ const CollapsibleTable: React.SFC<CollapsibleTableProps> = ({
 
         <TableCell component="th" scope="row">
           {building?.name}
+        </TableCell>
+        <TableCell>
+          <UpdateBuildingForm
+            buildingName={building.name}
+            buildingID={building._id}
+          />
+        </TableCell>
+        <TableCell>
+          <DeleteBuildingForm
+            buildingName={building.name}
+            buildingID={building._id}
+          />
         </TableCell>
         <TableCell style={{ width: 200 }} align="right">
           <AddRoom buildingName={building.name} />
@@ -76,6 +93,7 @@ const CollapsibleTable: React.SFC<CollapsibleTableProps> = ({
                         <EditRoom
                           buildingName={building.name}
                           roomName={r.name}
+                          roomID={r._id}
                         />
                       </TableCell>
                       <TableCell>
