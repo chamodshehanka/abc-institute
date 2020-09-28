@@ -49,12 +49,13 @@ const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
   const location = useLocation();
 
   const [update, setUpdate] = React.useState(false);
+  const [programmes, selectprogramme] = React.useState(Object);
 
   const [editTags] = useState<Programme | undefined>(() => {
     return location?.state as Programme | undefined;
   });
 
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, errors } = useForm({
     defaultValues: editTags,
   });
 
@@ -115,6 +116,7 @@ const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
                 <TableCell align="right">
                   <Button
                     onClick={() => {
+                      selectprogramme(w);
                       handleUpdateOpen();
                     }}
                   >
@@ -152,15 +154,19 @@ const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
                   type="hidden"
                   name="_id"
                   ref={register}
-                  value="5f52cf32bfc0d633b8edc37d"
+                  value={programmes._id}
                 />
                 <input
                   type="text"
                   className="form-control"
                   id="name"
                   name="name"
-                  ref={register}
+                  placeholder={programmes.name}
+                  ref={register({ required: true })}
                 />
+                {errors.name && (
+                  <span style={{ color: "red" }}>This Field is Required</span>
+                )}
                 <div className="align-right" style={{ alignContent: "right" }}>
                   <button type="submit" className="btn btn-primary btn-abc">
                     Save

@@ -69,7 +69,7 @@ const ProgrammeScreen: React.SFC = () => {
   const { data = [] } = useGetProgramme();
 
   const classes = useStyles();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, errors } = useForm();
   const history = useHistory();
 
   const [open, setOpen] = React.useState(false);
@@ -103,9 +103,7 @@ const ProgrammeScreen: React.SFC = () => {
         <CssBaseline />
         <Container>
           <h3 style={{ textAlign: "center" }}>Student management</h3>
-          <h5 style={{ marginTop: 50, paddingLeft: 30 }}>
-            Acedemic year & Semester
-          </h5>
+          <h5 style={{ marginTop: 50, paddingLeft: 30 }}>Programmes</h5>
           <hr style={{ width: 1000, borderWidth: 10, marginLeft: 60 }} />
           <ClickAwayListener onClickAway={handleClickAway}>
             <div
@@ -171,8 +169,13 @@ const ProgrammeScreen: React.SFC = () => {
                                 placeholder="Programme Name"
                                 style={{ width: 300, height: 30 }}
                                 name="name"
-                                ref={register}
+                                ref={register({ required: true })}
                               />
+                              {errors.name && (
+                                <span style={{ color: "red" }}>
+                                  This Field is Required
+                                </span>
+                              )}
                             </div>
                             <div style={{ marginTop: 15 }}>
                               <button
