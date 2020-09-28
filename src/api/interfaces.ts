@@ -202,3 +202,24 @@ export interface SubjectCreateData {
   tutorialHours: string;
   evaluationHours: string;
 }
+
+export interface SessionUpdateData {
+  _id: string;
+  lecturers: string[];
+  tags: string;
+  studentGroup: string;
+  subject: string;
+  subjectCode: string;
+  noOfStudents: number;
+  duration: number;
+}
+
+export interface SessionCreateData {
+  lecturers: string[];
+  tags: string;
+  studentGroup: string;
+  subject: string;
+  subjectCode: string;
+  noOfStudents: number;
+  duration: number;
+}

@@ -7,7 +7,6 @@ import GroupIcon from "@material-ui/icons/Group";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -69,7 +68,6 @@ export default function StudentHomecard() {
         </div>
       </Paper>
 
-
       <Paper elevation={3} className={classes.card2}>
         <h3 className={classes.text}>Programme</h3>
         <div
@@ -89,7 +87,6 @@ export default function StudentHomecard() {
           </Button>
         </div>
       </Paper>
-
 
       <Paper elevation={3} className={classes.card3}>
         <h3 className={classes.text}>Student Group</h3>
