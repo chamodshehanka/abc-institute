@@ -64,10 +64,7 @@ const CollapsibleTable: React.SFC<CollapsibleTableProps> = ({
           />
         </TableCell>
         <TableCell>
-          <DeleteBuildingForm
-            buildingName={building.name}
-            buildingID={building._id}
-          />
+          <DeleteBuildingForm buildingID={building._id} />
         </TableCell>
         <TableCell style={{ width: 200 }} align="right">
           <AddRoom buildingName={building.name} />

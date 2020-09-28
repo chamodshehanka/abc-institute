@@ -1,5 +1,4 @@
 import React from "react";
-//import ManageBuilding from "../../components/Buildings/ManageBuilding";
 import ManageRooms from "../../components/Rooms/ManageRooms";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
