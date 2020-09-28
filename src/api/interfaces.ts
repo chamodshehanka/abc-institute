@@ -120,6 +120,14 @@ export interface TagsUpdateData {
   name: string;
 }
 
+export interface GenerateGroupIdCreateData {
+  groupId: string;
+}
+
+export interface GenerateSubGroupIdCreateData {
+  groupId: string;
+}
+
 export interface BuildingsCreateData {
   name: string;
 }

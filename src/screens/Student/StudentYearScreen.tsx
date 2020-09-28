@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
 
 const StudentYearScreen: React.SFC = () => {
   const { data = [] } = useGetYearSemester();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, errors } = useForm();
 
   const classes = useStyles();
   const history = useHistory();
@@ -171,19 +171,29 @@ const StudentYearScreen: React.SFC = () => {
                                 placeholder="Academic Year"
                                 style={{ width: 250, height: 30 }}
                                 name="year"
-                                ref={register}
+                                ref={register({ required: true })}
                               />
+                              {errors.year && (
+                                <span style={{ color: "red" }}>
+                                  This Field is Required
+                                </span>
+                              )}
+                              <br /> <br />
                               <input
                                 id="semester"
                                 name="semester"
                                 style={{
                                   width: 250,
-                                  marginLeft: 30,
                                   height: 30,
                                 }}
                                 placeholder="Semester"
-                                ref={register}
+                                ref={register({ required: true })}
                               />
+                              {errors.semester && (
+                                <span style={{ color: "red" }}>
+                                  This Field is Required
+                                </span>
+                              )}
                             </div>
                             <div style={{ marginTop: 15 }}>
                               <button

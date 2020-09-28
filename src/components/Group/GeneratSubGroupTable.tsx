@@ -1,5 +1,5 @@
 import React from "react";
-import { SubGroup } from "../../models/SubGroup";
+import { GenerateSubGroupId } from "../../models/GenerateSubGroupId";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -9,15 +9,14 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
-import { deleteSubGroup } from "../../api/student/subGroup.request";
+import { deleteGenerateSubGroupId } from "../../api/student/GenerateSubGroupId.request";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   table: {
     width: 600,
-    borderTopWidth: 0.4,
+    borderTopWidth: 0.1,
     borderColor: "#cccccc",
     borderStyle: "solid",
   },
@@ -29,22 +28,22 @@ const useStyles = makeStyles({
   },
 });
 
-export interface ManageSubGroupProps {
-  subgroup: SubGroup[];
+export interface ManageGenerateSubGroupProps {
+  generatesubgroup: GenerateSubGroupId[];
 }
 
-const ManageSubGroupTable: React.SFC<ManageSubGroupProps> = ({
-  subgroup,
-}: ManageSubGroupProps) => {
+const ManageGenerateSubGroupTable: React.SFC<ManageGenerateSubGroupProps> = ({
+  generatesubgroup,
+}: ManageGenerateSubGroupProps) => {
   const classes = useStyles();
   const history = useHistory();
 
   const handleDeleteAction = (e) => {
-    deleteSubGroup(e)
+    deleteGenerateSubGroupId(e)
       .then((res) => {
         console.log(res);
         history.push("student-home-screen");
-        history.push("group-screen");
+        history.push("subgroup-screen");
       })
       .catch((err) => console.error(err));
   };
@@ -56,10 +55,7 @@ const ManageSubGroupTable: React.SFC<ManageSubGroupProps> = ({
           <TableHead>
             <TableRow>
               <TableCell className={classes.tablerow}>
-                SubGroup Number
-              </TableCell>
-              <TableCell className={classes.tablerow} align="right">
-                Edit
+                Generated Sub Group Id
               </TableCell>
               <TableCell className={classes.tablerow} align="right">
                 Delete
@@ -67,15 +63,10 @@ const ManageSubGroupTable: React.SFC<ManageSubGroupProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {subgroup.map((w: SubGroup) => (
+            {generatesubgroup.map((w: GenerateSubGroupId) => (
               <TableRow key={w._id}>
                 <TableCell component="th" scope="row">
-                  {w.number}
-                </TableCell>
-                <TableCell align="right">
-                  <Button>
-                    <EditIcon />
-                  </Button>
+                  {w.groupId}
                 </TableCell>
                 <TableCell align="right">
                   {" "}
@@ -92,4 +83,4 @@ const ManageSubGroupTable: React.SFC<ManageSubGroupProps> = ({
   );
 };
 
-export default ManageSubGroupTable;
+export default ManageGenerateSubGroupTable;

@@ -54,7 +54,7 @@ const ManageTagsTable: React.SFC<ManageTagsProps> = ({
     return location?.state as Tags | undefined;
   });
 
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, errors } = useForm({
     defaultValues: editTags,
   });
 
@@ -160,9 +160,12 @@ const ManageTagsTable: React.SFC<ManageTagsProps> = ({
                   className="form-control"
                   id="name"
                   name="name"
-                  value={tag.name}
-                  ref={register}
+                  placeholder={tag.name}
+                  ref={register({ required: true })}
                 />
+                {errors.name && (
+                  <span style={{ color: "red" }}>This Field is Required</span>
+                )}
                 <div className="align-right" style={{ alignContent: "right" }}>
                   <button type="submit" className="btn btn-primary btn-abc">
                     Save

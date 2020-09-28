@@ -69,7 +69,7 @@ const TagsScreen: React.SFC = () => {
   const { data = [] } = useGetTags();
 
   const classes = useStyles();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, errors } = useForm();
   const history = useHistory();
 
   const [open, setOpen] = React.useState(false);
@@ -169,8 +169,13 @@ const TagsScreen: React.SFC = () => {
                                 placeholder="Programme Name"
                                 style={{ width: 300, height: 30 }}
                                 name="name"
-                                ref={register}
+                                ref={register({ required: true })}
                               />
+                              {errors.name && (
+                                <span style={{ color: "red" }}>
+                                  This Field is Required
+                                </span>
+                              )}
                             </div>
                             <div style={{ marginTop: 15 }}>
                               <button

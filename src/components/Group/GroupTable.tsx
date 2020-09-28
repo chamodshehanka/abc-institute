@@ -16,7 +16,7 @@ import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   table: {
-    width: 500,
+    width: 600,
     borderTopWidth: 0.1,
     borderColor: "#cccccc",
     borderStyle: "solid",
@@ -52,7 +52,7 @@ const ManageGroupTable: React.SFC<ManageGroupProps> = ({
   return (
     <>
       <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
+        <Table className={classes.table} size="small" aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell className={classes.tablerow}>Group Number</TableCell>
