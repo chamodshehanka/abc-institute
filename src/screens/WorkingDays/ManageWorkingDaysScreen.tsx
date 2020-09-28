@@ -8,7 +8,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import SearchIcon from "@material-ui/icons/Search";
 import { TableSearchInput } from "../../components/Common/TableViewComponents/TableSearchInput";
 
-const ManageWorkingDaysScreen: React.SFC = () => {
+const ManageWorkingDaysScreen: React.FC = () => {
   const [searchText, setSearchText] = useState("");
 
   const { data = [], status } = useGetWorkingDays();
