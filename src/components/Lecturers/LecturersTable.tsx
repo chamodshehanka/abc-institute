@@ -37,6 +37,7 @@ import { useForm } from "react-hook-form";
 import { LecturerUpdateData } from "../../api/interfaces";
 import { useHistory } from "react-router-dom";
 import { useGetBuildings } from "../../queries/useGetBuildings";
+import { Buildings } from "../../models/Buildings";
 
 export interface ManageLecturerTableProps {
   lecturers: Lecturer[];
