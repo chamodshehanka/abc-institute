@@ -119,6 +119,7 @@ export interface TagsUpdateData {
   _id: string;
   name: string;
 }
+
 export interface BuildingsCreateData {
   name: string;
 }

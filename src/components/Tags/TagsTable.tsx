@@ -1,18 +1,28 @@
-import React from "react";
-import { Tags } from "../../models/Tags";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+import { useForm } from "react-hook-form";
+
+import {
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableHead,
+  Button,
+} from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import Button from "@material-ui/core/Button";
-import { deleteTags } from "../../api/student/tags.request";
-import { useHistory } from "react-router-dom";
+import { deleteTags, updateTags } from "../../api/student/tags.request";
+import { useHistory, useLocation } from "react-router-dom";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+
+import { TagsUpdateData } from "../../api/interfaces";
+import { Tags } from "../../models/Tags";
 
 const useStyles = makeStyles({
   table: {
@@ -35,17 +45,48 @@ const ManageTagsTable: React.SFC<ManageTagsProps> = ({
 }: ManageTagsProps) => {
   const classes = useStyles();
   const history = useHistory();
+  const location = useLocation();
 
-  function refreshPage() {
-    window.location.reload(false);
-    history.push("tags-screen");
-  }
+  const [update, setUpdate] = React.useState(false);
+  const [tag, selectTag] = React.useState(Object);
+
+  const [editTags] = useState<Tags | undefined>(() => {
+    return location?.state as Tags | undefined;
+  });
+
+  const { register, handleSubmit } = useForm({
+    defaultValues: editTags,
+  });
+
+  const onSubmit = (data: any) => {
+    const Tags: TagsUpdateData = {
+      _id: data?._id as string,
+      name: data?.name,
+    };
+    console.log("values2", data);
+    updateTags(Tags)
+      .then((res) => {
+        console.log(res);
+        history.push("/student-home-screen");
+        history.push("/tags-screen");
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const handleUpdateOpen = () => {
+    setUpdate(true);
+  };
+
+  const handleUpdateClose = () => {
+    setUpdate(false);
+  };
 
   const handleDeleteAction = (e) => {
     deleteTags(e)
       .then((res) => {
         console.log(res);
-        refreshPage();
+        history.push("/student-home-screen");
+        history.push("/tags-screen");
       })
       .catch((err) => console.error(err));
   };
@@ -72,7 +113,12 @@ const ManageTagsTable: React.SFC<ManageTagsProps> = ({
                   {w.name}
                 </TableCell>
                 <TableCell align="right">
-                  <Button>
+                  <Button
+                    onClick={() => {
+                      selectTag(w);
+                      handleUpdateOpen();
+                    }}
+                  >
                     <EditIcon />
                   </Button>
                 </TableCell>
@@ -86,6 +132,56 @@ const ManageTagsTable: React.SFC<ManageTagsProps> = ({
             ))}
           </TableBody>
         </Table>
+        <Dialog
+          open={update}
+          onClose={handleUpdateClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Update Tags"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              <form
+                noValidate
+                autoComplete="off"
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <label htmlFor="txtName" className="form-label">
+                  Name
+                </label>
+                <input
+                  type="hidden"
+                  name="_id"
+                  ref={register}
+                  value={tag._id}
+                />
+                <input
+                  type="text"
+                  className="form-control"
+                  id="name"
+                  name="name"
+                  value={tag.name}
+                  ref={register}
+                />
+                <div className="align-right" style={{ alignContent: "right" }}>
+                  <button type="submit" className="btn btn-primary btn-abc">
+                    Save
+                  </button>{" "}
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-abc"
+                    onClick={() => {
+                      history.push("/student-home-screen");
+                      history.push("/tags-screen");
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
       </TableContainer>
     </>
   );
