@@ -8,8 +8,12 @@ import {
   DialogTitle,
   DialogContent,
   Grid,
+  Checkbox,
+  TextField,
 } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import { Alert, Autocomplete } from "@material-ui/lab";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import SearchIcon from "@material-ui/icons/Search";
 import { TableSearchInput } from "../../components/Common/TableViewComponents/TableSearchInput";
@@ -20,13 +24,23 @@ import { addSession } from "../../api/sessions/sessions.request";
 import { useForm } from "react-hook-form";
 import { useToast } from "../../hooks/useToast";
 import { useHistory } from "react-router-dom";
+import { useGetLecturers } from "../../queries/useGetLecturers";
+import { useGetTags } from "../../queries/useGetTags";
+import { useGetSubjects } from "../../queries/useGetSubjects";
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const ManageSessionsScreen: React.SFC = () => {
   const [searchText, setSearchText] = useState("");
   const [addDialog, setAddDialog] = useState(false);
+  const [subjectName, setSubject] = useState("");
+  const [subjectCode, setSubjectCode] = useState("");
   const { register, handleSubmit, errors } = useForm();
   const displayToast = useToast();
-
+  const lecturers = useGetLecturers().data;
+  const tags = useGetTags().data;
+  const subjects = useGetSubjects().data;
   const { data = [], status } = useGetSessions();
   const history = useHistory();
 
@@ -135,6 +149,40 @@ const ManageSessionsScreen: React.SFC = () => {
               <Grid item xs={6}>
                 <div>
                   <label htmlFor="subject" className="form-label">
+                    Subject Code
+                  </label>
+                  <select
+                    className="form-select"
+                    aria-label="subjectCode"
+                    name="subjectCode"
+                    onChange={(e) => {
+                      setSubjectCode(e.target.value);
+                      // eslint-disable-next-line no-unused-expressions
+                      subjects?.forEach((s) => {
+                        if (s.subjectCode === e.target.value) {
+                          setSubject(s.subjectName);
+                          console.log(subjectCode);
+                        }
+                      });
+                    }}
+                    ref={register({ required: true })}
+                  >
+                    <option value="">Select A Subject Code</option>
+                    {subjects?.map((s) => {
+                      return (
+                        <option value={s.subjectCode}>{s.subjectCode}</option>
+                      );
+                    })}
+                  </select>
+                  {errors.subjectCode && (
+                    <span style={{ color: "red" }}>This Field is Required</span>
+                  )}
+                </div>
+              </Grid>
+
+              <Grid item xs={6}>
+                <div>
+                  <label htmlFor="subject" className="form-label">
                     Subject Name
                   </label>
                   <input
@@ -143,6 +191,7 @@ const ManageSessionsScreen: React.SFC = () => {
                     id="subject"
                     aria-describedby="emailHelp"
                     name="subject"
+                    value={subjectName}
                     ref={register({ required: true })}
                   />
                   {errors.subject && (
@@ -151,42 +200,33 @@ const ManageSessionsScreen: React.SFC = () => {
                 </div>
               </Grid>
 
-              <Grid item xs={6}>
-                <div>
-                  <label htmlFor="subjectCode" className="form-label">
-                    Subject Code
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="subjectCode"
-                    aria-describedby="emailHelp"
-                    name="subjectCode"
-                    ref={register({ required: true })}
-                  />
-                  {errors.subjectCode && (
-                    <span style={{ color: "red" }}>This Field is Required</span>
-                  )}
-                </div>
-              </Grid>
-
-              <Grid item xs={6}>
+              <Grid item xs={12} style={{ width: "100%" }}>
                 <label htmlFor="lecturers" className="form-label">
                   Lecturers
                 </label>
-                <select
-                  className="form-select"
-                  aria-label="lecturers"
-                  name="lecturers"
-                  ref={register({ required: true })}
-                >
-                  <option selected value="1">
-                    1
-                  </option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                </select>
+                <Autocomplete
+                  fullWidth={true}
+                  multiple
+                  id="checkboxes-tags-demo"
+                  options={lecturers || []}
+                  disableCloseOnSelect
+                  getOptionLabel={(option) => option.name}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.name}
+                    </React.Fragment>
+                  )}
+                  style={{ width: 500 }}
+                  renderInput={(params) => (
+                    <TextField {...params} variant="outlined" />
+                  )}
+                />
               </Grid>
 
               <Grid item xs={6}>
@@ -199,10 +239,9 @@ const ManageSessionsScreen: React.SFC = () => {
                   name="tags"
                   ref={register({ required: true })}
                 >
-                  <option selected value="1">
-                    1
-                  </option>
-                  <option value="2">2</option>
+                  {tags?.map((t) => {
+                    return <option value={t.name}>{t.name}</option>;
+                  })}
                 </select>
               </Grid>
 
