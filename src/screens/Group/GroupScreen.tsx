@@ -17,11 +17,11 @@ import { useGetYearSemester } from "../../queries/useGetYearSemester";
 import { useGetProgramme } from "../../queries/useGetProgramme";
 import { useGenerateGroupId } from "../../queries/useGenerateGroupId";
 import { addGroup } from "../../api/student/group.requets";
+import { addGenerateGroupId } from "../../api/student/GenerateGroupId.request";
 import {
   GroupCreateData,
   GenerateGroupIdCreateData,
 } from "../../api/interfaces";
-import { addGenerateGroupId } from "../../api/student/GenerateGroupId.request";
 
 import { useHistory } from "react-router-dom";
 import SettingsIcon from "@material-ui/icons/Settings";
