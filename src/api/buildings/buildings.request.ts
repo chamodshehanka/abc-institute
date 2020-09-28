@@ -14,10 +14,7 @@ export async function addBuilding(requestData: BuildingsCreateData) {
 
 export async function updateBuilding(requestData: BuildingUpdateData) {
   try {
-    const res = await apiInstance.put(
-      "/buildings/upadte" + requestData._id,
-      requestData
-    );
+    const res = await apiInstance.put("/buildings/update", requestData);
     const apiRes = res.data;
     return apiRes.success;
   } catch (e) {

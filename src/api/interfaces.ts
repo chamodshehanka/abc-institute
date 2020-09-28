@@ -152,7 +152,7 @@ export interface RoomsUpdateData {
   _id: string;
   buildingName: string;
   roomType: boolean;
-  rooms: string[];
+  name: string;
 }
 
 export interface RoomsListResponse {

@@ -1,5 +1,4 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -12,19 +11,34 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import EditIcon from "@material-ui/icons/Edit";
 import TextField from "@material-ui/core/TextField";
 import { useForm } from "react-hook-form";
-import { addBuilding } from "../../api/buildings/buildings.request";
-import { BuildingsCreateData } from "../../api/interfaces";
+import { Rooms } from "../../models/Rooms";
+import { useHistory, useLocation } from "react-router-dom";
+import { RoomsUpdateData } from "../../api/interfaces";
+import { updateRooms } from "../../api/rooms/rooms.request";
 
 export interface EditRoomProps {
   buildingName: string;
   roomName: string;
+  roomID: string;
 }
 
 const EditRoom: React.SFC<EditRoomProps> = ({
   buildingName,
   roomName,
+  roomID,
 }: EditRoomProps) => {
   const [open, setOpen] = React.useState(false);
+
+  const history = useHistory();
+  const location = useLocation();
+
+  const [editRoom] = useState<Rooms | undefined>(() => {
+    return location?.state as Rooms | undefined;
+  });
+
+  const { register, handleSubmit } = useForm({
+    defaultValues: editRoom,
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -35,11 +49,22 @@ const EditRoom: React.SFC<EditRoomProps> = ({
   };
 
   const onSubmit = (data) => {
-    console.log(data);
+    const rooms: RoomsUpdateData = {
+      _id: roomID as string,
+      buildingName: data?.buildingName,
+      roomType: data?.roomType,
+      name: data?.name,
+    };
+    console.log("values2", rooms);
+    updateRooms(rooms)
+      .then((res) => {
+        console.log(res);
+        handleClose();
+        history.push("/student-home-screen");
+        history.push("/locations-screen");
+      })
+      .catch((err) => console.error(err));
   };
-
-  const { register, handleSubmit, reset } = useForm();
-
   return (
     <React.Fragment>
       <EditIcon
@@ -64,28 +89,37 @@ const EditRoom: React.SFC<EditRoomProps> = ({
         </DialogTitle>
         <DialogContent>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            <DialogContentText>Building Name: {buildingName}</DialogContentText>
+            <DialogContentText>Building Name: </DialogContentText>
+            <TextField
+              name="buildingName"
+              inputRef={register}
+              variant="outlined"
+              fullWidth
+              margin="dense"
+              value={buildingName}
+            ></TextField>
             <RadioGroup
               row
               aria-label="position"
-              name="position"
+              name="roomType"
               defaultValue="top"
             >
               <FormControlLabel
                 value="Lecture Hall"
                 control={<Radio color="primary" />}
                 label="Lecture Hall"
-                checked
+                inputRef={register}
               />
               <FormControlLabel
                 value="Laboratory"
                 control={<Radio color="primary" />}
                 label="Laboratory"
+                inputRef={register}
               />
             </RadioGroup>
             <DialogContentText>Room Name</DialogContentText>
             <TextField
-              name="building"
+              name="name"
               inputRef={register}
               variant="outlined"
               fullWidth

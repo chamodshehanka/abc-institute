@@ -1,12 +1,9 @@
 import React from "react";
-import ManageBuilding from "../../components/Buildings/ManageBuilding";
 import ManageRooms from "../../components/Rooms/ManageRooms";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { useGetBuildings } from "../../queries/useGetBuildings";
 import AddBuildingForm from "../../components/Buildings/AddBuildingForm";
-
-
 
 const LocationsScreen: React.SFC = () => {
   const { data = [] } = useGetBuildings();
@@ -18,7 +15,7 @@ const LocationsScreen: React.SFC = () => {
         style={{
           paddingLeft: "40px",
           paddingRight: "40px",
-          paddingTop: "10px",
+          paddingTop: "5px",
         }}
       >
         <Typography
@@ -26,7 +23,7 @@ const LocationsScreen: React.SFC = () => {
           style={{
             backgroundColor: "white",
             height: 680,
-            borderRadius: 30,
+            borderRadius: 10,
           }}
         >
           <br />
@@ -34,30 +31,17 @@ const LocationsScreen: React.SFC = () => {
             style={{
               borderStyle: "solid",
               borderColor: "black",
-              borderRadius: "30px",
+              borderRadius: "5px",
               width: "95%",
-              height: "300px",
-              marginLeft: "30px",
+              height: "630px",
+              marginLeft: "25px",
+              marginRight: "100px",
             }}
           >
             <h4 style={{ marginTop: 10, paddingLeft: 30 }}>
-              Manage Buildings <AddBuildingForm />
+              Manage Locations <AddBuildingForm />
             </h4>
-
-            <ManageBuilding buildings={data} />
-          </Container>
-          <br />
-          <Container
-            style={{
-              borderStyle: "solid",
-              borderColor: "black",
-              borderRadius: "30px",
-              width: "95%",
-              height: "300px",
-              marginLeft: "30px",
-            }}
-          >
-            <h4 style={{ marginTop: 10, paddingLeft: 30 }}>Manage Locations</h4>
+            <br />
 
             <ManageRooms buildings={data} />
           </Container>
