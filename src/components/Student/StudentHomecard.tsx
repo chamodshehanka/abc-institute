@@ -87,6 +87,7 @@ export default function StudentHomecard() {
           history.push("programme-screen");
         }}
       >
+
         <h3 className={classes.text}>Programme</h3>
         <div
           style={{
@@ -109,6 +110,7 @@ export default function StudentHomecard() {
         }}
       >
         <h3 className={classes.text}>Student Groups</h3>
+
         <div
           style={{
             display: "flex",

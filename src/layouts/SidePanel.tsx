@@ -123,7 +123,7 @@ const SidePanel: React.FC = () => {
                 icon={<LocationCityIcon />}
               />
               <ListItemLink
-                to="/manage-lecturers"
+                to="/manage-sessions"
                 primary="Sessions"
                 icon={<WatchLaterIcon />}
               />

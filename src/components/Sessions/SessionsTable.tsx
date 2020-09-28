@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import { Subject } from "../../models/Subject";
+import { Session } from "../../models/Session";
 import {
   TableContainer,
   Table,
@@ -22,9 +22,9 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import {
-  deleteSubject,
-  updateSubject,
-} from "../../api/subjects/subjects.request";
+  deleteSession,
+  updateSession,
+} from "../../api/sessions/sessions.request";
 import Alert from "@material-ui/lab/Alert";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { useFilterRows } from "../Common/TableViewComponents/useFilterData";
@@ -34,30 +34,29 @@ import { useDeletePrompt } from "../Common/DeletePrompt/DeletePrompt";
 import { useMutation } from "react-query";
 import { useToast } from "../../hooks/useToast";
 import { useForm } from "react-hook-form";
-import { SubjectUpdateData } from "../../api/interfaces";
+import { SessionUpdateData } from "../../api/interfaces";
 import { useHistory } from "react-router-dom";
 
-export interface ManageSubjectsTableProps {
-  subjects: Subject[];
+export interface ManageSessionsTableProps {
+  sessions: Session[];
   searchVal: string;
 }
 
-function filterData(tableData: Subject[], searchText = "") {
+function filterData(tableData: Session[], searchText = "") {
   if (searchText === "") return tableData;
   return tableData.filter(
     (dataObj) =>
-      dataObj.subjectName &&
-      dataObj.subjectName.toLowerCase().startsWith(searchText)
+      dataObj.subject && dataObj.subject.toLowerCase().startsWith(searchText)
   );
 }
 
-const ManageSubjectsTable: React.SFC<ManageSubjectsTableProps> = ({
-  subjects,
+const ManageSessionsTable: React.SFC<ManageSessionsTableProps> = ({
+  sessions,
   searchVal,
-}: ManageSubjectsTableProps) => {
+}: ManageSessionsTableProps) => {
   const { pageData, tableFooterProps, noMatchingItems } = useFilterRows(
     searchVal,
-    subjects,
+    sessions,
     filterData
   );
   const history = useHistory();
@@ -78,27 +77,33 @@ const ManageSubjectsTable: React.SFC<ManageSubjectsTableProps> = ({
               <TableCell style={{ fontFamily: "Varela Round" }}>
                 Subject Code
               </TableCell>
+              <TableCell style={{ fontFamily: "Varela Round" }}>Tag</TableCell>
               <TableCell style={{ fontFamily: "Varela Round" }}>
-                Offered Year
+                Group ID
               </TableCell>
               <TableCell style={{ fontFamily: "Varela Round" }}>
-                Offered Semester
+                Student Count
+              </TableCell>
+              <TableCell style={{ fontFamily: "Varela Round" }}>
+                Duration
               </TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {pageData?.map((s: Subject) => (
+            {pageData?.map((s: Session) => (
               <TableRow key={s._id} hover={true}>
                 <TableCell style={{ fontFamily: "Varela Round" }}>
-                  {s.subjectName}
+                  {s.subject}
                 </TableCell>
                 <TableCell>{s.subjectCode}</TableCell>
-                <TableCell>{s.offeredYear}</TableCell>
-                <TableCell>{s.offeredSemester}</TableCell>
+                <TableCell>{s.tags}</TableCell>
+                <TableCell>{s.studentGroup}</TableCell>
+                <TableCell>{s.noOfStudents}</TableCell>
+                <TableCell>{s.duration}</TableCell>
                 <TableCell style={{ width: "5rem" }}>
                   <div className="display-flex align-center justify-end">
-                    <SubjectAction subject={s} history={history} />
+                    <SessionAction session={s} history={history} />
                   </div>
                 </TableCell>
               </TableRow>
@@ -108,26 +113,26 @@ const ManageSubjectsTable: React.SFC<ManageSubjectsTableProps> = ({
       </TableContainer>
 
       {noMatchingItems && (
-        <Alert severity="info">No Matching Subject Found</Alert>
+        <Alert severity="info">No Matching Sessions Found</Alert>
       )}
       <TableFooterPagination {...tableFooterProps} />
     </>
   );
 };
 
-export default ManageSubjectsTable;
+export default ManageSessionsTable;
 
-export interface SubjectsActionProps {
-  subject: Subject;
+export interface SessionsActionProps {
+  session: Session;
   history: any;
 }
 
-const SubjectAction: React.FC<SubjectsActionProps> = (props) => {
+const SessionAction: React.FC<SessionsActionProps> = (props) => {
   const displayToast = useToast();
   const confirmDelete = useDeletePrompt({
-    resourceType: "Subject",
+    resourceType: "Session",
     textType: "Code",
-    textToMatch: props.subject.subjectCode,
+    textToMatch: props.session.subject,
   });
 
   const [view, setView] = React.useState(false);
@@ -150,64 +155,63 @@ const SubjectAction: React.FC<SubjectsActionProps> = (props) => {
     setUpdateDialog(false);
   };
 
-  const [name, setName] = useState(props.subject.subjectName);
-  const [code, setCode] = useState(props.subject.subjectCode);
-  const [year, setYear] = useState(props.subject.offeredYear);
-  const [semester, setSemester] = useState(props.subject.offeredSemester);
-  const [lecture, setLecture] = useState(props.subject.lectureHours);
-  const [lab, setLab] = useState(props.subject.labHours);
-  const [tutorial, setTutorial] = useState(props.subject.tutorialHours);
-  const [evaluation, setEvaluation] = useState(props.subject.evaluationHours);
+  const [name, setSubject] = useState(props.session.subject);
+  const [code, setSubjectCode] = useState(props.session.subjectCode);
+  const [lecturers, setLecturers] = useState(props.session.lecturers);
+  const [group, setStudentGroup] = useState(props.session.studentGroup);
+  const [duration, setDuration] = useState(props.session.duration);
+  const [noOfStudents, setNoOfStudents] = useState(props.session.noOfStudents);
+  const [tags, setTags] = useState(props.session.tags);
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [id, setId] = useState(props.subject._id);
+  const [id, setId] = useState(props.session._id);
 
   const onSubmit = (data: any) => {
     console.log(data);
-    const subject: SubjectUpdateData = {
+    const session: SessionUpdateData = {
       _id: id,
-      subjectName: data?.subjectName,
+      lecturers: data?.lecturers,
+      tags: data?.tags,
+      studentGroup: data?.studentGroup,
+      subject: data?.subject,
       subjectCode: data?.subjectCode,
-      offeredYear: data?.offeredYear,
-      offeredSemester: data?.offeredSemester,
-      lectureHours: data?.lectureHours,
-      labHours: data?.labHours,
-      tutorialHours: data?.tutorialHours,
-      evaluationHours: data?.evaluationHours,
+      noOfStudents: data?.noOfStudents,
+      duration: data?.duration,
     };
 
-    updateSubject(subject)
+    updateSession(session)
       .then((res) => {
         console.log(res);
         handleUpdateDialogClose();
         displayToast(
-          `Subject ${props.subject.subjectCode} Succesfully Updated` || "Hi ",
+          `Session ${props.session.subject} Succesfully Updated` || "Hi ",
           "default"
         );
         props.history.push("manage-lecturers");
-        props.history.push("manage-subjects");
+        props.history.push("manage-sessions");
       })
       .catch((err) => {
         handleUpdateDialogClose();
         displayToast(
-          `Subject ${props.subject.subjectCode} Updation Failed` || "Hi ",
+          `Session ${props.session.subject} Updation Failed` || "Hi ",
           "default"
         );
         console.error(err);
       });
   };
 
-  const [remove, { status: removeStatus }] = useMutation(deleteSubject, {
+  const [remove, { status: removeStatus }] = useMutation(deleteSession, {
     onError() {
       console.log("errrrrrrrr");
       displayToast(
-        `Subject ${props.subject.subjectCode} Removing Failed` || "Hi ",
+        `Session ${props.session.subject} Removing Failed` || "Hi ",
         "default"
       );
       props.history.push("manage-lecturers");
-      props.history.push("manage-subjects");
+      props.history.push("manage-sessions");
     },
     onSuccess() {
-      displayToast(`Subject ${props.subject.subjectCode}  Removed`, "default");
+      displayToast(`Session ${props.session.subject}  Removed`, "default");
     },
   });
 
@@ -225,46 +229,19 @@ const SubjectAction: React.FC<SubjectsActionProps> = (props) => {
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle id="alert-dialog-title">
-                {"Subject Details"}
+                {"Session Details"}
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  <Table aria-label="simple table">
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>Subject Name</TableCell>
-                        <TableCell>{props.subject.subjectName}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Subject Code</TableCell>
-                        <TableCell>{props.subject.subjectCode}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Offered Year</TableCell>
-                        <TableCell>{props.subject.offeredYear}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Offered Semester</TableCell>
-                        <TableCell>{props.subject.offeredSemester}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Lecture Hours</TableCell>
-                        <TableCell>{props.subject.lectureHours}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Lab Hours</TableCell>
-                        <TableCell>{props.subject.labHours}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Tutorial Hours</TableCell>
-                        <TableCell>{props.subject.tutorialHours}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Evaluation Hours</TableCell>
-                        <TableCell>{props.subject.evaluationHours}</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
+                  <h4>{props.session.lecturers.map((l) => l + ", ")}</h4>
+                  <h4>
+                    {props.session.subject}({props.session.subjectCode})
+                  </h4>
+                  <h4>{props.session.tags}</h4>
+                  <h4>{props.session.studentGroup}</h4>
+                  <h4>
+                    {props.session.noOfStudents}({props.session.duration})
+                  </h4>
                 </DialogContentText>
               </DialogContent>
             </Dialog>
@@ -290,17 +267,17 @@ const SubjectAction: React.FC<SubjectsActionProps> = (props) => {
                         <input
                           type="text"
                           className="form-control"
-                          id="subjectName"
+                          id="subject"
                           aria-describedby="emailHelp"
-                          name="subjectName"
-                          onChange={(e) => setName(e.target.value)}
+                          name="subject"
+                          onChange={(e) => setSubject(e.target.value)}
                           ref={register({ required: true })}
                           value={name}
                           onFocus={() => {
-                            setName("");
+                            setSubject("");
                           }}
                         />
-                        {errors.subjectName && (
+                        {errors.subject && (
                           <span style={{ color: "red" }}>
                             This Field is Required
                           </span>
@@ -319,11 +296,11 @@ const SubjectAction: React.FC<SubjectsActionProps> = (props) => {
                           id="subjectCode"
                           aria-describedby="emailHelp"
                           name="subjectCode"
-                          onChange={(e) => setCode(e.target.value)}
+                          onChange={(e) => setSubjectCode(e.target.value)}
                           ref={register({ required: true })}
                           value={code}
                           onFocus={() => {
-                            setCode("");
+                            setSubjectCode("");
                           }}
                         />
                         {errors.subjectCode && (
@@ -335,18 +312,18 @@ const SubjectAction: React.FC<SubjectsActionProps> = (props) => {
                     </Grid>
 
                     <Grid item xs={6}>
-                      <label htmlFor="offeredYear" className="form-label">
-                        Offered Year
+                      <label htmlFor="lecturers" className="form-label">
+                        Lecturers
                       </label>
                       <select
                         className="form-select"
-                        aria-label="offeredYear"
-                        name="offeredYear"
-                        onChange={(e) => setYear(e.target.value)}
+                        aria-label="lecturers"
+                        name="lecturers"
+                        onChange={(e) => setLecturers([])}
                         ref={register({ required: true })}
-                        value={year}
+                        value={lecturers}
                         onFocus={() => {
-                          setYear("");
+                          setLecturers([]);
                         }}
                       >
                         <option selected value="1">
@@ -356,7 +333,7 @@ const SubjectAction: React.FC<SubjectsActionProps> = (props) => {
                         <option value="3">3</option>
                         <option value="4">4</option>
                       </select>
-                      {errors.offeredYear && (
+                      {errors.lecturers && (
                         <span style={{ color: "red" }}>
                           This Field is Required
                         </span>
@@ -364,18 +341,18 @@ const SubjectAction: React.FC<SubjectsActionProps> = (props) => {
                     </Grid>
 
                     <Grid item xs={6}>
-                      <label htmlFor="offeredSemester" className="form-label">
-                        Offered Semester
+                      <label htmlFor="tags" className="form-label">
+                        Tags
                       </label>
                       <select
                         className="form-select"
-                        aria-label="offeredSemester"
-                        name="offeredSemester"
-                        onChange={(e) => setSemester(e.target.value)}
+                        aria-label="tags"
+                        name="tags"
+                        onChange={(e) => setTags(e.target.value)}
                         ref={register({ required: true })}
-                        value={semester}
+                        value={tags}
                         onFocus={() => {
-                          setSemester("");
+                          setTags("");
                         }}
                       >
                         <option selected value="1">
@@ -392,23 +369,23 @@ const SubjectAction: React.FC<SubjectsActionProps> = (props) => {
 
                     <Grid item xs={6}>
                       <div>
-                        <label htmlFor="lectureHours" className="form-label">
-                          Lecture Hours
+                        <label htmlFor="student group" className="form-label">
+                          Student Group
                         </label>
                         <input
                           type="text"
                           className="form-control"
-                          id="lectureHours"
+                          id="studentGroup"
                           aria-describedby="emailHelp"
-                          name="lectureHours"
-                          onChange={(e) => setLecture(e.target.value)}
+                          name="studentGroup"
+                          onChange={(e) => setStudentGroup(e.target.value)}
                           ref={register({ required: true })}
-                          value={lecture}
+                          value={group}
                           onFocus={() => {
-                            setLecture("");
+                            setStudentGroup("");
                           }}
                         />
-                        {errors.lectureHours && (
+                        {errors.studentGroup && (
                           <span style={{ color: "red" }}>
                             This Field is Required
                           </span>
@@ -418,23 +395,25 @@ const SubjectAction: React.FC<SubjectsActionProps> = (props) => {
 
                     <Grid item xs={6}>
                       <div>
-                        <label htmlFor="labHours" className="form-label">
-                          Lab Hours
+                        <label htmlFor="noOfStudents" className="form-label">
+                          No of Students
                         </label>
                         <input
                           type="text"
                           className="form-control"
-                          id="labHours"
+                          id="noOfStudents"
                           aria-describedby="emailHelp"
-                          name="labHours"
-                          onChange={(e) => setLab(e.target.value)}
+                          name="noOfStudents"
+                          onChange={(e) =>
+                            setNoOfStudents(parseInt(e.target.value))
+                          }
                           ref={register({ required: true })}
-                          value={lab}
+                          value={noOfStudents}
                           onFocus={() => {
-                            setLab("");
+                            setNoOfStudents(0);
                           }}
                         />
-                        {errors.labHours && (
+                        {errors.noOfStudents && (
                           <span style={{ color: "red" }}>
                             This Field is Required
                           </span>
@@ -444,49 +423,25 @@ const SubjectAction: React.FC<SubjectsActionProps> = (props) => {
 
                     <Grid item xs={6}>
                       <div>
-                        <label htmlFor="tutorialHours" className="form-label">
-                          Tutorial Hours
+                        <label htmlFor="duration" className="form-label">
+                          Duration
                         </label>
                         <input
-                          type="text"
+                          type="number"
                           className="form-control"
-                          id="tutorialHours"
+                          id="duration"
                           aria-describedby="emailHelp"
-                          name="tutorialHours"
-                          onChange={(e) => setTutorial(e.target.value)}
+                          name="duration"
+                          onChange={(e) =>
+                            setDuration(parseInt(e.target.value))
+                          }
                           ref={register({ required: true })}
-                          value={tutorial}
+                          value={duration}
                           onFocus={() => {
-                            setTutorial("");
+                            setDuration(0);
                           }}
                         />
-                        {errors.tutorialHours && (
-                          <span style={{ color: "red" }}>
-                            This Field is Required
-                          </span>
-                        )}
-                      </div>
-                    </Grid>
-
-                    <Grid item xs={6}>
-                      <div>
-                        <label htmlFor="evaluationHours" className="form-label">
-                          Evaluation Hours
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="evaluationHours"
-                          aria-describedby="emailHelp"
-                          name="evaluationHours"
-                          onChange={(e) => setEvaluation(e.target.value)}
-                          ref={register({ required: true })}
-                          value={evaluation}
-                          onFocus={() => {
-                            setEvaluation("");
-                          }}
-                        />
-                        {errors.evaluationHours && (
+                        {errors.duration && (
                           <span style={{ color: "red" }}>
                             This Field is Required
                           </span>
@@ -521,7 +476,7 @@ const SubjectAction: React.FC<SubjectsActionProps> = (props) => {
                 style={{ color: "green" }}
                 onClick={() => {
                   popupState.close();
-                  console.log(props.subject);
+                  console.log(props.session);
                   handleViewOpen();
                 }}
               >
@@ -543,7 +498,7 @@ const SubjectAction: React.FC<SubjectsActionProps> = (props) => {
                 onClick={() => {
                   popupState.close();
                   confirmDelete()
-                    .then(() => remove(props.subject._id))
+                    .then(() => remove(props.session._id))
                     .catch((err) => {
                       console.error(err);
                     });

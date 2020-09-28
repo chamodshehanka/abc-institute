@@ -19,14 +19,21 @@ import { useToast } from "../../hooks/useToast";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import SearchIcon from "@material-ui/icons/Search";
 import { TableSearchInput } from "../../components/Common/TableViewComponents/TableSearchInput";
+import { useHistory } from "react-router-dom";
+import { useGetBuildings } from "../../queries/useGetBuildings";
+import { Buildings } from "../../models/Buildings";
 
 const ManageLecturersScreen: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const { data = [], status } = useGetLecturers();
+  const buildings = useGetBuildings().data;
   const [addDialog, setAddDialog] = useState(false);
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, errors } = useForm();
   const displayToast = useToast();
-
+  const history = useHistory();
+  const [employeeId, setempId] = useState("");
+  const [level, setLevel] = useState("");
+  const [rank, setRank] = useState("");
   const noData = status === "success" && data?.length === 0;
   const hasData = status === "success" && data?.length !== 0;
 
@@ -47,7 +54,7 @@ const ManageLecturersScreen: React.FC = () => {
       centre: data?.center,
       building: data?.building,
       level: data?.level,
-      rank: data?.rank,
+      rank: rank,
     };
 
     addLecturer(lecturer)
@@ -58,6 +65,8 @@ const ManageLecturersScreen: React.FC = () => {
           `Lecturer ${lecturer.name} Succesfully Added` || "Hi ",
           "default"
         );
+        history.push("manage-subjects");
+        history.push("manage-lecturers");
       })
       .catch((err) => {
         handleAddDialogClose();
@@ -139,8 +148,11 @@ const ManageLecturersScreen: React.FC = () => {
                     id="txtName"
                     aria-describedby="emailHelp"
                     name="name"
-                    ref={register}
+                    ref={register({ required: true })}
                   />
+                  {errors.name && (
+                    <span style={{ color: "red" }}>This Field is Required</span>
+                  )}
                 </div>
               </Grid>
 
@@ -158,72 +170,115 @@ const ManageLecturersScreen: React.FC = () => {
                     id="txtName"
                     aria-describedby="emailHelp"
                     name="employeeId"
-                    ref={register}
+                    ref={register({ required: true })}
+                    onChange={(e) => {
+                      setempId(e.target.value);
+                      setRank(level + "." + employeeId);
+                      setRank(level + "." + employeeId);
+                    }}
                   />
+                  {errors.employeeId && (
+                    <span style={{ color: "red" }}>This Field is Required</span>
+                  )}
                 </div>
               </Grid>
 
               <Grid item xs={6}>
+                <label htmlFor="faculty" className="form-label">
+                  Faculty
+                </label>
                 <select
                   className="form-select"
                   aria-label="Faculty"
                   name="faculty"
-                  ref={register}
+                  ref={register({ required: true })}
                 >
-                  <option selected>Faculty</option>
-                  <option value="Computing">Computing</option>
+                  <option selected value="Computing">
+                    Computing
+                  </option>
                   <option value="Business">Business</option>
                   <option value="Engineering">Engineering</option>
                 </select>
+                {errors.faculty && (
+                  <span style={{ color: "red" }}>This Field is Required</span>
+                )}
               </Grid>
 
               <Grid item xs={6}>
+                <label htmlFor="department" className="form-label">
+                  Department
+                </label>
                 <select
                   className="form-select"
                   aria-label="Department"
                   name="department"
-                  ref={register}
+                  ref={register({ required: true })}
                 >
-                  <option selected>Department</option>
-                  <option value="SE">SE</option>
+                  <option selected value="SE">
+                    SE
+                  </option>
                   <option value="IT">IT</option>
                   <option value="DS">DS</option>
                 </select>
+                {errors.department && (
+                  <span style={{ color: "red" }}>This Field is Required</span>
+                )}
               </Grid>
 
               <Grid item xs={6}>
+                <label htmlFor="center" className="form-label">
+                  Center
+                </label>
                 <select
                   className="form-select"
                   aria-label="Center"
                   name="center"
-                  ref={register}
+                  ref={register({ required: true })}
                 >
-                  <option selected>Center</option>
-                  <option value="Malabe">Malabe</option>
+                  <option selected value="Malabe">
+                    Malabe
+                  </option>
                   <option value="Kandy">Kandy</option>
                   <option value="Matara">Matara</option>
                 </select>
+                {errors.center && (
+                  <span style={{ color: "red" }}>This Field is Required</span>
+                )}
               </Grid>
 
               <Grid item xs={6}>
+                <label htmlFor="building" className="form-label">
+                  Building
+                </label>
                 <select
                   className="form-select"
                   aria-label="Building"
                   name="building"
-                  ref={register}
+                  ref={register({ required: true })}
                 >
-                  <option selected>Building</option>
-                  <option value="New Building">New Building</option>
-                  <option value="Main">Main</option>
+                  {buildings?.map((b: Buildings) => (
+                    <option value={b.name}>{b.name}</option>
+                  ))}
                 </select>
+                {errors.building && (
+                  <span style={{ color: "red" }}>This Field is Required</span>
+                )}
               </Grid>
 
               <Grid item xs={6}>
+                <label htmlFor="level" className="form-label">
+                  Level
+                </label>
                 <select
                   className="form-select"
                   aria-label="Level"
                   name="level"
-                  ref={register}
+                  ref={register({ required: true })}
+                  onChange={(e) => {
+                    setLevel(e.target.value);
+                    setRank(level + "." + employeeId);
+                    setRank(level + "." + employeeId);
+                  }}
                 >
                   <option selected>Level</option>
                   <option value="1">Professor</option>
@@ -234,6 +289,9 @@ const ManageLecturersScreen: React.FC = () => {
                   <option value="6">Assistant Lecturer</option>
                   <option value="7">Instructors</option>
                 </select>
+                {errors.level && (
+                  <span style={{ color: "red" }}>This Field is Required</span>
+                )}
               </Grid>
 
               <Grid item xs={6}>
@@ -247,9 +305,14 @@ const ManageLecturersScreen: React.FC = () => {
                     id="txtName"
                     aria-describedby="emailHelp"
                     name="rank"
-                    ref={register}
+                    value={rank}
+                    readOnly={true}
+                    ref={register({ required: true })}
                   />
                 </div>
+                {errors.rank && (
+                  <span style={{ color: "red" }}>This Field is Required</span>
+                )}
               </Grid>
             </Grid>
 

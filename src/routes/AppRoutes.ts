@@ -14,6 +14,7 @@ import LocationsScreen from "../screens/Locations/LocationScreen";
 import HomeScreen from "../screens/Home/HomeScreen";
 import ManageSubjectsScreen from "../screens/Subjects/ManageSubjectsScreen";
 import NotAvailableScreen from "../screens/NotAvailable/NotAvailableScreen";
+import ManageSessionsScreen from "../screens/Sessions/ManageSessionsScreen";
 
 export const routes = [
   { path: "/", component: HomeScreen },
@@ -24,6 +25,7 @@ export const routes = [
   { path: "/manage-lecturers", component: ManageLecturersScreen },
   { path: "/manage-subjects", component: ManageSubjectsScreen },
   { path: "/not-available-screen", component: NotAvailableScreen },
+  { path: "/manage-sessions", component: ManageSessionsScreen },
   { path: "/working-days-add", component: WorkingDaysAddEditScreen },
   { path: "/programme-screen", component: ProgrammeScreen },
   { path: "/group-screen", component: GroupScreen },
