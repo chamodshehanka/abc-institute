@@ -50,13 +50,12 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
 
   const [update, setUpdate] = React.useState(false);
   const [year, selectYear] = React.useState(Object);
-  // const [yearcopy, copyyear] = React.useState(Object);
 
   const [editTags] = useState<YearSemester | undefined>(() => {
     return location?.state as YearSemester | undefined;
   });
 
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, errors } = useForm({
     defaultValues: editTags,
   });
 
@@ -166,8 +165,11 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
                   id="year"
                   placeholder={year.year}
                   name="year"
-                  ref={register}
+                  ref={register({ required: true })}
                 />
+                {errors.year && (
+                  <span style={{ color: "red" }}>This Field is Required</span>
+                )}
                 <label htmlFor="txtSem" className="form-label">
                   Semester
                 </label>
@@ -175,10 +177,13 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
                   type="text"
                   className="form-control"
                   id="semester"
-                  value={year.semester}
+                  placeholder={year.semester}
                   name="semester"
-                  ref={register}
+                  ref={register({ required: true })}
                 />
+                {errors.semester && (
+                  <span style={{ color: "red" }}>This Field is Required</span>
+                )}
                 <div className="align-right" style={{ alignContent: "right" }}>
                   <button type="submit" className="btn btn-primary btn-abc">
                     Save
