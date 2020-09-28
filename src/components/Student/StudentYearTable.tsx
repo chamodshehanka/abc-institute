@@ -1,5 +1,5 @@
-import React from "react";
-import { YearSemester } from "../../models/yearSemester";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -11,8 +11,18 @@ import Paper from "@material-ui/core/Paper";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
-import { deleteYearSemester } from "../../api/student/year.request";
-import { useHistory } from "react-router-dom";
+import {
+  deleteYearSemester,
+  updateYearSemester,
+} from "../../api/student/year.request";
+import { useHistory, useLocation } from "react-router-dom";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+
+import { YearSemesterUpdateData } from "../../api/interfaces";
+import { YearSemester } from "../../models/yearSemester";
 
 const useStyles = makeStyles({
   table: {
@@ -36,21 +46,53 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
   const classes = useStyles();
   const history = useHistory();
 
+  const location = useLocation();
 
-  function refreshPage() {
-    window.location.reload(false);
-  }
+  const [update, setUpdate] = React.useState(false);
+  const [year, selectYear] = React.useState(Object);
+  // const [yearcopy, copyyear] = React.useState(Object);
+
+  const [editTags] = useState<YearSemester | undefined>(() => {
+    return location?.state as YearSemester | undefined;
+  });
+
+  const { register, handleSubmit } = useForm({
+    defaultValues: editTags,
+  });
+
+  const onSubmit = (data: any) => {
+    const YearSemester: YearSemesterUpdateData = {
+      _id: data?._id as string,
+      year: data?.year,
+      semester: data?.semester,
+    };
+    console.log("values2", data);
+    updateYearSemester(YearSemester)
+      .then((res) => {
+        console.log(res);
+        history.push("/student-home-screen");
+        history.push("/student-year-screen");
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const handleUpdateOpen = () => {
+    setUpdate(true);
+  };
+
+  const handleUpdateClose = () => {
+    setUpdate(false);
+  };
 
   const handleDeleteAction = (e) => {
     deleteYearSemester(e)
       .then((res) => {
         console.log(res);
-        refreshPage();
-        history.push("student-year-screen");
+        history.push("/student-home-screen");
+        history.push("/student-year-screen");
       })
       .catch((err) => console.error(err));
   };
-
 
   return (
     <>
@@ -76,15 +118,18 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
                   {w.year}.{w.semester}
                 </TableCell>
                 <TableCell align="right">
-                  <Button>
+                  <Button
+                    onClick={() => {
+                      selectYear(w);
+                      handleUpdateOpen();
+                    }}
+                  >
                     <EditIcon />
                   </Button>
                 </TableCell>
                 <TableCell align="right">
                   {" "}
-
                   <Button onClick={() => handleDeleteAction(w._id)}>
-
                     <DeleteIcon />
                   </Button>
                 </TableCell>
@@ -92,6 +137,67 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
             ))}
           </TableBody>
         </Table>
+        <Dialog
+          open={update}
+          onClose={handleUpdateClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Update Tags"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              <form
+                noValidate
+                autoComplete="off"
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <label htmlFor="txtyear" className="form-label">
+                  Year
+                </label>
+                <input
+                  type="hidden"
+                  name="_id"
+                  ref={register}
+                  value={year._id}
+                />
+                <input
+                  type="text"
+                  className="form-control"
+                  id="year"
+                  placeholder={year.year}
+                  name="year"
+                  ref={register}
+                />
+                <label htmlFor="txtSem" className="form-label">
+                  Semester
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="semester"
+                  value={year.semester}
+                  name="semester"
+                  ref={register}
+                />
+                <div className="align-right" style={{ alignContent: "right" }}>
+                  <button type="submit" className="btn btn-primary btn-abc">
+                    Save
+                  </button>{" "}
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-abc"
+                    onClick={() => {
+                      history.push("/student-home-screen");
+                      history.push("/student-year-screen");
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
       </TableContainer>
     </>
   );

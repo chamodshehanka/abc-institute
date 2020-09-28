@@ -1,8 +1,12 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
-import { useHistory } from "react-router-dom";
+import DateRangeIcon from "@material-ui/icons/DateRange";
+import SchoolIcon from "@material-ui/icons/School";
 import GroupIcon from "@material-ui/icons/Group";
+import { useHistory } from "react-router-dom";
+import Button from "@material-ui/core/Button";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,21 +24,21 @@ const useStyles = makeStyles((theme) => ({
 
   card1: {
     backgroundColor: "#F5C000",
-    width: 300,
-    height: 180,
+    width: 280,
+    height: 160,
   },
   card2: {
     backgroundColor: "#0489D6",
-    width: 300,
-    height: 180,
+    width: 280,
+    height: 160,
   },
   card3: {
     backgroundColor: "#00AD28",
-    width: 300,
-    height: 180,
+    width: 280,
+    height: 160,
   },
   text: {
-    fontSize: 33,
+    fontSize: 28,
     color: "white",
     padding: 10,
   },
@@ -47,11 +51,46 @@ export default function StudentHomecard() {
   return (
     <div className={classes.root}>
       <Paper elevation={3} className={classes.card1}>
-        <p className={classes.text}>Acedemic Year & Semester</p>
+        <h3 className={classes.text}>Acedemic Year & Semester</h3>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+          }}
+        >
+          <Button
+            onClick={() => {
+              history.push("student-year-screen");
+            }}
+          >
+            <DateRangeIcon htmlColor="#f5f5f5" style={{ fontSize: 50 }} />
+          </Button>
+        </div>
       </Paper>
+
+
       <Paper elevation={3} className={classes.card2}>
-        <p className={classes.text}>Programme</p>
+        <h3 className={classes.text}>Programme</h3>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            marginTop: 40,
+          }}
+        >
+          <Button
+            onClick={() => {
+              history.push("programme-screen");
+            }}
+          >
+            <SchoolIcon htmlColor="#f5f5f5" style={{ fontSize: 50 }} />
+          </Button>
+        </div>
       </Paper>
+
+
       <Paper elevation={3} className={classes.card3}>
         <h3 className={classes.text}>Student Group</h3>
         <div

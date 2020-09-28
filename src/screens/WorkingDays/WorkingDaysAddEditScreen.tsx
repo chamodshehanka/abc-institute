@@ -26,7 +26,7 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
     return location?.state as WorkingDays | undefined;
   });
 
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, errors } = useForm({
     defaultValues: editWorkingDay,
   });
 
@@ -111,8 +111,11 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
                   id="txtName"
                   aria-describedby="emailHelp"
                   name="name"
-                  ref={register}
+                  ref={register({ required: true })}
                 />
+                {errors.name && (
+                  <span style={{ color: "red" }}>This Field is Required</span>
+                )}
               </div>
             </Grid>
             <Grid item xs={5}>
@@ -245,8 +248,11 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
                   className="form-control"
                   id="txtName"
                   name="workingHours.hours"
-                  ref={register}
+                  ref={register({ required: true })}
                 />
+                {errors?.workingHours?.hours && (
+                  <span style={{ color: "red" }}>This Field is Required</span>
+                )}
               </div>
             </Grid>
 
@@ -260,8 +266,11 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
                   className="form-control"
                   id="txtName"
                   name="workingHours.mins"
-                  ref={register}
+                  ref={register({ required: true })}
                 />
+                {errors?.workingHours?.mins && (
+                  <span style={{ color: "red" }}>This Field is Required</span>
+                )}
               </div>
             </Grid>
 
