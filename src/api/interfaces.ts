@@ -120,6 +120,14 @@ export interface TagsUpdateData {
   name: string;
 }
 
+export interface GenerateGroupIdCreateData {
+  groupId: string;
+}
+
+export interface GenerateSubGroupIdCreateData {
+  groupId: string;
+}
+
 export interface BuildingsCreateData {
   name: string;
 }
@@ -144,7 +152,7 @@ export interface RoomsUpdateData {
   _id: string;
   buildingName: string;
   roomType: boolean;
-  rooms: string[];
+  name: string;
 }
 
 export interface RoomsListResponse {
