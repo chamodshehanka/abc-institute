@@ -28,8 +28,9 @@ import { useHistory } from "react-router-dom";
 import { useGetLecturers } from "../../queries/useGetLecturers";
 import { useGetTags } from "../../queries/useGetTags";
 import { useGetSubjects } from "../../queries/useGetSubjects";
-import { useGetGroup } from "../../queries/useGetGroup";
-import { useGetSubGroup } from "../../queries/useGetSubGroup";
+import { useGenerateSubGroupId } from "../../queries/useGenerateSubGroupId";
+import { useGenerateGroupId } from "../../queries/useGenerateGroupId";
+import { Lecturer } from "../../models/Lecturer";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -39,13 +40,17 @@ const ManageSessionsScreen: React.SFC = () => {
   const [addDialog, setAddDialog] = useState(false);
   const [subjectName, setSubject] = useState("");
   const [subjectCode, setSubjectCode] = useState("");
+  const [groups, setGroups] = useState([""]);
+  const [lecs, setLecs] = useState([""]);
+  const [tag, setTag] = useState("");
+  const [duration, setDuration] = useState(0);
   const { register, handleSubmit, errors } = useForm();
   const displayToast = useToast();
   const lecturers = useGetLecturers().data;
   const tags = useGetTags().data;
   const subjects = useGetSubjects().data;
-  const studentGroups = useGetGroup().data;
-  const studentSubGroups = useGetSubGroup().data;
+  const studentGroups = useGenerateGroupId().data;
+  const studentSubGroups = useGenerateSubGroupId().data;
   const { data = [], status } = useGetSessions();
   const history = useHistory();
 
@@ -56,9 +61,9 @@ const ManageSessionsScreen: React.SFC = () => {
   const handleAddDialogClose = () => {
     setAddDialog(false);
     setSubject("");
-    console.log(studentGroups);
-    console.log(subjectCode);
-    console.log(studentSubGroups);
+    setSubjectCode("");
+    setDuration(0);
+    console.log(tag);
   };
   function handleSubjectChange(subjectCode: string) {
     subjects?.forEach((s) => {
@@ -68,12 +73,54 @@ const ManageSessionsScreen: React.SFC = () => {
     });
   }
 
+  function handleTagChange(tag: string) {
+    // eslint-disable-next-line prefer-const
+    let students = [""];
+    subjects?.forEach((s) => {
+      if (subjectCode === s.subjectCode) {
+        if (tag === "Lecture") {
+          setDuration(Number.parseInt(s.lectureHours));
+          studentGroups?.forEach((g) => {
+            console.log(
+              g.groupId.includes("Y" + s.offeredYear + ".S" + s.offeredSemester)
+            );
+            if (
+              g.groupId.includes("Y" + s.offeredYear + ".S" + s.offeredSemester)
+            ) {
+              students.push(g.groupId);
+            }
+          });
+        } else if (tag === "Tute") {
+          setDuration(Number.parseInt(s.tutorialHours));
+          studentGroups?.forEach((g) => {
+            if (
+              g.groupId.includes("Y" + s.offeredYear + ".S" + s.offeredSemester)
+            ) {
+              students.push(g.groupId);
+            }
+          });
+        } else if (tag === "Lab") {
+          setDuration(Number.parseInt(s.labHours));
+          studentSubGroups?.forEach((g) => {
+            if (
+              g.groupId.includes("Y" + s.offeredYear + ".S" + s.offeredSemester)
+            ) {
+              students.push(g.groupId);
+            }
+          });
+        }
+      }
+    });
+    setGroups(students);
+    console.log(groups);
+  }
+
   const onSubmit = (data: any) => {
     const session: SessionCreateData = {
-      lecturers: data?.lecturers,
+      lecturers: lecs,
       tags: data?.tags,
       studentGroup: data?.studentGroup,
-      subject: data?.subject,
+      subject: data?.subjectName,
       subjectCode: data?.subjectCode,
       noOfStudents: data?.noOfStudents,
       duration: data?.duration,
@@ -221,10 +268,22 @@ const ManageSessionsScreen: React.SFC = () => {
                 <Autocomplete
                   fullWidth={true}
                   multiple
-                  id="checkboxes-tags-demo"
+                  id="lecturers"
+                  onChange={(event, value: Lecturer[]) => {
+                    // eslint-disable-next-line prefer-const
+                    let l = [""];
+                    l.pop();
+                    value.forEach((v) => {
+                      l.push(v.name);
+                    });
+                    setLecs(l);
+                    setLecs(l);
+                  }}
                   options={lecturers || []}
+                  ref={register({ required: true })}
                   disableCloseOnSelect
                   getOptionLabel={(option) => option.name}
+                  defaultValue={[]}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
@@ -236,7 +295,6 @@ const ManageSessionsScreen: React.SFC = () => {
                       {option.name}
                     </React.Fragment>
                   )}
-                  style={{ width: 500 }}
                   renderInput={(params) => (
                     <TextField {...params} variant="outlined" />
                   )}
@@ -251,8 +309,17 @@ const ManageSessionsScreen: React.SFC = () => {
                   className="form-select"
                   aria-label="tags"
                   name="tags"
+                  onChange={(e) => {
+                    console.log(e.target.value);
+                    setTag(e.target.value);
+                    handleTagChange(e.target.value);
+                    // eslint-disable-next-line no-unused-expressions
+
+                    handleTagChange(e.target.value);
+                  }}
                   ref={register({ required: true })}
                 >
+                  <option value="">Select A Tag</option>
                   {tags?.map((t) => {
                     return <option value={t.name}>{t.name}</option>;
                   })}
@@ -264,17 +331,16 @@ const ManageSessionsScreen: React.SFC = () => {
                   <label htmlFor="group" className="form-label">
                     Student Group
                   </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="group"
-                    aria-describedby="emailHelp"
-                    name="group"
+                  <select
+                    className="form-select"
+                    aria-label="tags"
+                    name="studentGroup"
                     ref={register({ required: true })}
-                  />
-                  {errors.group && (
-                    <span style={{ color: "red" }}>This Field is Required</span>
-                  )}
+                  >
+                    {groups?.map((g) => {
+                      return <option value={g}>{g}</option>;
+                    })}
+                  </select>
                 </div>
               </Grid>
 
@@ -308,6 +374,7 @@ const ManageSessionsScreen: React.SFC = () => {
                     id="duration"
                     aria-describedby="emailHelp"
                     name="duration"
+                    value={duration}
                     ref={register({ required: true })}
                   />
                   {errors.duration && (
