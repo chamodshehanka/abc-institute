@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import React, { useState } from "react";
 import {
   Container,
@@ -27,6 +28,8 @@ import { useHistory } from "react-router-dom";
 import { useGetLecturers } from "../../queries/useGetLecturers";
 import { useGetTags } from "../../queries/useGetTags";
 import { useGetSubjects } from "../../queries/useGetSubjects";
+import { useGetGroup } from "../../queries/useGetGroup";
+import { useGetSubGroup } from "../../queries/useGetSubGroup";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -41,6 +44,8 @@ const ManageSessionsScreen: React.SFC = () => {
   const lecturers = useGetLecturers().data;
   const tags = useGetTags().data;
   const subjects = useGetSubjects().data;
+  const studentGroups = useGetGroup().data;
+  const studentSubGroups = useGetSubGroup().data;
   const { data = [], status } = useGetSessions();
   const history = useHistory();
 
@@ -50,7 +55,18 @@ const ManageSessionsScreen: React.SFC = () => {
 
   const handleAddDialogClose = () => {
     setAddDialog(false);
+    setSubject("");
+    console.log(studentGroups);
+    console.log(subjectCode);
+    console.log(studentSubGroups);
   };
+  function handleSubjectChange(subjectCode: string) {
+    subjects?.forEach((s) => {
+      if (s.subjectCode === subjectCode) {
+        setSubject(s?.subjectName);
+      }
+    });
+  }
 
   const onSubmit = (data: any) => {
     const session: SessionCreateData = {
@@ -141,7 +157,7 @@ const ManageSessionsScreen: React.SFC = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Add Lecturer"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Add Session"}</DialogTitle>
 
         <DialogContent>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -156,14 +172,12 @@ const ManageSessionsScreen: React.SFC = () => {
                     aria-label="subjectCode"
                     name="subjectCode"
                     onChange={(e) => {
+                      console.log(e.target.value);
                       setSubjectCode(e.target.value);
+                      handleSubjectChange(e.target.value);
                       // eslint-disable-next-line no-unused-expressions
-                      subjects?.forEach((s) => {
-                        if (s.subjectCode === e.target.value) {
-                          setSubject(s.subjectName);
-                          console.log(subjectCode);
-                        }
-                      });
+
+                      handleSubjectChange(e.target.value);
                     }}
                     ref={register({ required: true })}
                   >
@@ -182,15 +196,15 @@ const ManageSessionsScreen: React.SFC = () => {
 
               <Grid item xs={6}>
                 <div>
-                  <label htmlFor="subject" className="form-label">
+                  <label htmlFor="subjectName" className="form-label">
                     Subject Name
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="subject"
+                    id="subjectName"
                     aria-describedby="emailHelp"
-                    name="subject"
+                    name="subjectName"
                     value={subjectName}
                     ref={register({ required: true })}
                   />
