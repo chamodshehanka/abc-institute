@@ -15,6 +15,7 @@ import HomeScreen from "../screens/Home/HomeScreen";
 import ManageSubjectsScreen from "../screens/Subjects/ManageSubjectsScreen";
 import NotAvailableScreen from "../screens/NotAvailable/NotAvailableScreen";
 import ManageSessionsScreen from "../screens/Sessions/ManageSessionsScreen";
+import SessionManageScreen from "../screens/ManageSessions/SessionManageScreen";
 
 export const routes = [
   { path: "/", component: HomeScreen },
@@ -33,5 +34,6 @@ export const routes = [
   { path: "/tags-screen", component: TagsScreen },
   { path: "/locations-screen", component: LocationsScreen },
   { path: "/statistic-screen", component: StatisticScreen },
+  { path: "/SessionManage-screen", component: SessionManageScreen },
   { path: "/test", component: TestPage },
 ];
