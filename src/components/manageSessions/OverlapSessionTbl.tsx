@@ -9,9 +9,9 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
-import { deletePSession } from "../../api/sessions/parallelSessions.request";
+import { deleteOSession } from "../../api/sessions/overlapSessions.request";
 import { useHistory } from "react-router-dom";
-import { PSession } from "../../models/parallelSession";
+import { OSession } from "../../models/overlapSessions";
 
 const useStyles = makeStyles({
   table: {
@@ -25,18 +25,18 @@ const useStyles = makeStyles({
   },
 });
 
-export interface ManagePsessiontblProps {
-  psession: PSession[];
+export interface ManageOsessiontblProps {
+  osession: OSession[];
 }
 
-const ManagePsessiontbl: React.SFC<ManagePsessiontblProps> = ({
-  psession,
-}: ManagePsessiontblProps) => {
+const ManageOsessiontbl: React.SFC<ManageOsessiontblProps> = ({
+  osession,
+}: ManageOsessiontblProps) => {
   const classes = useStyles();
   const history = useHistory();
 
   const handleDeleteAction = (e) => {
-    deletePSession(e)
+    deleteOSession(e)
       .then((res) => {
         console.log(res);
         history.push("student-year-screen");
@@ -58,10 +58,10 @@ const ManagePsessiontbl: React.SFC<ManagePsessiontblProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {psession.map((w: PSession) => (
+            {osession.map((w: OSession) => (
               <TableRow key={w._id}>
                 <TableCell component="th" scope="row">
-                  {w.psessions.map((l) => l + ",")}
+                  {w.osessions.map((l) => l + ",")}
                 </TableCell>
 
                 <TableCell align="right">
@@ -79,4 +79,4 @@ const ManagePsessiontbl: React.SFC<ManagePsessiontblProps> = ({
   );
 };
 
-export default ManagePsessiontbl;
+export default ManageOsessiontbl;
