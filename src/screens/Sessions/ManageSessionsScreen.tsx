@@ -37,6 +37,7 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const ManageSessionsScreen: React.SFC = () => {
   const [searchText, setSearchText] = useState("");
+  const [sortBy, setSortBy] = useState("Subject");
   const [addDialog, setAddDialog] = useState(false);
   const [subjectName, setSubject] = useState("");
   const [subjectCode, setSubjectCode] = useState("");
@@ -71,6 +72,10 @@ const ManageSessionsScreen: React.SFC = () => {
         setSubject(s?.subjectName);
       }
     });
+  }
+
+  function handleSortByChange(sortBy: string) {
+    setSortBy(sortBy);
   }
 
   function handleTagChange(tag: string) {
@@ -172,11 +177,22 @@ const ManageSessionsScreen: React.SFC = () => {
       <div className="row mb-3">
         <div className="col-9"></div>
         <div className="col-2">
-          <select className="form-select" aria-label="Default select example">
-            <option selected>Sort By</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+          <select
+            className="form-select"
+            aria-label="Default select example"
+            name="sortBy"
+            onChange={(e) => {
+              handleSortByChange(e.target.value);
+              handleSortByChange(e.target.value);
+              console.log(sortBy + "1");
+            }}
+          >
+            <option selected value="Subject">
+              Filter by Subject
+            </option>
+            <option value="Lecturer">Filter by Lecturer</option>
+            <option value="Group">Filter by Group</option>
+            <option value="Tag">Filter by Tag</option>
           </select>
         </div>
       </div>
@@ -192,7 +208,11 @@ const ManageSessionsScreen: React.SFC = () => {
                 <Alert severity="info">You Have No Saved Sessions.</Alert>
               )}
               {hasData && (
-                <ManageSessionsTable sessions={data} searchVal={searchText} />
+                <ManageSessionsTable
+                  sessions={data}
+                  searchVal={searchText}
+                  sortBy={sortBy}
+                />
               )}
             </div>
           </Toolbar>
