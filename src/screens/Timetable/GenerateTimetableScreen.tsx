@@ -13,9 +13,7 @@ import React, { useState } from "react";
 import { useGetWorkingDays } from "../../queries/useGetWorkingDays";
 import { generateTimetable } from "../../api/timetable/timetable.request";
 import { TimetableGenerateData } from "../../api/interfaces";
-import { useGetTimeslots } from "../../queries/useGetTimeslots";
-import { Page, Text, View, Document, PDFViewer } from "@react-pdf/renderer";
-import TimetableView from "./TimetableView";
+// import { Page, Text, View, Document, PDFViewer } from "@react-pdf/renderer";
 
 const GenerateTimetableScreen: React.FC = () => {
   const [workingDate, setWorkingDate] = useState("");
@@ -24,7 +22,6 @@ const GenerateTimetableScreen: React.FC = () => {
 
   const { data: wdData = [], status: wdStatus } = useGetWorkingDays();
   const { data: gData = [], status: gStatus } = useGenerateGroupId();
-  const { data: timeslotData = [], status: timeslotStatus } = useGetTimeslots();
 
   const noData = wdStatus === "success" && wdData?.length === 0;
   const hasData = wdStatus === "success" && wdData?.length !== 0;

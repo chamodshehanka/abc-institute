@@ -5,12 +5,14 @@ import { useHistory } from "react-router-dom";
 import { useGetLecturers } from "../../queries/useGetLecturers";
 import { useGenerateGroupId } from "../../queries/useGenerateGroupId";
 import { useGetRooms } from "../../queries/useGetRooms";
+import TimetableView from "./TimetableView";
 
 const TimetableScreen: React.FC = () => {
   const [viewBy, setViewBy] = useState("");
   const [selectedLecturer, setSelectedLecturer] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
   const [selectedRoom, setselectedRoom] = useState("");
+  const [viewTimetable, setViewTimetable] = useState(false);
   const history = useHistory();
 
   const { data: lecturersData = [] } = useGetLecturers();
@@ -34,6 +36,19 @@ const TimetableScreen: React.FC = () => {
   const handleRoomChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setselectedRoom(event.target.value as string);
   };
+
+  function getSelectedData() {
+    let value = "";
+    if (selectedLecturer !== "") {
+      value = selectedLecturer;
+    } else if (selectedGroup !== "") {
+      value = selectedGroup;
+    } else if (selectedRoom !== "") {
+      value = selectedRoom;
+    }
+
+    return value;
+  }
 
   return (
     <>
@@ -124,13 +139,34 @@ const TimetableScreen: React.FC = () => {
 
                 <div className="col">
                   {viewBy !== "" && (
-                    <button className="btn btn-primary">View</button>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => {
+                        setViewTimetable(true);
+                      }}
+                    >
+                      View
+                    </button>
                   )}
                 </div>
               </div>
             </div>
           </Toolbar>
         </Card>
+
+        {viewBy !== "" &&
+          viewTimetable &&
+          (selectedGroup !== "" ||
+            selectedLecturer !== "" ||
+            selectedRoom !== "") && (
+            <Card>
+              <TimetableView
+                timeslotData={[]}
+                type={viewBy}
+                selectedData={getSelectedData()}
+              />
+            </Card>
+          )}
       </Container>
     </>
   );

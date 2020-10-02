@@ -1,17 +1,20 @@
 import React from "react";
 import { Timeslot } from "../../models/Timeslot";
 import { useGetSessions } from "../../queries/useGetSessions";
+import { useGetTimeslots } from "../../queries/useGetTimeslots";
 
 export interface TimetableViewProps {
   timeslotData: Timeslot[];
   type: string;
+  selectedData: string;
 }
 
 const TimetableView: React.FC<TimetableViewProps> = () => {
-  const { data = [] } = useGetSessions();
+  const { data: sessionData = [] } = useGetSessions();
+  const { data: timeslotData = [] } = useGetTimeslots();
 
   function getSessionById(id: string) {
-    return data.find((s) => id === s._id);
+    return sessionData.find((s) => id === s._id);
   }
 
   getSessionById("");
