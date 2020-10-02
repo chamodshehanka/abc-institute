@@ -31,6 +31,7 @@ const GenerateTimetableScreen: React.FC = () => {
   };
 
   const handleGroupChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    console.log(viewTimetable);
     setGroup(event.target.value as string);
   };
 

@@ -167,6 +167,15 @@ const TimetableScreen: React.FC = () => {
               />
             </Card>
           )}
+
+        <div className="container">
+          {viewTimetable && (
+            <>
+              <button className="btn btn-primary">Download</button>{" "}
+              <button className="btn btn-primary">Print</button>
+            </>
+          )}
+        </div>
       </Container>
     </>
   );

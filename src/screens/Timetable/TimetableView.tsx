@@ -9,7 +9,7 @@ export interface TimetableViewProps {
   selectedData: string;
 }
 
-const TimetableView: React.FC<TimetableViewProps> = () => {
+const TimetableView: React.FC<TimetableViewProps> = (props) => {
   const { data: sessionData = [] } = useGetSessions();
   const { data: timeslotData = [] } = useGetTimeslots();
 
@@ -17,7 +17,76 @@ const TimetableView: React.FC<TimetableViewProps> = () => {
     return sessionData.find((s) => id === s._id);
   }
 
+  function getTimeslotByTimeAndDate(startTime: string, day: string) {
+    console.log(
+      "Result",
+      timeslotData?.find((t) => startTime === t?.startTime && day === t?.day)
+    );
+    return timeslotData?.find(
+      (t) => startTime === t?.startTime && day === t?.day
+    );
+  }
+
   getSessionById("");
+
+  async function makeLecturerTable() {
+    return (
+      <tbody>
+        <tr>
+          <td>08:30</td>
+          <td>
+            {getTimeslotByTimeAndDate("08:30", "Monday")?._id !== undefined
+              ? getTimeslotByTimeAndDate("08:30", "Monday")?._id[0]
+              : "X"}
+            gggg
+          </td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>09:30</td>
+        </tr>
+
+        <tr>
+          <td>10:30</td>
+        </tr>
+
+        <tr>
+          <td>11:30</td>
+        </tr>
+
+        <tr>
+          <td>12:30</td>
+        </tr>
+
+        <tr>
+          <td>13:30</td>
+        </tr>
+
+        <tr>
+          <td>14:30</td>
+        </tr>
+
+        <tr>
+          <td>15:30</td>
+        </tr>
+      </tbody>
+    );
+  }
+
+  function generateContent() {
+    switch (props.type) {
+      case "Lecturer":
+        makeLecturerTable();
+        break;
+      case "Group":
+        break;
+      case "Room":
+        break;
+      default:
+      //  return tempData();
+    }
+  }
 
   return (
     <>
@@ -31,53 +100,7 @@ const TimetableView: React.FC<TimetableViewProps> = () => {
           <td>Friday</td>
         </thead>
 
-        <tbody>
-          <tr>
-            <td>08:30</td>
-            <td>
-              <p>
-                IT1010 ITP <br /> Y1.S2.IT.01
-                <br />
-                Location : 501 A
-              </p>
-            </td>
-            <td>
-              <p>
-                IT1010 ITP <br /> Y1.S2.IT.01
-                <br />
-                Location : 501 A
-              </p>
-            </td>
-          </tr>
-
-          <tr>
-            <td>09:30</td>
-          </tr>
-
-          <tr>
-            <td>10:30</td>
-          </tr>
-
-          <tr>
-            <td>11:30</td>
-          </tr>
-
-          <tr>
-            <td>12:30</td>
-          </tr>
-
-          <tr>
-            <td>13:30</td>
-          </tr>
-
-          <tr>
-            <td>14:30</td>
-          </tr>
-
-          <tr>
-            <td>15:30</td>
-          </tr>
-        </tbody>
+        {generateContent()}
       </table>
     </>
   );
