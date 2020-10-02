@@ -2,6 +2,7 @@ import { WorkingDays } from "../models/WorkingDays";
 import { YearSemester } from "../models/yearSemester";
 import { Buildings } from "../models/Buildings";
 import { Rooms } from "../models/Rooms";
+import { Options } from "electron";
 
 export interface WorkingDaysCreateData {
   name: string;
@@ -118,6 +119,7 @@ export interface TagsCreateData {
 export interface TagsUpdateData {
   _id: string;
   name: string;
+  rooms: Options[];
 }
 
 export interface GenerateGroupIdCreateData {

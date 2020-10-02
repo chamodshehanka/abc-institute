@@ -62,7 +62,7 @@ function ListItemLink(props: ListItemLinkProps) {
 const useStyles = makeStyles({
   root: {
     width: "100%",
-    backgroundColor: "#0065ff",
+    backgroundColor: "#2A4BA5",
     height: "100vh",
   },
 });
