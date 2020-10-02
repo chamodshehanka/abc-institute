@@ -173,7 +173,7 @@ const SubjectAction: React.FC<ManageGenerateSubGroupActionProps> = (props) => {
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle id="alert-dialog-title">
-                {"Allocate Not Available Time for Lecturers"}
+                {"Allocate Not Available Time for Sub-group"}
               </DialogTitle>
 
               <DialogContent>

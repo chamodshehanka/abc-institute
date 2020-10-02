@@ -12,19 +12,19 @@ import {
 } from "@material-ui/core";
 import { Session } from "../../models/Session";
 import { useForm } from "react-hook-form";
-import { addPSession } from "../../api/sessions/parallelSessions.request";
-import { PSessionCreateData } from "../../api/interfaces";
-import { useGetPSessions } from "../../queries/useGetParallelSession";
+import { addCSession } from "../../api/sessions/consecutiveSessions.request";
+import { CSessionCreateData } from "../../api/interfaces";
+import { useGetCSessions } from "../../queries/useGetConsecutive";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import ManagePsessiontbl from "./ParallelSessionTbl";
+import ManageCsessiontbl from "./ConsecutiveSessionTbl";
 
-export interface ManageParallelProps {
-  psession: Session[];
+export interface ManageConProps {
+  csession: Session[];
 }
 
-const ParallelSession: React.SFC<ManageParallelProps> = ({
-  psession,
-}: ManageParallelProps) => {
+const ConsecutiveSession: React.SFC<ManageConProps> = ({
+  csession,
+}: ManageConProps) => {
   const [id, setId] = useState("");
   const [addDialog, setAddDialog] = useState(false);
 
@@ -41,17 +41,18 @@ const ParallelSession: React.SFC<ManageParallelProps> = ({
   values.pop();
 
   const { register, handleSubmit } = useForm();
+
   console.log(register);
-  const { data = [] } = useGetPSessions();
+  const { data = [] } = useGetCSessions();
 
   const onSubmit = (data: any) => {
     console.log("submit data", data);
 
-    const psession: PSessionCreateData = {
-      psessions: values,
+    const csession: CSessionCreateData = {
+      csessions: values,
     };
 
-    addPSession(psession)
+    addCSession(csession)
       .then((res) => {
         console.log(res);
       })
@@ -62,7 +63,7 @@ const ParallelSession: React.SFC<ManageParallelProps> = ({
     <div>
       <div style={{ display: "flex", alignItems: "flex-end" }}>
         <button className="btn btn-primary" onClick={handleAddDialogOpen}>
-          View Parallel Sessions <VisibilityIcon />
+          View Consecutive Sessions <VisibilityIcon />
         </button>
       </div>
       <TableContainer
@@ -97,7 +98,7 @@ const ParallelSession: React.SFC<ManageParallelProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {psession?.map((s: Session) => (
+            {csession?.map((s: Session) => (
               <TableRow key={s._id} hover={true}>
                 <TableCell style={{ fontFamily: "Varela Round" }}>
                   {s.subject}
@@ -133,11 +134,11 @@ const ParallelSession: React.SFC<ManageParallelProps> = ({
           maxWidth="lg"
         >
           <DialogTitle id="alert-dialog-title">
-            {"Parralel Sessions"}
+            {"Consecutive Sessions"}
           </DialogTitle>
 
           <DialogContent>
-            <ManagePsessiontbl psession={data} />
+            <ManageCsessiontbl csession={data} />
           </DialogContent>
         </Dialog>
 
@@ -156,4 +157,4 @@ const ParallelSession: React.SFC<ManageParallelProps> = ({
   );
 };
 
-export default ParallelSession;
+export default ConsecutiveSession;
