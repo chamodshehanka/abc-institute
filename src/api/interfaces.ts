@@ -251,6 +251,13 @@ export interface SessionCreateData {
   duration: number;
 }
 
+export interface TimeslotCreateData {
+  startTime: string;
+  endTime: string;
+  day: string;
+  session: string;
+}
+
 export interface PSessionCreateData {
   psessions: string[];
 }
