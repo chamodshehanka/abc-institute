@@ -254,3 +254,11 @@ export interface SessionCreateData {
 export interface PSessionCreateData {
   psessions: string[];
 }
+
+export interface CSessionCreateData {
+  csessions: string[];
+}
+
+export interface OSessionCreateData {
+  osessions: string[];
+}
