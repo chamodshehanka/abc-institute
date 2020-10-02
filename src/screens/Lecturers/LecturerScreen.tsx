@@ -173,6 +173,7 @@ const ManageLecturersScreen: React.FC = () => {
                     ref={register({ required: true })}
                     onChange={(e) => {
                       setempId(e.target.value);
+                      setempId(e.target.value);
                       setRank(level + "." + employeeId);
                       setRank(level + "." + employeeId);
                     }}
@@ -275,6 +276,7 @@ const ManageLecturersScreen: React.FC = () => {
                   name="level"
                   ref={register({ required: true })}
                   onChange={(e) => {
+                    setLevel(e.target.value);
                     setLevel(e.target.value);
                     setRank(level + "." + employeeId);
                     setRank(level + "." + employeeId);

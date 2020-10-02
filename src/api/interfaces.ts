@@ -111,6 +111,25 @@ export interface SubGroupUpdateData {
   number: string;
 }
 
+export interface NotAvailableCreateData {
+  type: string;
+  typeId: string;
+  name: string;
+  day: string;
+  stime: string;
+  ltime: string;
+}
+
+export interface NotAvailableUpdateData {
+  _id: string;
+  type: string;
+  typeId: string;
+  name: string;
+  day: string;
+  stime: string;
+  ltime: string;
+}
+
 export interface TagsCreateData {
   name: string;
 }
@@ -242,4 +261,8 @@ export interface TimeslotCreateData {
 export interface TimetableGenerateData {
   workingDay: string;
   groups: string[];
+}
+
+export interface PSessionCreateData {
+  psessions: string[];
 }
