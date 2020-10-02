@@ -12,19 +12,19 @@ import {
 } from "@material-ui/core";
 import { Session } from "../../models/Session";
 import { useForm } from "react-hook-form";
-import { addPSession } from "../../api/sessions/parallelSessions.request";
-import { PSessionCreateData } from "../../api/interfaces";
-import { useGetPSessions } from "../../queries/useGetParallelSession";
+import { addOSession } from "../../api/sessions/overlapSessions.request";
+import { OSessionCreateData } from "../../api/interfaces";
+import { useGetOSessions } from "../../queries/useGetOverlap";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import ManagePsessiontbl from "./ParallelSessionTbl";
+import ManageOsessiontbl from "./OverlapSessionTbl";
 
-export interface ManageParallelProps {
-  psession: Session[];
+export interface ManageOverlapProps {
+  osession: Session[];
 }
 
-const ParallelSession: React.SFC<ManageParallelProps> = ({
-  psession,
-}: ManageParallelProps) => {
+const OverlapSession: React.SFC<ManageOverlapProps> = ({
+  osession,
+}: ManageOverlapProps) => {
   const [id, setId] = useState("");
   const [addDialog, setAddDialog] = useState(false);
 
@@ -42,16 +42,16 @@ const ParallelSession: React.SFC<ManageParallelProps> = ({
 
   const { register, handleSubmit } = useForm();
   console.log(register);
-  const { data = [] } = useGetPSessions();
+  const { data = [] } = useGetOSessions();
 
   const onSubmit = (data: any) => {
     console.log("submit data", data);
 
-    const psession: PSessionCreateData = {
-      psessions: values,
+    const osession: OSessionCreateData = {
+      osessions: values,
     };
 
-    addPSession(psession)
+    addOSession(osession)
       .then((res) => {
         console.log(res);
       })
@@ -62,7 +62,7 @@ const ParallelSession: React.SFC<ManageParallelProps> = ({
     <div>
       <div style={{ display: "flex", alignItems: "flex-end" }}>
         <button className="btn btn-primary" onClick={handleAddDialogOpen}>
-          View Parallel Sessions <VisibilityIcon />
+          View Overlap Sessions <VisibilityIcon />
         </button>
       </div>
       <TableContainer
@@ -97,7 +97,7 @@ const ParallelSession: React.SFC<ManageParallelProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {psession?.map((s: Session) => (
+            {osession?.map((s: Session) => (
               <TableRow key={s._id} hover={true}>
                 <TableCell style={{ fontFamily: "Varela Round" }}>
                   {s.subject}
@@ -133,11 +133,11 @@ const ParallelSession: React.SFC<ManageParallelProps> = ({
           maxWidth="lg"
         >
           <DialogTitle id="alert-dialog-title">
-            {"Parralel Sessions"}
+            {"Overlap Sessions"}
           </DialogTitle>
 
           <DialogContent>
-            <ManagePsessiontbl psession={data} />
+            <ManageOsessiontbl osession={data} />
           </DialogContent>
         </Dialog>
 
@@ -156,4 +156,4 @@ const ParallelSession: React.SFC<ManageParallelProps> = ({
   );
 };
 
-export default ParallelSession;
+export default OverlapSession;

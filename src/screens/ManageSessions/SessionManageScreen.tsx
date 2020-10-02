@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { useGetSessions } from "../../queries/useGetSessions";
 import ParallelSession from "../../components/manageSessions/ParallelSession";
+import OverlapSession from "../../components/manageSessions/OverlapSession";
 import ConsecutiveSession from "../../components/manageSessions/ConsecutiveSession";
 
 interface TabPanelProps {
@@ -72,7 +73,6 @@ const SessionManageScreen: React.SFC = () => {
               aria-label="scrollable auto tabs example"
             >
               <Tab label="Parallel Session" {...a11yProps(0)} />
-
               <Tab label="Consecutive Session" {...a11yProps(1)} />
               <Tab label="Overlap Session" {...a11yProps(2)} />
 
@@ -86,8 +86,10 @@ const SessionManageScreen: React.SFC = () => {
           <TabPanel value={value} index={1}>
             <ConsecutiveSession csession={data} />
           </TabPanel>
-
-          <TabPanel value={value} index={2}></TabPanel>
+       
+          <TabPanel value={value} index={2}>
+          <OverlapSession osession={data} />
+          </TabPanel>
 
         </div>
       </Container>
