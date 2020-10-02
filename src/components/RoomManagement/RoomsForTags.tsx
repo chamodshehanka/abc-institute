@@ -14,8 +14,7 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import { useForm, NestedValue } from "react-hook-form";
 import { Options } from "electron";
 import { TagsUpdateData } from "../../api/interfaces";
-//import { updateTags } from "../../api/student/tags.request";
-//import { Tags } from "../../models/Tags";
+import { updateTags } from "../../api/student/tags.request";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -64,13 +63,14 @@ const BootstrapButton = withStyles({
 })(Button);
 
 export interface RoomsForTagsProps {
-  // tagID: string;
-  // tagName: string;
+  tagID: string;
+  tagName: string;
 }
 
-const RoomsForTags: React.SFC<RoomsForTagsProps> = ({}: // tagID,
-// tagName,
-RoomsForTagsProps) => {
+const RoomsForTags: React.SFC<RoomsForTagsProps> = ({
+  tagID,
+  tagName,
+}: RoomsForTagsProps) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const rooms = useGetRooms().data;
@@ -91,17 +91,17 @@ RoomsForTagsProps) => {
   };
 
   const onSubmit = handleSubmit((data) => {
-    // const Tags: TagsUpdateData = {
-    // _id: tagID as string,
-    // name: tagName,
-    //  rooms: data.selectedRoom,
-    //  };
-    // console.log("values2", Tags);
-    // updateTags(Tags)
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((err) => console.error(err));
+    const Tags: TagsUpdateData = {
+      _id: tagID as string,
+      name: tagName,
+      rooms: data.selectedRoom,
+    };
+    console.log("values2", Tags);
+    updateTags(Tags)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.error(err));
   });
 
   React.useEffect(() => {
@@ -115,7 +115,7 @@ RoomsForTagsProps) => {
       <BootstrapButton
         size="small"
         onClick={handleClickOpen}
-        style={{ color: "white" }}
+        style={{ color: "white", float: "right" }}
       >
         <h5
           style={{
@@ -125,7 +125,7 @@ RoomsForTagsProps) => {
             backgroundColor: "0075FF",
           }}
         />
-        Add Room
+        Add Rooms
       </BootstrapButton>
 
       <Dialog

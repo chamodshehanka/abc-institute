@@ -1,4 +1,5 @@
 import React from "react";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -12,11 +13,27 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import { useForm, NestedValue } from "react-hook-form";
 import { Options } from "electron";
-import { LecturerUpdateData } from "../../api/interfaces";
-import { updateLecturer } from "../../api/lecturers/lecturers.request";
+import { TagsUpdateData } from "../../api/interfaces";
+import { updateTags } from "../../api/student/tags.request";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      margin: "auto",
+    },
+    paper: {
+      width: 200,
+      height: 230,
+      overflow: "auto",
+    },
+    button: {
+      margin: theme.spacing(0.5, 0),
+    },
+  })
+);
 
 const BootstrapButton = withStyles({
   root: {
@@ -45,29 +62,16 @@ const BootstrapButton = withStyles({
   },
 })(Button);
 
-export interface RoomsForLecturersProps {
-  lecID: string;
-  lecName: string;
-  lecEmp: string;
-  lecFaculty: string;
-  lecDept: string;
-  lecCentre: string;
-  lecbuilding: string;
-  lecLevel: string;
-  lecRank: string;
+export interface RoomsForSubjectProps {
+  tagID: string;
+  tagName: string;
 }
 
-const RoomsForLecturers: React.SFC<RoomsForLecturersProps> = ({
-  lecID,
-  lecName,
-  lecEmp,
-  lecFaculty,
-  lecDept,
-  lecCentre,
-  lecbuilding,
-  lecLevel,
-  lecRank,
-}: RoomsForLecturersProps) => {
+const RoomsForSubject: React.SFC<RoomsForSubjectProps> = ({
+  tagID,
+  tagName,
+}: RoomsForSubjectProps) => {
+  const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const rooms = useGetRooms().data;
   const [selectedRoom, setSelectedRoom] = React.useState([]);
@@ -87,20 +91,14 @@ const RoomsForLecturers: React.SFC<RoomsForLecturersProps> = ({
   };
 
   const onSubmit = handleSubmit((data) => {
-    const Lecturer: LecturerUpdateData = {
-      _id: lecID as string,
-      name: lecName,
-      employeeId: lecEmp,
-      faculty: lecFaculty,
-      department: lecDept,
-      centre: lecCentre,
-      building: lecbuilding,
-      level: parseInt(lecLevel, 10),
-      rank: lecRank,
+    handleClose();
+    const Tags: TagsUpdateData = {
+      _id: tagID as string,
+      name: tagName,
       rooms: data.selectedRoom,
     };
-    console.log("values2", Lecturer);
-    updateLecturer(Lecturer)
+    console.log("values2", Tags);
+    updateTags(Tags)
       .then((res) => {
         console.log(res);
       })
@@ -188,4 +186,4 @@ const RoomsForLecturers: React.SFC<RoomsForLecturersProps> = ({
   );
 };
 
-export default RoomsForLecturers;
+export default RoomsForSubject;

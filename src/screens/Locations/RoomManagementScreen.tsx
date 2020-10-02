@@ -11,7 +11,15 @@ import { useGetGroup } from "../../queries/useGetGroup";
 import { useGetSubGroup } from "../../queries/useGetSubGroup";
 import RoomsForSession from "../../components/RoomManagement/RoomsForSession";
 import RoomsForTags from "../../components/RoomManagement/RoomsForTags";
+import RoomsForLecturers from "../../components/RoomManagement/RoomsForLecturers";
+import RoomsForGroup from "../../components/RoomManagement/RoomsForGroup";
+import RoomsForSubGroup from "../../components/RoomManagement/RoomsForSubGroup";
+import RoomsForSubject from "../../components/RoomManagement/RoomsForSubject";
 import { Tags } from "../../models/Tags";
+import { Lecturer } from "../../models/Lecturer";
+import { Group } from "../../models/Group";
+import { SubGroup } from "../../models/SubGroup";
+import { Subject } from "../../models/Subject";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -53,6 +61,28 @@ const RoomManagementScreen: React.FC = () => {
   const subgroup = useGetSubGroup().data;
 
   const [tag, setTag] = React.useState<Tags>({ _id: "", name: "", rooms: [] });
+  const [lecturer, setLecturer] = React.useState<Lecturer>({
+    _id: "",
+    name: "",
+    employeeId: "",
+    faculty: "",
+    department: "",
+    centre: "",
+    building: "",
+    level: "",
+    rank: "",
+    rooms: [],
+  });
+  const [group, setGroup] = React.useState<Group>({
+    _id: "",
+    number: "",
+    rooms: [],
+  });
+  const [subGroup, setSubGroup] = React.useState<SubGroup>({
+    _id: "",
+    number: "",
+    rooms: [],
+  });
 
   const { register, handleSubmit, errors } = useForm();
 
@@ -114,12 +144,11 @@ const RoomManagementScreen: React.FC = () => {
                         return <option value={t.name}>{t.name}</option>;
                       })}
                     </select>
-
-                    <div style={{ float: "right" }}>
-                      <br />
-                      <RoomsForTags />
-                    </div>
                   </Grid>
+                  <div style={{ float: "right" }}>
+                    <br />
+                    <RoomsForTags tagID={tag._id} tagName={tag.name} />
+                  </div>
                 </Container>
               </div>
             </Grid>
@@ -168,6 +197,10 @@ const RoomManagementScreen: React.FC = () => {
                       })}
                     </select>
                   </Grid>
+                  <div style={{ float: "right", marginTop: "-45px" }}>
+                    <br />
+                    <RoomsForSubject />
+                  </div>
                 </Container>
               </div>
             </Grid>
@@ -190,12 +223,50 @@ const RoomManagementScreen: React.FC = () => {
                       aria-label="lecturer"
                       name="leturer"
                       ref={register({ required: true })}
+                      onChange={(event) => {
+                        const selectedValue = event.target.value;
+
+                        let selectedLecturer: Lecturer = {
+                          _id: "",
+                          name: "",
+                          employeeId: "",
+                          faculty: "",
+                          department: "",
+                          centre: "",
+                          building: "",
+                          level: "",
+                          rank: "",
+                          rooms: [],
+                        };
+
+                        // eslint-disable-next-line no-unused-expressions
+                        lecturers?.forEach((l) => {
+                          if (l.name === selectedValue) {
+                            selectedLecturer = l;
+                          }
+                        });
+
+                        setLecturer(selectedLecturer);
+                      }}
                     >
                       {lecturers?.map((l) => {
                         return <option value={l.name}>{l.name}</option>;
                       })}
                     </select>
+
+                    <br />
                   </Grid>
+                  <RoomsForLecturers
+                    lecID={lecturer._id}
+                    lecName={lecturer.name}
+                    lecEmp={lecturer.employeeId}
+                    lecFaculty={lecturer.faculty}
+                    lecDept={lecturer.department}
+                    lecCentre={lecturer.centre}
+                    lecbuilding={lecturer.building}
+                    lecLevel={lecturer.level}
+                    lecRank={lecturer.rank}
+                  />
                 </Container>
               </div>
             </Grid>
@@ -205,42 +276,100 @@ const RoomManagementScreen: React.FC = () => {
                   <h5 style={{ fontFamily: "Roboto", marginTop: "10px" }}>
                     Groups/Sub-groups
                   </h5>
+                  <Grid container spacing={3}>
+                    <Grid item xs={8}>
+                      <h6
+                        style={{
+                          color: "gray",
+                          fontSize: "12px",
+                          marginTop: "15px",
+                        }}
+                      >
+                        Group Name
+                      </h6>
+                      <select
+                        className="form-select"
+                        aria-label="group"
+                        name="group"
+                        ref={register({ required: true })}
+                        onChange={(event) => {
+                          const selectedValue = event.target.value;
 
-                  <Grid item xs={8}>
-                    <h6
-                      style={{
-                        color: "gray",
-                        fontSize: "12px",
-                        marginTop: "15px",
-                      }}
-                    >
-                      Group Name
-                    </h6>
-                    <select
-                      className="form-select"
-                      aria-label="group"
-                      name="group"
-                      ref={register({ required: true })}
-                    >
-                      {groups?.map((g) => {
-                        return <option value={g.number}>{g.number}</option>;
-                      })}
-                    </select>
+                          let selectedGroup: Group = {
+                            _id: "",
+                            number: "",
+                            rooms: [],
+                          };
+
+                          // eslint-disable-next-line no-unused-expressions
+                          groups?.forEach((g) => {
+                            if (g.number === selectedValue) {
+                              selectedGroup = g;
+                            }
+                          });
+
+                          setGroup(selectedGroup);
+                        }}
+                      >
+                        {groups?.map((g) => {
+                          return <option value={g.number}>{g.number}</option>;
+                        })}
+                      </select>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <div style={{ float: "right", marginTop: "18px" }}>
+                        <br />
+                        <RoomsForGroup
+                          groupID={group._id}
+                          groupNum={group.number}
+                        />
+                      </div>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={8}>
-                    <h6 style={{ color: "gray", fontSize: "12px" }}>
-                      Sub-group Name
-                    </h6>
-                    <select
-                      className="form-select"
-                      aria-label="subgroup"
-                      name="subgroup"
-                      ref={register({ required: true })}
-                    >
-                      {subgroup?.map((s) => {
-                        return <option value={s.number}>{s.number}</option>;
-                      })}
-                    </select>
+
+                  <Grid container spacing={3}>
+                    <Grid item xs={8}>
+                      <h6 style={{ color: "gray", fontSize: "12px" }}>
+                        Sub-group Name
+                      </h6>
+                      <select
+                        className="form-select"
+                        aria-label="subgroup"
+                        name="subgroup"
+                        ref={register({ required: true })}
+                        onChange={(event) => {
+                          const selectedValue = event.target.value;
+
+                          let selectedSubGroup: SubGroup = {
+                            _id: "",
+                            number: "",
+                            rooms: [],
+                          };
+
+                          // eslint-disable-next-line no-unused-expressions
+                          subgroup?.forEach((g) => {
+                            if (g.number === selectedValue) {
+                              selectedSubGroup = g;
+                            }
+                          });
+
+                          setSubGroup(selectedSubGroup);
+                        }}
+                      >
+                        {subgroup?.map((s) => {
+                          return <option value={s.number}>{s.number}</option>;
+                        })}
+                      </select>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <div style={{ float: "right", marginTop: "2px" }}>
+                        <br />
+                        <RoomsForSubGroup
+                          groupID={subGroup._id}
+                          groupNum={subGroup.number}
+                        />
+                      </div>
+                    </Grid>
                   </Grid>
                 </Container>
               </div>

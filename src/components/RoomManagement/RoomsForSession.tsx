@@ -17,6 +17,7 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
+import AddRoomForSession from "./AddRoomForSession";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -85,7 +86,7 @@ export default function RoomsForSession() {
       <BootstrapButton
         size="small"
         onClick={handleClickOpen}
-        style={{ color: "white" }}
+        style={{ color: "white", float: "right" }}
       >
         <h5
           style={{
@@ -95,7 +96,7 @@ export default function RoomsForSession() {
             backgroundColor: "0075FF",
           }}
         />
-        Add Room
+        Add Rooms
       </BootstrapButton>
 
       <Dialog
@@ -124,24 +125,30 @@ export default function RoomsForSession() {
                     <Table aria-label="collapsible table">
                       <TableHead>
                         <TableRow>
-                          <TableCell />
                           <TableCell>Lecturer</TableCell>
-                          <TableCell style={{ width: 100 }} align="right">
-                            Subject
-                          </TableCell>
-                          <TableCell style={{ width: 100 }} align="right">
-                            GroupID
-                          </TableCell>
+                          <TableCell style={{ width: 100 }}>Subject</TableCell>
+                          <TableCell style={{ width: 100 }}>GroupID</TableCell>
                           <TableCell></TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
                         {sessions?.map((s) => (
                           <TableRow>
-                            <TableCell>"Hello"{s.lecturers}</TableCell>
+                            <TableCell>{s.lecturers.join(", ")}</TableCell>
                             <TableCell>{s.subject}</TableCell>
                             <TableCell>{s.studentGroup}</TableCell>
-                            <TableCell>Add Room</TableCell>
+                            <TableCell>
+                              <AddRoomForSession
+                                ID={s._id}
+                                lecturers={s.lecturers}
+                                tags={s.tags}
+                                group={s.studentGroup}
+                                subject={s.subject}
+                                sCode={s.subjectCode}
+                                noOfStd={s.noOfStudents}
+                                duration={s.duration}
+                              />
+                            </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>

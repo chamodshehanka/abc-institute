@@ -32,7 +32,8 @@ export const routes = [
   { path: "/group-screen", component: GroupScreen },
   { path: "/subgroup-screen", component: SubGroup },
   { path: "/tags-screen", component: TagsScreen },
-  { path: "/locations-screen", component: RoomManagementScreen },
+  { path: "/locations-screen", component: LocationsScreen },
+  { path: "/rooms-screen", component: RoomManagementScreen },
   { path: "/statistic-screen", component: StatisticScreen },
   { path: "/test", component: TestPage },
 ];

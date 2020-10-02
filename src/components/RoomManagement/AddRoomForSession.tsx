@@ -1,4 +1,5 @@
 import React from "react";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -12,11 +13,28 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import { useForm, NestedValue } from "react-hook-form";
 import { Options } from "electron";
-import { LecturerUpdateData } from "../../api/interfaces";
-import { updateLecturer } from "../../api/lecturers/lecturers.request";
+import { SessionUpdateData } from "../../api/interfaces";
+import { updateSession } from "../../api/sessions/sessions.request";
+import AddIcon from "@material-ui/icons/Add";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      margin: "auto",
+    },
+    paper: {
+      width: 200,
+      height: 230,
+      overflow: "auto",
+    },
+    button: {
+      margin: theme.spacing(0.5, 0),
+    },
+  })
+);
 
 const BootstrapButton = withStyles({
   root: {
@@ -45,29 +63,28 @@ const BootstrapButton = withStyles({
   },
 })(Button);
 
-export interface RoomsForLecturersProps {
-  lecID: string;
-  lecName: string;
-  lecEmp: string;
-  lecFaculty: string;
-  lecDept: string;
-  lecCentre: string;
-  lecbuilding: string;
-  lecLevel: string;
-  lecRank: string;
+export interface AddRoomForSessionProps {
+  ID: string;
+  lecturers: string[];
+  tags: string;
+  group: string;
+  subject: string;
+  sCode: string;
+  noOfStd: number;
+  duration: number;
 }
 
-const RoomsForLecturers: React.SFC<RoomsForLecturersProps> = ({
-  lecID,
-  lecName,
-  lecEmp,
-  lecFaculty,
-  lecDept,
-  lecCentre,
-  lecbuilding,
-  lecLevel,
-  lecRank,
-}: RoomsForLecturersProps) => {
+const AddRoomForSession: React.SFC<AddRoomForSessionProps> = ({
+  ID,
+  lecturers,
+  tags,
+  group,
+  subject,
+  sCode,
+  noOfStd,
+  duration,
+}: AddRoomForSessionProps) => {
+  const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const rooms = useGetRooms().data;
   const [selectedRoom, setSelectedRoom] = React.useState([]);
@@ -87,20 +104,19 @@ const RoomsForLecturers: React.SFC<RoomsForLecturersProps> = ({
   };
 
   const onSubmit = handleSubmit((data) => {
-    const Lecturer: LecturerUpdateData = {
-      _id: lecID as string,
-      name: lecName,
-      employeeId: lecEmp,
-      faculty: lecFaculty,
-      department: lecDept,
-      centre: lecCentre,
-      building: lecbuilding,
-      level: parseInt(lecLevel, 10),
-      rank: lecRank,
+    const Session: SessionUpdateData = {
+      _id: ID as string,
+      lecturers: lecturers,
+      tags: tags,
+      studentGroup: group,
+      subject: subject,
+      subjectCode: sCode,
+      noOfStudents: noOfStd,
+      duration: duration,
       rooms: data.selectedRoom,
     };
-    console.log("values2", Lecturer);
-    updateLecturer(Lecturer)
+    console.log("values2", Session);
+    updateSession(Session)
       .then((res) => {
         console.log(res);
       })
@@ -118,8 +134,9 @@ const RoomsForLecturers: React.SFC<RoomsForLecturersProps> = ({
       <BootstrapButton
         size="small"
         onClick={handleClickOpen}
-        style={{ color: "white", float: "right" }}
+        style={{ color: "white" }}
       >
+        <AddIcon />
         <h5
           style={{
             color: "white",
@@ -128,7 +145,7 @@ const RoomsForLecturers: React.SFC<RoomsForLecturersProps> = ({
             backgroundColor: "0075FF",
           }}
         />
-        Add Rooms
+        Room
       </BootstrapButton>
 
       <Dialog
@@ -188,4 +205,4 @@ const RoomsForLecturers: React.SFC<RoomsForLecturersProps> = ({
   );
 };
 
-export default RoomsForLecturers;
+export default AddRoomForSession;

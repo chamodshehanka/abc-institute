@@ -101,6 +101,7 @@ export interface GroupCreateData {
 export interface GroupUpdateData {
   _id: string;
   number: string;
+  rooms: Options[];
 }
 
 export interface SubGroupCreateData {
@@ -110,6 +111,7 @@ export interface SubGroupCreateData {
 export interface SubGroupUpdateData {
   _id: string;
   number: string;
+  rooms: Options[];
 }
 
 export interface TagsCreateData {
@@ -183,6 +185,7 @@ export interface LecturerUpdateData {
   building: string;
   level: number;
   rank: string;
+  rooms: Options[];
 }
 
 export interface RoomsByBuildingData {
@@ -222,6 +225,7 @@ export interface SessionUpdateData {
   subjectCode: string;
   noOfStudents: number;
   duration: number;
+  rooms: Options[];
 }
 
 export interface SessionCreateData {
