@@ -19,7 +19,6 @@ import { Tags } from "../../models/Tags";
 import { Lecturer } from "../../models/Lecturer";
 import { Group } from "../../models/Group";
 import { SubGroup } from "../../models/SubGroup";
-import { Subject } from "../../models/Subject";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -199,7 +198,7 @@ const RoomManagementScreen: React.FC = () => {
                   </Grid>
                   <div style={{ float: "right", marginTop: "-45px" }}>
                     <br />
-                    <RoomsForSubject />
+                    <RoomsForSubject tagID={tag._id} tagName={tag.name} />
                   </div>
                 </Container>
               </div>
