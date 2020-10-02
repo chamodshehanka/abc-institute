@@ -9,9 +9,9 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
-import { deleteCSession } from "../../api/sessions/consecutiveSessions.request";
+import { deleteOSession } from "../../api/sessions/overlapSessions.request";
 import { useHistory } from "react-router-dom";
-import { CSession } from "../../models/consecutiveSessions";
+import { OSession } from "../../models/overlapSessions";
 
 const useStyles = makeStyles({
   table: {
@@ -25,18 +25,18 @@ const useStyles = makeStyles({
   },
 });
 
-export interface ManageContblProps {
-  csession: CSession[];
+export interface ManageOsessiontblProps {
+  osession: OSession[];
 }
 
-const ManageCsessiontbl: React.SFC<ManageContblProps> = ({
-  csession,
-}: ManageContblProps) => {
+const ManageOsessiontbl: React.SFC<ManageOsessiontblProps> = ({
+  osession,
+}: ManageOsessiontblProps) => {
   const classes = useStyles();
   const history = useHistory();
 
   const handleDeleteAction = (e) => {
-    deleteCSession(e)
+    deleteOSession(e)
       .then((res) => {
         console.log(res);
         history.push("student-year-screen");
@@ -58,10 +58,10 @@ const ManageCsessiontbl: React.SFC<ManageContblProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {csession.map((w: CSession) => (
+            {osession.map((w: OSession) => (
               <TableRow key={w._id}>
                 <TableCell component="th" scope="row">
-                  {w.csessions.map((l) => l + ",")}
+                  {w.osessions.map((l) => l + ",")}
                 </TableCell>
 
                 <TableCell align="right">
@@ -79,4 +79,4 @@ const ManageCsessiontbl: React.SFC<ManageContblProps> = ({
   );
 };
 
-export default ManageCsessiontbl;
+export default ManageOsessiontbl;

@@ -63,7 +63,7 @@ const ManagePsessiontbl: React.SFC<ManagePsessiontblProps> = ({
                 <TableCell component="th" scope="row">
                   {w.psessions.map((l) => l + ",")}
                 </TableCell>
-                <TableCell align="right"></TableCell>
+
                 <TableCell align="right">
                   {" "}
                   <Button onClick={() => handleDeleteAction(w._id)}>

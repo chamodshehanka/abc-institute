@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { useGetSessions } from "../../queries/useGetSessions";
 import ParallelSession from "../../components/manageSessions/ParallelSession";
+import OverlapSession from "../../components/manageSessions/OverlapSession";
 import ConsecutiveSession from "../../components/manageSessions/ConsecutiveSession";
 
 interface TabPanelProps {
@@ -85,7 +86,9 @@ const SessionManageScreen: React.SFC = () => {
             <ConsecutiveSession csession={data} />
           </TabPanel>
 
-          <TabPanel value={value} index={2}></TabPanel>
+          <TabPanel value={value} index={2}>
+            <OverlapSession osession={data} />
+          </TabPanel>
         </div>
       </Container>
     </React.Fragment>
