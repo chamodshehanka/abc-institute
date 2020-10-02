@@ -10,16 +10,14 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { Buildings } from "../../models/Buildings";
 import CollapsibleTable from "./CollapsibleTable";
-//import { Rooms } from "../../models/Rooms";
 import { useGetRooms } from "../../queries/useGetRooms";
-//import { getRoombyBuilding } from "../../api/rooms/rooms.request"
 
 const useStyles = makeStyles({
   root: {
     width: "100%",
   },
   container: {
-    height: "230px",
+    height: "550px",
   },
 });
 
@@ -40,6 +38,13 @@ const ManageRooms: React.SFC<ManageRoomsProps> = ({
           <TableRow>
             <TableCell />
             <TableCell>Building Name</TableCell>
+            <TableCell style={{ width: 100 }} align="right">
+              Edit
+            </TableCell>
+            <TableCell style={{ width: 100 }} align="right">
+              Delete
+            </TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

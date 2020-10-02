@@ -11,7 +11,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import AddIcon from "@material-ui/icons/Add";
 import TextField from "@material-ui/core/TextField";
 import { useForm } from "react-hook-form";
-
+import { useHistory } from "react-router-dom";
 import { addRooms } from "../../api/rooms/rooms.request";
 import { RoomsCreateData } from "../../api/interfaces";
 import { withStyles } from "@material-ui/core/styles";
@@ -33,6 +33,8 @@ const AddRoom: React.SFC<ManageAddRoomProps> = ({
     setOpen(false);
   };
 
+  const history = useHistory();
+
   const onSubmit = (data) => {
     console.log(data);
     const room: RoomsCreateData = {
@@ -47,9 +49,11 @@ const AddRoom: React.SFC<ManageAddRoomProps> = ({
       })
       .catch((err) => console.log(err));
     handleClose();
+    history.push("/student-home-screen");
+    history.push("/locations-screen");
   };
 
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, errors } = useForm();
 
   const BootstrapButton = withStyles({
     root: {
@@ -125,18 +129,21 @@ const AddRoom: React.SFC<ManageAddRoomProps> = ({
               Building &nbsp;&nbsp;
               <TextField
                 name="building"
-                inputRef={register}
+                inputRef={register({ required: true })}
                 value={buildingName}
                 variant="outlined"
                 size="small"
               ></TextField>
+              {errors.building && (
+                <span style={{ color: "red" }}>This Field is Required</span>
+              )}
             </DialogContentText>
             <RadioGroup
               row
               aria-label="position"
               name="roomType"
               defaultValue="top"
-              ref={register}
+              ref={register({ required: true })}
             >
               <FormControlLabel
                 value="Lecture Hall"
@@ -154,16 +161,26 @@ const AddRoom: React.SFC<ManageAddRoomProps> = ({
             <DialogContentText>Room Name</DialogContentText>
             <TextField
               name="name"
-              inputRef={register}
+              inputRef={register({ required: true })}
               variant="outlined"
               fullWidth
               margin="dense"
             ></TextField>
+            {errors.name && (
+              <span style={{ color: "red" }}>This Field is Required</span>
+            )}
             <DialogActions>
               <Button type="submit" color="primary">
                 Add
               </Button>
-              <Button onClick={handleClose} color="primary">
+              <Button
+                onClick={() => {
+                  handleClose();
+                  history.push("/student-home-screen");
+                  history.push("/locations-screen");
+                }}
+                color="primary"
+              >
                 Close
               </Button>
             </DialogActions>
