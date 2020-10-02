@@ -279,6 +279,7 @@ const SessionAction: React.FC<SessionsActionProps> = (props) => {
       subjectCode: data?.subjectCode,
       noOfStudents: data?.noOfStudents,
       duration: data?.duration,
+      rooms: [],
     };
 
     updateSession(session)
