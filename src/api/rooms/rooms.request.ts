@@ -14,10 +14,7 @@ export async function addRooms(requestData: RoomsCreateData) {
 
 export async function updateRooms(requestData: RoomsUpdateData) {
   try {
-    const res = await apiInstance.put(
-      "/rooms/upadte" + requestData._id,
-      requestData
-    );
+    const res = await apiInstance.put("/rooms/update", requestData);
     const apiRes = res.data;
     return apiRes.success;
   } catch (e) {
@@ -44,5 +41,3 @@ export async function getAllRooms() {
     console.error(e);
   }
 }
-
-
