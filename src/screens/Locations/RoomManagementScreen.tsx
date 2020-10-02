@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const RoomManagementScreen: React.SFC = () => {
+const RoomManagementScreen: React.FC = () => {
   const classes = useStyles();
 
   const tags = useGetTags().data;
@@ -90,15 +90,28 @@ const RoomManagementScreen: React.SFC = () => {
                       aria-label="tags"
                       name="tags"
                       ref={register({ required: true })}
-                      // value={tag}
-                      onChange={() => {
-                        //  setTag(event.target.value as Tags);
+                      value={tag.name}
+                      onChange={(event) => {
+                        const selectedValue = event.target.value;
+
+                        let selectedTag: Tags = {
+                          _id: "",
+                          name: "",
+                          rooms: [],
+                        };
+
+                        // eslint-disable-next-line no-unused-expressions
+                        tags?.forEach((t) => {
+                          if (t.name === selectedValue) {
+                            selectedTag = t;
+                          }
+                        });
+
+                        setTag(selectedTag);
                       }}
                     >
                       {tags?.map((t) => {
                         return <option value={t.name}>{t.name}</option>;
-                        {
-                        }
                       })}
                     </select>
 
