@@ -264,6 +264,11 @@ export interface TimeslotCreateData {
   session: string;
 }
 
+export interface TimetableGenerateData {
+  workingDay: string;
+  groups: string[];
+}
+
 export interface PSessionCreateData {
   psessions: string[];
 }
