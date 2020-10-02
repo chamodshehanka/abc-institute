@@ -63,7 +63,6 @@ const ManageCsessiontbl: React.SFC<ManageContblProps> = ({
                 <TableCell component="th" scope="row">
                   {w.csessions.map((l) => l + ",")}
                 </TableCell>
-
                 <TableCell align="right">
                   {" "}
                   <Button onClick={() => handleDeleteAction(w._id)}>

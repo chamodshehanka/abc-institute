@@ -85,7 +85,6 @@ const RoomManagementScreen: React.FC = () => {
   });
 
   const { register, handleSubmit, errors } = useForm();
-  console.log(handleSubmit,errors);
 
   return (
     <>

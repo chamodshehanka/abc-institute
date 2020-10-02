@@ -152,24 +152,6 @@ export interface NotAvailableUpdateData {
   ltime: string;
 }
 
-export interface NotAvailableCreateData {
-  type: string;
-  typeId: string;
-  name: string;
-  day: string;
-  stime: string;
-  ltime: string;
-}
-
-export interface NotAvailableUpdateData {
-  _id: string;
-  type: string;
-  typeId: string;
-  name: string;
-  day: string;
-  stime: string;
-  ltime: string;
-}
 
 export interface TagsCreateData {
   name: string;
@@ -305,7 +287,6 @@ export interface CSessionCreateData {
 
 export interface OSessionCreateData {
   osessions: string[];
-
 }
 
 export interface TimeslotCreateData {
