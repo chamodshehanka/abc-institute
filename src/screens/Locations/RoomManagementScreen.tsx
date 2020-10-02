@@ -15,6 +15,7 @@ import RoomsForLecturers from "../../components/RoomManagement/RoomsForLecturers
 import RoomsForGroup from "../../components/RoomManagement/RoomsForGroup";
 import RoomsForSubGroup from "../../components/RoomManagement/RoomsForSubGroup";
 import RoomsForSubject from "../../components/RoomManagement/RoomsForSubject";
+import RoomsNotAvailableTime from "../../components/RoomManagement/RoomsNotAvailableTime";
 import { Tags } from "../../models/Tags";
 import { Lecturer } from "../../models/Lecturer";
 import { Group } from "../../models/Group";
@@ -400,6 +401,7 @@ const RoomManagementScreen: React.FC = () => {
                   <h6 style={{ color: "gray", fontSize: "14px" }}>
                     Add time period that con not be reserved
                   </h6>
+                  <RoomsNotAvailableTime />
                 </Container>
               </div>
             </Grid>
