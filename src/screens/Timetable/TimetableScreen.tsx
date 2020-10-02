@@ -6,10 +6,12 @@ import TimetableTable from "../../components/Timetable/TimetableTable";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import SearchIcon from "@material-ui/icons/Search";
 import { TableSearchInput } from "../../components/Common/TableViewComponents/TableSearchInput";
+import { useHistory } from "react-router-dom";
 
 const TimetableScreen: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const { data = [], status } = useGetTimetable();
+  const history = useHistory();
 
   const noData = status === "success" && data?.length === 0;
   const hasData = status === "success" && data?.length !== 0;
@@ -25,7 +27,12 @@ const TimetableScreen: React.FC = () => {
           <TableSearchInput onUpdate={setSearchText} />
         </div>
         <div className="col-3">
-          <button className="btn btn-primary">
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              history.push("/generate-timetable");
+            }}
+          >
             Create <AddCircleIcon />
           </button>
         </div>

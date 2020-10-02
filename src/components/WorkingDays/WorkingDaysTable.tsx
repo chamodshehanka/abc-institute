@@ -20,7 +20,7 @@ import { deleteWorkingDays } from "../../api/working-days/working.days.request";
 import Alert from "@material-ui/lab/Alert";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import DateRangeIcon from "@material-ui/icons/DateRange";
-import WatchLaterIcon from "@material-ui/icons/WatchLater";
+// import WatchLaterIcon from "@material-ui/icons/WatchLater";
 import "./WorkingDaysTable.css";
 import { useFilterRows } from "../Common/TableViewComponents/useFilterData";
 import { TableFooterPagination } from "../Common/TableViewComponents/TableFooterPagination";
@@ -93,9 +93,9 @@ const ManageWorkingDaysTable: React.FC<ManageWorkingDaysTableProps> = ({
               <TableCell style={{ fontFamily: "Varela Round" }}>
                 No of Wokring Days
               </TableCell>
-              <TableCell style={{ fontFamily: "Varela Round" }}>
+              {/* <TableCell style={{ fontFamily: "Varela Round" }}>
                 No of Working Hours
-              </TableCell>
+              </TableCell> */}
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
@@ -118,7 +118,7 @@ const ManageWorkingDaysTable: React.FC<ManageWorkingDaysTableProps> = ({
                     style={{ backgroundColor: "#0065ff" }}
                   />
                 </TableCell>
-                <TableCell>
+                {/* <TableCell>
                   <Chip
                     size="small"
                     color="secondary"
@@ -134,7 +134,7 @@ const ManageWorkingDaysTable: React.FC<ManageWorkingDaysTableProps> = ({
                     }
                     style={{ backgroundColor: "#00AD28" }}
                   />
-                </TableCell>
+                </TableCell> */}
                 <TableCell style={{ width: "5rem" }}>
                   <div className="display-flex align-center justify-end">
                     <WorkingDaysAction workingDays={w} />
