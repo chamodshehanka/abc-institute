@@ -238,3 +238,8 @@ export interface TimeslotCreateData {
   day: string;
   session: string;
 }
+
+export interface TimetableGenerateData {
+  workingDay: string;
+  groups: string[];
+}

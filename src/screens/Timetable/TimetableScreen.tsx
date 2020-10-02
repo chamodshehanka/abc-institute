@@ -1,20 +1,39 @@
 import React, { useState } from "react";
-import { Container, Card, LinearProgress, Toolbar } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
-import { useGetTimetable } from "../../queries/useGetTimetable";
-import TimetableTable from "../../components/Timetable/TimetableTable";
+import { Container, Card, Toolbar } from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import SearchIcon from "@material-ui/icons/Search";
-import { TableSearchInput } from "../../components/Common/TableViewComponents/TableSearchInput";
 import { useHistory } from "react-router-dom";
+import { useGetLecturers } from "../../queries/useGetLecturers";
+import { useGenerateGroupId } from "../../queries/useGenerateGroupId";
+import { useGetRooms } from "../../queries/useGetRooms";
 
 const TimetableScreen: React.FC = () => {
-  const [searchText, setSearchText] = useState("");
-  const { data = [], status } = useGetTimetable();
+  const [viewBy, setViewBy] = useState("");
+  const [selectedLecturer, setSelectedLecturer] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState("");
+  const [selectedRoom, setselectedRoom] = useState("");
   const history = useHistory();
 
-  const noData = status === "success" && data?.length === 0;
-  const hasData = status === "success" && data?.length !== 0;
+  const { data: lecturersData = [] } = useGetLecturers();
+  const { data: groupData = [] } = useGenerateGroupId();
+  const { data: roomsData = [] } = useGetRooms();
+
+  const handleViewChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setViewBy(event.target.value as string);
+  };
+
+  const handleLecturerChange = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    setSelectedLecturer(event.target.value as string);
+  };
+
+  const handleGroupChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setSelectedGroup(event.target.value as string);
+  };
+
+  const handleRoomChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setselectedRoom(event.target.value as string);
+  };
 
   return (
     <>
@@ -22,33 +41,15 @@ const TimetableScreen: React.FC = () => {
 
       <div className="row mb-3">
         <div className="col-1"></div>
-        <div className="col-8">
-          <SearchIcon className="search-icon" />{" "}
-          <TableSearchInput onUpdate={setSearchText} />
-        </div>
-        <div className="col-3">
+        <div className="col-11">
           <button
             className="btn btn-primary"
             onClick={() => {
               history.push("/generate-timetable");
             }}
           >
-            Create <AddCircleIcon />
+            Generate <AddCircleIcon />
           </button>
-        </div>
-      </div>
-
-      {status === "loading" && <LinearProgress />}
-
-      <div className="row mb-3">
-        <div className="col-9"></div>
-        <div className="col-2">
-          <select className="form-select" aria-label="Default select example">
-            <option selected>Sort By</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-          </select>
         </div>
       </div>
 
@@ -56,17 +57,77 @@ const TimetableScreen: React.FC = () => {
         <Card>
           <Toolbar style={{ paddingLeft: 0 }}>
             <div className="container">
-              {status === "error" && (
-                <Alert severity="error">Error loading Working Days Data</Alert>
-              )}
-              {noData && (
-                <Alert severity="info">
-                  You have not created any timetables.
-                </Alert>
-              )}
-              {hasData && (
-                <TimetableTable timetables={data} searchVal={searchText} />
-              )}
+              <div className="row">
+                <div className="col">
+                  <select
+                    className="form-select"
+                    aria-label="Default select example"
+                    value={viewBy}
+                    onChange={handleViewChange}
+                  >
+                    <option selected>View By</option>
+                    <option value="Lecturer">Lecturer</option>
+                    <option value="Group">Group</option>
+                    <option value="Room">Room</option>
+                  </select>
+                </div>
+
+                <div className="col">
+                  {viewBy === "Lecturer" && (
+                    <>
+                      <select
+                        className="form-select"
+                        aria-label="Default select example"
+                        value={selectedLecturer}
+                        onChange={handleLecturerChange}
+                      >
+                        <option selected>Select Lecturer</option>
+                        {lecturersData?.map((l) => (
+                          <option> {l?.name}</option>
+                        ))}
+                      </select>
+                    </>
+                  )}
+
+                  {viewBy === "Group" && (
+                    <>
+                      <select
+                        className="form-select"
+                        aria-label="Default select example"
+                        value={selectedGroup}
+                        onChange={handleGroupChange}
+                      >
+                        <option selected>Select Group</option>
+                        {groupData?.map((g) => (
+                          <option value={g?.groupId}>{g?.groupId}</option>
+                        ))}
+                      </select>
+                    </>
+                  )}
+
+                  {viewBy === "Room" && (
+                    <>
+                      <select
+                        className="form-select"
+                        aria-label="Default select example"
+                        value={selectedRoom}
+                        onChange={handleRoomChange}
+                      >
+                        <option selected>Select Room</option>
+                        {roomsData?.map((r) => (
+                          <option value={r?.name}>{r?.name}</option>
+                        ))}
+                      </select>
+                    </>
+                  )}
+                </div>
+
+                <div className="col">
+                  {viewBy !== "" && (
+                    <button className="btn btn-primary">View</button>
+                  )}
+                </div>
+              </div>
             </div>
           </Toolbar>
         </Card>

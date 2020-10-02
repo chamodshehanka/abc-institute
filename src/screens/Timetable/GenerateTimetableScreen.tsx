@@ -11,13 +11,20 @@ import { Alert } from "@material-ui/lab";
 import { useGenerateGroupId } from "../../queries/useGenerateGroupId";
 import React, { useState } from "react";
 import { useGetWorkingDays } from "../../queries/useGetWorkingDays";
+import { generateTimetable } from "../../api/timetable/timetable.request";
+import { TimetableGenerateData } from "../../api/interfaces";
+import { useGetTimeslots } from "../../queries/useGetTimeslots";
+import { Page, Text, View, Document, PDFViewer } from "@react-pdf/renderer";
+import TimetableView from "./TimetableView";
 
 const GenerateTimetableScreen: React.FC = () => {
   const [workingDate, setWorkingDate] = useState("");
   const [group, setGroup] = useState("");
+  const [viewTimetable, setViewTimetable] = useState(false);
 
   const { data: wdData = [], status: wdStatus } = useGetWorkingDays();
   const { data: gData = [], status: gStatus } = useGenerateGroupId();
+  const { data: timeslotData = [], status: timeslotStatus } = useGetTimeslots();
 
   const noData = wdStatus === "success" && wdData?.length === 0;
   const hasData = wdStatus === "success" && wdData?.length !== 0;
@@ -29,6 +36,33 @@ const GenerateTimetableScreen: React.FC = () => {
   const handleGroupChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setGroup(event.target.value as string);
   };
+
+  const generateTimetableAction = async () => {
+    const requestData: TimetableGenerateData = {
+      workingDay: workingDate,
+      groups: [group],
+    };
+    const isGenerated = await generateTimetable(requestData);
+    if (isGenerated) {
+      setViewTimetable(true);
+    }
+  };
+
+  // Create Document Component
+  //   const MyDocument = () => (
+  //     <Document>
+  //       <Page size="A4" style={{ flexDirection: "row", width: "100%" }}>
+  //         <View style={{ margin: 10, padding: 10, flexGrow: 1 }}>
+  //           <Text>Section #1</Text>
+
+  //           {timeslotData.map((t) => t?.session)}
+  //         </View>
+  //         <View>
+  //           <Text>Section #2</Text>
+  //         </View>
+  //       </Page>
+  //     </Document>
+  //   );
 
   return (
     <>
@@ -94,7 +128,14 @@ const GenerateTimetableScreen: React.FC = () => {
                     </Grid>
 
                     <Grid item xs={4}>
-                      <button className="btn btn-primary">Generate</button>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => {
+                          generateTimetableAction();
+                        }}
+                      >
+                        Generate
+                      </button>
                     </Grid>
                   </Grid>
                 </>

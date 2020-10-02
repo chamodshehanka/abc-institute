@@ -138,7 +138,7 @@ const SidePanel: React.FC = () => {
                 icon={<DateRangeIcon />}
               />
               <ListItemLink
-                to="/generate-timetable"
+                to="/manage-timetables"
                 primary="Timetables"
                 icon={<TableChartIcon />}
               />
