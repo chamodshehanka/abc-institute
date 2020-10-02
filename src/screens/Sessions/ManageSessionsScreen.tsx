@@ -74,10 +74,10 @@ const ManageSessionsScreen: React.SFC = () => {
     });
   }
 
+
   function handleSortByChange(sortBy: string) {
     setSortBy(sortBy);
   }
-
   function handleTagChange(tag: string) {
     // eslint-disable-next-line prefer-const
     let students = [""];

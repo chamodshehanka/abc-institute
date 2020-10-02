@@ -11,16 +11,16 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
 import {
-  deleteProgramme,
-  updateProgramme,
-} from "../../api/student/programme.request";
+  deleteNotAvailable,
+  updateNotAvailable,
+} from "../../api/student/notAvailable.requets";
 import { useHistory, useLocation } from "react-router-dom";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { ProgrammeUpdateData } from "../../api/interfaces";
-import { Programme } from "../../models/Programme";
+import { NotAvailableUpdateData } from "../../api/interfaces";
+import { NotAvailable } from "../../models/NotAvailable";
 import { useForm } from "react-hook-form";
 
 const useStyles = makeStyles({
@@ -35,23 +35,23 @@ const useStyles = makeStyles({
   },
 });
 
-export interface ManageProgrammeProps {
-  programme: Programme[];
+export interface ManageNotAvailabletblProps {
+  notabl: NotAvailable[];
 }
 
-const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
-  programme,
-}: ManageProgrammeProps) => {
+const ManageNotAvailabletbl: React.SFC<ManageNotAvailabletblProps> = ({
+  notabl,
+}: ManageNotAvailabletblProps) => {
   const classes = useStyles();
   const history = useHistory();
 
   const location = useLocation();
 
   const [update, setUpdate] = React.useState(false);
-  const [programmes, selectprogramme] = React.useState(Object);
+  const [notAvailables, selectnotAvailables] = React.useState(Object);
 
-  const [editTags] = useState<Programme | undefined>(() => {
-    return location?.state as Programme | undefined;
+  const [editTags] = useState<NotAvailable | undefined>(() => {
+    return location?.state as NotAvailable | undefined;
   });
 
   const { register, handleSubmit, errors } = useForm({
@@ -59,16 +59,21 @@ const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
   });
 
   const onSubmit = (data: any) => {
-    const Programme: ProgrammeUpdateData = {
+    const notabl: NotAvailableUpdateData = {
       _id: data?._id as string,
+      type: data?.type,
+      typeId: data?.typeId,
       name: data?.name,
+      day: data?.day,
+      stime: data?.stime,
+      ltime: data?.ltime,
     };
     console.log("values2", data);
-    updateProgramme(Programme)
+    updateNotAvailable(notabl)
       .then((res) => {
         console.log(res);
         history.push("student-year-screen");
-        history.push("programme-screen");
+        history.push("not-available-screen");
       })
       .catch((err) => console.error(err));
   };
@@ -82,11 +87,11 @@ const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
   };
 
   const handleDeleteAction = (e) => {
-    deleteProgramme(e)
+    deleteNotAvailable(e)
       .then((res) => {
         console.log(res);
         history.push("student-year-screen");
-        history.push("programme-screen");
+        history.push("not-available-screen");
       })
       .catch((err) => console.error(err));
   };
@@ -94,10 +99,15 @@ const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
   return (
     <>
       <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
+        <Table className={classes.table} aria-label="simple table" size="small">
           <TableHead>
             <TableRow>
-              <TableCell className={classes.tablerow}>Programme Name</TableCell>
+              <TableCell className={classes.tablerow}>Type</TableCell>
+              <TableCell className={classes.tablerow}>Type ID</TableCell>
+              <TableCell className={classes.tablerow}>Name</TableCell>
+              <TableCell className={classes.tablerow}>Date</TableCell>
+              <TableCell className={classes.tablerow}>Start Time</TableCell>
+              <TableCell className={classes.tablerow}>End Time</TableCell>
               <TableCell className={classes.tablerow} align="right">
                 Edit
               </TableCell>
@@ -107,15 +117,30 @@ const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {programme.map((w: Programme) => (
+            {notabl.map((w: NotAvailable) => (
               <TableRow key={w._id}>
                 <TableCell component="th" scope="row">
                   {w.name}
                 </TableCell>
+                <TableCell component="th" scope="row">
+                  {w.typeId}
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  {w.name}
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  {w.day}
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  {w.stime}
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  {w.ltime}
+                </TableCell>
                 <TableCell align="right">
                   <Button
                     onClick={() => {
-                      selectprogramme(w);
+                      selectnotAvailables(w);
                       handleUpdateOpen();
                     }}
                   >
@@ -147,35 +172,66 @@ const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
                 onSubmit={handleSubmit(onSubmit)}
               >
                 <label htmlFor="txtName" className="form-label">
-                  Name
+                  Date :
                 </label>
                 <input
                   type="hidden"
                   name="_id"
                   ref={register}
-                  value={programmes._id}
+                  value={notAvailables._id}
                 />
                 <input
                   type="text"
                   className="form-control"
-                  id="name"
-                  name="name"
-                  placeholder={programmes.name}
+                  id="day"
+                  name="day"
+                  placeholder={notAvailables.day}
                   ref={register({ required: true })}
                 />
                 {errors.name && (
                   <span style={{ color: "red" }}>This Field is Required</span>
                 )}
+
+                <label htmlFor="txtName" className="form-label">
+                  Start Time :
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="stime"
+                  name="stime"
+                  placeholder={notAvailables.stime}
+                  ref={register({ required: true })}
+                />
+                {errors.name && (
+                  <span style={{ color: "red" }}>This Field is Required</span>
+                )}
+
+                <label htmlFor="txtName" className="form-label">
+                  End Time :
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="ltime"
+                  name="ltime"
+                  placeholder={notAvailables.ltime}
+                  ref={register({ required: true })}
+                />
+                {errors.name && (
+                  <span style={{ color: "red" }}>This Field is Required</span>
+                )}
+
                 <div className="align-right" style={{ alignContent: "right" }}>
                   <button type="submit" className="btn btn-primary btn-abc">
-                    Save
+                    Update
                   </button>{" "}
                   <button
                     type="button"
                     className="btn btn-danger btn-abc"
                     onClick={() => {
                       history.push("student-year-screen");
-                      history.push("programme-screen");
+                      history.push("not-available-screen");
                     }}
                   >
                     Cancel
@@ -190,4 +246,4 @@ const ManageProgrammeTable: React.SFC<ManageProgrammeProps> = ({
   );
 };
 
-export default ManageProgrammeTable;
+export default ManageNotAvailabletbl;
