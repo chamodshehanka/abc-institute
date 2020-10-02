@@ -19,7 +19,7 @@ export interface ManageParallelProps {
 const ParallelSession: React.SFC<ManageParallelProps> = ({
   psession,
 }: ManageParallelProps) => {
-  const values: string[] = [];
+  let values: string[];
 
   const [id, setId] = useState("");
   const { register, handleSubmit } = useForm();
@@ -38,7 +38,6 @@ const ParallelSession: React.SFC<ManageParallelProps> = ({
       .catch((err) => console.error(err));
   };
 
-  console.log("array ", values);
   return (
     <div>
       <TableContainer className="table-container expandable-table-container">
@@ -114,9 +113,12 @@ const ParallelSession: React.SFC<ManageParallelProps> = ({
         </div>
       </TableContainer>
       <ul>
-        {values?.map((value, index) => (
+        {/* {values?.map((value, index) => (
           <li key={index}>{value}</li>
         ))}
+
+        {  console.log("array1 ", values[0])}
+        {  console.log("array2 ", values[1])} */}
       </ul>
     </div>
   );
