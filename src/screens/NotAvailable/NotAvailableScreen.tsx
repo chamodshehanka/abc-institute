@@ -11,10 +11,11 @@ import {
 import { useGetLecturers } from "../../queries/useGetLecturers";
 import { useGenerateGroupId } from "../../queries/useGenerateGroupId";
 import { useGenerateSubGroupId } from "../../queries/useGenerateSubGroupId";
+import { useNotAvailable } from "../../queries/useNotAvailable";
 import ManageLecturersTable from "../../components/NotAvailable/LecturersDetailsTable";
 import ManageGenerateGroupTable from "../../components/NotAvailable/GeneratGroupTable";
 import ManageGenerateSubGroupTable from "../../components/NotAvailable/GeneratSubGroupTable";
-//import { useForm } from "react-hook-form";
+import ManageNotAvailabletbl from "../../components/NotAvailable/notAvailabletable";
 import SearchIcon from "@material-ui/icons/Search";
 import { TableSearchInput } from "../../components/Common/TableViewComponents/TableSearchInput";
 import { makeStyles } from "@material-ui/core/styles";
@@ -23,6 +24,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -70,13 +72,14 @@ const NotAvailableScreen: React.FC = () => {
   const { data: lecturer = [] } = useGetLecturers();
   const { data: groups = [] } = useGenerateGroupId();
   const { data: subgroups = [] } = useGenerateSubGroupId();
+  const { data: notavl = [] } = useNotAvailable();
   const [addDialog, setAddDialog] = useState(false);
   // const { register, handleSubmit } = useForm();
   // const displayToast = useToast();
 
-  // const handleAddDialogOpen = () => {
-  //   setAddDialog(true);
-  // };
+  const handleAddDialogOpen = () => {
+    setAddDialog(true);
+  };
 
   const handleAddDialogClose = () => {
     setAddDialog(false);
@@ -106,6 +109,14 @@ const NotAvailableScreen: React.FC = () => {
       {status === "loading" && <LinearProgress />}
 
       <div className={classes.root} style={{ marginTop: 50, marginLeft: 90 }}>
+        <div className="row mb-3">
+          <div className="col-8"></div>
+          <div style={{ display: "flex", alignItems: "flex-end" }}>
+            <button className="btn btn-primary" onClick={handleAddDialogOpen}>
+              View <VisibilityIcon />
+            </button>
+          </div>
+        </div>
         <AppBar position="static" color="default">
           <Tabs
             value={value}
@@ -117,9 +128,8 @@ const NotAvailableScreen: React.FC = () => {
             aria-label="scrollable auto tabs example"
           >
             <Tab label="Lecturers" {...a11yProps(0)} />
-            <Tab label="Sessions" {...a11yProps(1)} />
-            <Tab label="Groups" {...a11yProps(2)} />
-            <Tab label="Sub-Groups" {...a11yProps(3)} />
+            <Tab label="Groups" {...a11yProps(1)} />
+            <Tab label="Sub-Groups" {...a11yProps(2)} />
           </Tabs>
         </AppBar>
 
@@ -168,10 +178,6 @@ const NotAvailableScreen: React.FC = () => {
         </TabPanel>
 
         <TabPanel value={value} index={1}>
-          23
-        </TabPanel>
-
-        <TabPanel value={value} index={2}>
           <Container
             className="top-container"
             style={{
@@ -205,14 +211,17 @@ const NotAvailableScreen: React.FC = () => {
             <Card>
               <Toolbar style={{ paddingLeft: 0 }}>
                 <div className="container">
-                  <ManageGenerateGroupTable generategroup={groups} />
+                  <ManageGenerateGroupTable
+                    generategroup={groups}
+                    searchVal={searchText}
+                  />
                 </div>
               </Toolbar>
             </Card>
           </Container>
         </TabPanel>
 
-        <TabPanel value={value} index={3}>
+        <TabPanel value={value} index={2}>
           <Container
             className="top-container"
             style={{
@@ -246,7 +255,10 @@ const NotAvailableScreen: React.FC = () => {
             <Card>
               <Toolbar style={{ paddingLeft: 0 }}>
                 <div className="container">
-                  <ManageGenerateSubGroupTable generatesubgroup={subgroups} />
+                  <ManageGenerateSubGroupTable
+                    generatesubgroup={subgroups}
+                    searchVal={searchText}
+                  />
                 </div>
               </Toolbar>
             </Card>
@@ -259,146 +271,14 @@ const NotAvailableScreen: React.FC = () => {
         onClose={handleAddDialogClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        maxWidth="lg"
       >
-        <DialogTitle id="alert-dialog-title">{"Add Lecturer"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          {"Not Available Time"}
+        </DialogTitle>
 
         <DialogContent>
-          {/* <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={2} className="form-row">
-              <Grid item xs={6}>
-                <div>
-                  <label htmlFor="txtName" className="form-label">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="txtName"
-                    aria-describedby="emailHelp"
-                    name="name"
-                    ref={register}
-                  />
-                </div>
-              </Grid>
-
-              <Grid item xs={6}>
-                <div>
-                  <label htmlFor="txtName" className="form-label">
-                    Employee ID
-                  </label>
-                  <label style={{ marginLeft: "110px", color: "#C0C0C0" }}>
-                    000150
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="txtName"
-                    aria-describedby="emailHelp"
-                    name="employeeId"
-                    ref={register}
-                  />
-                </div>
-              </Grid>
-
-              <Grid item xs={6}>
-                <select
-                  className="form-select"
-                  aria-label="Faculty"
-                  name="faculty"
-                  ref={register}
-                >
-                  <option selected>Faculty</option>
-                  <option value="Computing">Computing</option>
-                  <option value="Business">Business</option>
-                  <option value="Engineering">Engineering</option>
-                </select>
-              </Grid>
-
-              <Grid item xs={6}>
-                <select
-                  className="form-select"
-                  aria-label="Department"
-                  name="department"
-                  ref={register}
-                >
-                  <option selected>Department</option>
-                  <option value="SE">SE</option>
-                  <option value="IT">IT</option>
-                  <option value="DS">DS</option>
-                </select>
-              </Grid>
-
-              <Grid item xs={6}>
-                <select
-                  className="form-select"
-                  aria-label="Center"
-                  name="center"
-                  ref={register}
-                >
-                  <option selected>Center</option>
-                  <option value="Malabe">Malabe</option>
-                  <option value="Kandy">Kandy</option>
-                  <option value="Matara">Matara</option>
-                </select>
-              </Grid>
-
-              <Grid item xs={6}>
-                <select
-                  className="form-select"
-                  aria-label="Building"
-                  name="building"
-                  ref={register}
-                >
-                  <option selected>Building</option>
-                  <option value="New Building">New Building</option>
-                  <option value="Main">Main</option>
-                </select>
-              </Grid>
-
-              <Grid item xs={6}>
-                <select
-                  className="form-select"
-                  aria-label="Level"
-                  name="level"
-                  ref={register}
-                >
-                  <option selected>Level</option>
-                  <option value="1">Professor</option>
-                  <option value="2">Assistant Professor</option>
-                  <option value="3">Senior Lecturer(HG)</option>
-                  <option value="4">Senior Lecturer</option>
-                  <option value="5">Lecturer</option>
-                  <option value="6">Assistant Lecturer</option>
-                  <option value="7">Instructors</option>
-                </select>
-              </Grid>
-
-              <Grid item xs={6}>
-                <div>
-                  <label htmlFor="txtName" className="form-label">
-                    Rank
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="txtName"
-                    aria-describedby="emailHelp"
-                    name="rank"
-                    ref={register}
-                  />
-                </div>
-              </Grid>
-            </Grid>
-
-            <div className="mt-3">
-              <button className="btn btn-primary" type="submit">
-                Save
-              </button>{" "}
-              <button className="btn btn-danger" onClick={handleAddDialogClose}>
-                Cancel
-              </button>
-            </div>
-          </form> */}
+          <ManageNotAvailabletbl notabl={notavl} />
         </DialogContent>
       </Dialog>
     </>
