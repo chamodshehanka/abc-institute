@@ -27,3 +27,24 @@ export function useFilterRows<T>(
   const noMatchingItems = pageData.length === 0 && searchText !== "";
   return { pageData, tableFooterProps, noMatchingItems };
 }
+
+export function useFilterRowsSessions<T>(
+  searchText = "",
+  sortBy: string,
+  rows: T[],
+  filterFn: FilterRowsFn<T>
+) {
+  const filteredData = useMemo(() => filterFn(rows, searchText.toLowerCase()), [
+    filterFn,
+    rows,
+    searchText,
+    sortBy,
+  ]);
+  const { pageData, tableFooterProps } = usePagination(
+    filteredData,
+    10,
+    searchText
+  );
+  const noMatchingItems = pageData.length === 0 && searchText !== "";
+  return { pageData, tableFooterProps, noMatchingItems };
+}

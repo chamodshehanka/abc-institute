@@ -66,18 +66,6 @@ const AddRoom: React.SFC<ManageAddRoomProps> = ({
       backgroundColor: "#0075FF",
       borderColor: "#0075FF",
       borderRadius: "30px",
-      fontFamily: [
-        "-apple-system",
-        "BlinkMacSystemFont",
-        '"Segoe UI"',
-        "Roboto",
-        '"Helvetica Neue"',
-        "Arial",
-        "sans-serif",
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-      ].join(","),
       "&:hover": {
         backgroundColor: "#0075FF",
         borderColor: "#0075FF",

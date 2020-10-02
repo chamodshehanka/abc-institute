@@ -72,8 +72,10 @@ const SessionManageScreen: React.SFC = () => {
               aria-label="scrollable auto tabs example"
             >
               <Tab label="Parallel Session" {...a11yProps(0)} />
+
               <Tab label="Consecutive Session" {...a11yProps(1)} />
               <Tab label="Overlap Session" {...a11yProps(2)} />
+
             </Tabs>
           </AppBar>
 
@@ -86,6 +88,7 @@ const SessionManageScreen: React.SFC = () => {
           </TabPanel>
 
           <TabPanel value={value} index={2}></TabPanel>
+
         </div>
       </Container>
     </React.Fragment>
