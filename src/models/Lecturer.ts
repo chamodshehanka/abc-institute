@@ -8,4 +8,5 @@ export interface Lecturer {
   building: string;
   level: string;
   rank: string;
+  rooms:string[];
 }

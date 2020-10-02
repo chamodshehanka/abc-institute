@@ -85,9 +85,9 @@ const SessionManageScreen: React.SFC = () => {
           <TabPanel value={value} index={1}>
             <ConsecutiveSession csession={data} />
           </TabPanel>
-
+       
           <TabPanel value={value} index={2}>
-            <OverlapSession osession={data} />
+          <OverlapSession osession={data} />
           </TabPanel>
         </div>
       </Container>

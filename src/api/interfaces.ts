@@ -2,6 +2,7 @@ import { WorkingDays } from "../models/WorkingDays";
 import { YearSemester } from "../models/yearSemester";
 import { Buildings } from "../models/Buildings";
 import { Rooms } from "../models/Rooms";
+import { Options } from "electron";
 
 export interface WorkingDaysCreateData {
   name: string;
@@ -100,6 +101,7 @@ export interface GroupCreateData {
 export interface GroupUpdateData {
   _id: string;
   number: string;
+  rooms: Options[];
 }
 
 export interface SubGroupCreateData {
@@ -109,6 +111,45 @@ export interface SubGroupCreateData {
 export interface SubGroupUpdateData {
   _id: string;
   number: string;
+  rooms: Options[];
+}
+
+export interface NotAvailableCreateData {
+  type: string;
+  typeId: string;
+  name: string;
+  day: string;
+  stime: string;
+  ltime: string;
+}
+
+export interface NotAvailableUpdateData {
+  _id: string;
+  type: string;
+  typeId: string;
+  name: string;
+  day: string;
+  stime: string;
+  ltime: string;
+}
+
+export interface NotAvailableCreateData {
+  type: string;
+  typeId: string;
+  name: string;
+  day: string;
+  stime: string;
+  ltime: string;
+}
+
+export interface NotAvailableUpdateData {
+  _id: string;
+  type: string;
+  typeId: string;
+  name: string;
+  day: string;
+  stime: string;
+  ltime: string;
 }
 
 export interface NotAvailableCreateData {
@@ -137,6 +178,7 @@ export interface TagsCreateData {
 export interface TagsUpdateData {
   _id: string;
   name: string;
+  rooms: Options[];
 }
 
 export interface GenerateGroupIdCreateData {
@@ -200,6 +242,7 @@ export interface LecturerUpdateData {
   building: string;
   level: number;
   rank: string;
+  rooms: Options[];
 }
 
 export interface RoomsByBuildingData {
@@ -239,6 +282,7 @@ export interface SessionUpdateData {
   subjectCode: string;
   noOfStudents: number;
   duration: number;
+  rooms: Options[];
 }
 
 export interface SessionCreateData {
@@ -261,4 +305,19 @@ export interface CSessionCreateData {
 
 export interface OSessionCreateData {
   osessions: string[];
+
 }
+
+export interface TimeslotCreateData {
+  startTime: string;
+  endTime: string;
+  day: string;
+  session: string;
+}
+
+export interface TimetableGenerateData {
+  workingDay: string;
+  groups: string[];
+}
+
+

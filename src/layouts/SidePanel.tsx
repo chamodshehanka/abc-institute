@@ -26,6 +26,8 @@ import EqualizerIcon from "@material-ui/icons/Equalizer";
 import BookIcon from "@material-ui/icons/LibraryBooks";
 import NotificationsOffIcon from "@material-ui/icons/NotificationsOff";
 import AssessmentIcon from "@material-ui/icons/Assessment";
+import MeetingRoomOutlinedIcon from "@material-ui/icons/MeetingRoomOutlined";
+
 
 interface ListItemLinkProps {
   icon?: React.ReactElement;
@@ -63,7 +65,7 @@ function ListItemLink(props: ListItemLinkProps) {
 const useStyles = makeStyles({
   root: {
     width: "100%",
-    backgroundColor: "#0065ff",
+    backgroundColor: "#2A4BA5",
     height: "100vh",
   },
 });
@@ -94,7 +96,7 @@ const SidePanel: React.FC = () => {
 
             <AvatarSection />
 
-            <div className="" style={{ height: "4rem" }}></div>
+            {/* <div className="" style={{ height: "4rem" }}></div> */}
 
             <List aria-label="main mailbox folders">
               <ListItemLink to="/home" primary="Home" icon={<HomeIcon />} />
@@ -122,6 +124,11 @@ const SidePanel: React.FC = () => {
                 to="/locations-screen"
                 primary="Locations"
                 icon={<LocationCityIcon />}
+              />
+              <ListItemLink
+                to="/rooms-screen"
+                primary="Room Management"
+                icon={<MeetingRoomOutlinedIcon />}
               />
               <ListItemLink
                 to="/manage-sessions"

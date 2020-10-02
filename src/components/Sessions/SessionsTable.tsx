@@ -32,7 +32,10 @@ import {
 } from "../../api/sessions/sessions.request";
 import Alert from "@material-ui/lab/Alert";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { useFilterRows } from "../Common/TableViewComponents/useFilterData";
+import {
+  useFilterRows,
+  useFilterRowsSessions,
+} from "../Common/TableViewComponents/useFilterData";
 import { TableFooterPagination } from "../Common/TableViewComponents/TableFooterPagination";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 import { useDeletePrompt } from "../Common/DeletePrompt/DeletePrompt";
@@ -52,22 +55,50 @@ import { Autocomplete } from "@material-ui/lab";
 export interface ManageSessionsTableProps {
   sessions: Session[];
   searchVal: string;
+  sortBy: string;
 }
 
-function filterData(tableData: Session[], searchText = "") {
+function filterData(tableData: Session[], searchText = "", sortBy = "") {
+  console.log(sortBy);
   if (searchText === "") return tableData;
-  return tableData.filter(
-    (dataObj) =>
-      dataObj.subject && dataObj.subject.toLowerCase().startsWith(searchText)
-  );
+  else {
+    if (sortBy === "Subject") {
+      return tableData.filter(
+        (dataObj) =>
+          dataObj.subject &&
+          dataObj.subject.toLowerCase().startsWith(searchText)
+      );
+    }
+    if (sortBy === "Tag") {
+      return tableData.filter(
+        (dataObj) =>
+          dataObj.tags && dataObj.tags.toLowerCase().startsWith(searchText)
+      );
+    }
+    if (sortBy === "Group") {
+      return tableData.filter(
+        (dataObj) =>
+          dataObj.studentGroup &&
+          dataObj.studentGroup.toLowerCase().startsWith(searchText)
+      );
+    } else {
+      return tableData.filter(
+        (dataObj) =>
+          dataObj.subject &&
+          dataObj.subject.toLowerCase().startsWith(searchText)
+      );
+    }
+  }
 }
 
 const ManageSessionsTable: React.SFC<ManageSessionsTableProps> = ({
   sessions,
   searchVal,
+  sortBy,
 }: ManageSessionsTableProps) => {
-  const { pageData, tableFooterProps, noMatchingItems } = useFilterRows(
+  const { pageData, tableFooterProps, noMatchingItems } = useFilterRowsSessions(
     searchVal,
+    sortBy,
     sessions,
     filterData
   );
@@ -248,6 +279,7 @@ const SessionAction: React.FC<SessionsActionProps> = (props) => {
       subjectCode: data?.subjectCode,
       noOfStudents: data?.noOfStudents,
       duration: data?.duration,
+      rooms: [],
     };
 
     updateSession(session)
@@ -551,16 +583,6 @@ const SessionAction: React.FC<SessionsActionProps> = (props) => {
               >
                 <VisibilityIcon style={{ color: "green" }} />
                 View
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  popupState.close();
-                  handleUpdateDialogOpen();
-                }}
-                style={{ color: "orange" }}
-              >
-                <EditIcon style={{ color: "orange" }} />
-                Edit
               </MenuItem>
               <MenuItem
                 style={{ color: "red" }}

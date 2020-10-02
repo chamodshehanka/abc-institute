@@ -84,19 +84,23 @@ const CollapsibleTable: React.SFC<CollapsibleTableProps> = ({
               <Table size="small" aria-label="purchases">
                 <TableBody>
                   {rooms?.map((r: Rooms) => (
-                    <TableRow>
-                      <TableCell>{r?.name}</TableCell>
-                      <TableCell>
-                        <EditRoom
-                          buildingName={building.name}
-                          roomName={r.name}
-                          roomID={r._id}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <DeleteRoom _id={r._id} />
-                      </TableCell>
-                    </TableRow>
+                    <>
+                      {building.name === r.building && (
+                        <TableRow>
+                          <TableCell>{r?.name}</TableCell>
+                          <TableCell>
+                            <EditRoom
+                              buildingName={building.name}
+                              roomName={r.name}
+                              roomID={r._id}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <DeleteRoom _id={r._id} />
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </>
                   ))}
                 </TableBody>
               </Table>

@@ -7,4 +7,5 @@ export interface Session {
   subjectCode: string;
   noOfStudents: number;
   duration: number;
+  rooms: string[];
 }
