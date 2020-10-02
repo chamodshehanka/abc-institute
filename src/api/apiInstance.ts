@@ -11,8 +11,8 @@ addResponseIntecepter(apiInstance);
 
 apiInstance.interceptors.request.use(
   async function (config) {
-    config.baseURL = "http://localhost:4000/api/v1";
-    // "http://167.172.5.220/api/v1";
+    config.baseURL = "http://167.172.5.220/api/v1";
+    // "http://localhost:4000/api/v1";
     return config;
   },
   function (error) {
