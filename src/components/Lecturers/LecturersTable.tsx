@@ -165,6 +165,7 @@ const SubjectAction: React.FC<LecturersActionProps> = (props) => {
       building: data?.building,
       level: data?.level,
       rank: data?.rank,
+      rooms: [],
     };
 
     updateLecturer(lecturer)

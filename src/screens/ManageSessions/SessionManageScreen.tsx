@@ -9,6 +9,7 @@ import Box from "@material-ui/core/Box";
 import { useGetSessions } from "../../queries/useGetSessions";
 import ParallelSession from "../../components/manageSessions/ParallelSession";
 import ConsecutiveSession from "../../components/manageSessions/ConsecutiveSession";
+import OverlapSession from "../../components/manageSessions/OverlapSession";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -84,8 +85,10 @@ const SessionManageScreen: React.SFC = () => {
           <TabPanel value={value} index={1}>
             <ConsecutiveSession csession={data} />
           </TabPanel>
-
-          <TabPanel value={value} index={2}></TabPanel>
+       
+          <TabPanel value={value} index={2}>
+          <OverlapSession osession={data} />
+          </TabPanel>
         </div>
       </Container>
     </React.Fragment>
