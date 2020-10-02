@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import React, { useState } from "react";
 import {
   Container,
@@ -27,20 +28,30 @@ import { useHistory } from "react-router-dom";
 import { useGetLecturers } from "../../queries/useGetLecturers";
 import { useGetTags } from "../../queries/useGetTags";
 import { useGetSubjects } from "../../queries/useGetSubjects";
+import { useGenerateSubGroupId } from "../../queries/useGenerateSubGroupId";
+import { useGenerateGroupId } from "../../queries/useGenerateGroupId";
+import { Lecturer } from "../../models/Lecturer";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const ManageSessionsScreen: React.SFC = () => {
   const [searchText, setSearchText] = useState("");
+  const [sortBy, setSortBy] = useState("Subject");
   const [addDialog, setAddDialog] = useState(false);
   const [subjectName, setSubject] = useState("");
   const [subjectCode, setSubjectCode] = useState("");
+  const [groups, setGroups] = useState([""]);
+  const [lecs, setLecs] = useState([""]);
+  const [tag, setTag] = useState("");
+  const [duration, setDuration] = useState(0);
   const { register, handleSubmit, errors } = useForm();
   const displayToast = useToast();
   const lecturers = useGetLecturers().data;
   const tags = useGetTags().data;
   const subjects = useGetSubjects().data;
+  const studentGroups = useGenerateGroupId().data;
+  const studentSubGroups = useGenerateSubGroupId().data;
   const { data = [], status } = useGetSessions();
   const history = useHistory();
 
@@ -50,14 +61,71 @@ const ManageSessionsScreen: React.SFC = () => {
 
   const handleAddDialogClose = () => {
     setAddDialog(false);
+    setSubject("");
+    setSubjectCode("");
+    setDuration(0);
+    console.log(tag);
   };
+  function handleSubjectChange(subjectCode: string) {
+    subjects?.forEach((s) => {
+      if (s.subjectCode === subjectCode) {
+        setSubject(s?.subjectName);
+      }
+    });
+  }
+
+
+  function handleSortByChange(sortBy: string) {
+    setSortBy(sortBy);
+  }
+  function handleTagChange(tag: string) {
+    // eslint-disable-next-line prefer-const
+    let students = [""];
+    subjects?.forEach((s) => {
+      if (subjectCode === s.subjectCode) {
+        if (tag === "Lecture") {
+          setDuration(Number.parseInt(s.lectureHours));
+          studentGroups?.forEach((g) => {
+            console.log(
+              g.groupId.includes("Y" + s.offeredYear + ".S" + s.offeredSemester)
+            );
+            if (
+              g.groupId.includes("Y" + s.offeredYear + ".S" + s.offeredSemester)
+            ) {
+              students.push(g.groupId);
+            }
+          });
+        } else if (tag === "Tute") {
+          setDuration(Number.parseInt(s.tutorialHours));
+          studentGroups?.forEach((g) => {
+            if (
+              g.groupId.includes("Y" + s.offeredYear + ".S" + s.offeredSemester)
+            ) {
+              students.push(g.groupId);
+            }
+          });
+        } else if (tag === "Lab") {
+          setDuration(Number.parseInt(s.labHours));
+          studentSubGroups?.forEach((g) => {
+            if (
+              g.groupId.includes("Y" + s.offeredYear + ".S" + s.offeredSemester)
+            ) {
+              students.push(g.groupId);
+            }
+          });
+        }
+      }
+    });
+    setGroups(students);
+    console.log(groups);
+  }
 
   const onSubmit = (data: any) => {
     const session: SessionCreateData = {
-      lecturers: data?.lecturers,
+      lecturers: lecs,
       tags: data?.tags,
       studentGroup: data?.studentGroup,
-      subject: data?.subject,
+      subject: data?.subjectName,
       subjectCode: data?.subjectCode,
       noOfStudents: data?.noOfStudents,
       duration: data?.duration,
@@ -109,11 +177,22 @@ const ManageSessionsScreen: React.SFC = () => {
       <div className="row mb-3">
         <div className="col-9"></div>
         <div className="col-2">
-          <select className="form-select" aria-label="Default select example">
-            <option selected>Sort By</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+          <select
+            className="form-select"
+            aria-label="Default select example"
+            name="sortBy"
+            onChange={(e) => {
+              handleSortByChange(e.target.value);
+              handleSortByChange(e.target.value);
+              console.log(sortBy + "1");
+            }}
+          >
+            <option selected value="Subject">
+              Filter by Subject
+            </option>
+            <option value="Lecturer">Filter by Lecturer</option>
+            <option value="Group">Filter by Group</option>
+            <option value="Tag">Filter by Tag</option>
           </select>
         </div>
       </div>
@@ -129,7 +208,11 @@ const ManageSessionsScreen: React.SFC = () => {
                 <Alert severity="info">You Have No Saved Sessions.</Alert>
               )}
               {hasData && (
-                <ManageSessionsTable sessions={data} searchVal={searchText} />
+                <ManageSessionsTable
+                  sessions={data}
+                  searchVal={searchText}
+                  sortBy={sortBy}
+                />
               )}
             </div>
           </Toolbar>
@@ -141,7 +224,7 @@ const ManageSessionsScreen: React.SFC = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Add Lecturer"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Add Session"}</DialogTitle>
 
         <DialogContent>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -156,14 +239,12 @@ const ManageSessionsScreen: React.SFC = () => {
                     aria-label="subjectCode"
                     name="subjectCode"
                     onChange={(e) => {
+                      console.log(e.target.value);
                       setSubjectCode(e.target.value);
+                      handleSubjectChange(e.target.value);
                       // eslint-disable-next-line no-unused-expressions
-                      subjects?.forEach((s) => {
-                        if (s.subjectCode === e.target.value) {
-                          setSubject(s.subjectName);
-                          console.log(subjectCode);
-                        }
-                      });
+
+                      handleSubjectChange(e.target.value);
                     }}
                     ref={register({ required: true })}
                   >
@@ -182,15 +263,15 @@ const ManageSessionsScreen: React.SFC = () => {
 
               <Grid item xs={6}>
                 <div>
-                  <label htmlFor="subject" className="form-label">
+                  <label htmlFor="subjectName" className="form-label">
                     Subject Name
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="subject"
+                    id="subjectName"
                     aria-describedby="emailHelp"
-                    name="subject"
+                    name="subjectName"
                     value={subjectName}
                     ref={register({ required: true })}
                   />
@@ -207,10 +288,22 @@ const ManageSessionsScreen: React.SFC = () => {
                 <Autocomplete
                   fullWidth={true}
                   multiple
-                  id="checkboxes-tags-demo"
+                  id="lecturers"
+                  onChange={(event, value: Lecturer[]) => {
+                    // eslint-disable-next-line prefer-const
+                    let l = [""];
+                    l.pop();
+                    value.forEach((v) => {
+                      l.push(v.name);
+                    });
+                    setLecs(l);
+                    setLecs(l);
+                  }}
                   options={lecturers || []}
+                  ref={register({ required: true })}
                   disableCloseOnSelect
                   getOptionLabel={(option) => option.name}
+                  defaultValue={[]}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
@@ -222,7 +315,6 @@ const ManageSessionsScreen: React.SFC = () => {
                       {option.name}
                     </React.Fragment>
                   )}
-                  style={{ width: 500 }}
                   renderInput={(params) => (
                     <TextField {...params} variant="outlined" />
                   )}
@@ -237,8 +329,17 @@ const ManageSessionsScreen: React.SFC = () => {
                   className="form-select"
                   aria-label="tags"
                   name="tags"
+                  onChange={(e) => {
+                    console.log(e.target.value);
+                    setTag(e.target.value);
+                    handleTagChange(e.target.value);
+                    // eslint-disable-next-line no-unused-expressions
+
+                    handleTagChange(e.target.value);
+                  }}
                   ref={register({ required: true })}
                 >
+                  <option value="">Select A Tag</option>
                   {tags?.map((t) => {
                     return <option value={t.name}>{t.name}</option>;
                   })}
@@ -250,17 +351,16 @@ const ManageSessionsScreen: React.SFC = () => {
                   <label htmlFor="group" className="form-label">
                     Student Group
                   </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="group"
-                    aria-describedby="emailHelp"
-                    name="group"
+                  <select
+                    className="form-select"
+                    aria-label="tags"
+                    name="studentGroup"
                     ref={register({ required: true })}
-                  />
-                  {errors.group && (
-                    <span style={{ color: "red" }}>This Field is Required</span>
-                  )}
+                  >
+                    {groups?.map((g) => {
+                      return <option value={g}>{g}</option>;
+                    })}
+                  </select>
                 </div>
               </Grid>
 
@@ -294,6 +394,7 @@ const ManageSessionsScreen: React.SFC = () => {
                     id="duration"
                     aria-describedby="emailHelp"
                     name="duration"
+                    value={duration}
                     ref={register({ required: true })}
                   />
                   {errors.duration && (

@@ -87,7 +87,6 @@ export default function StudentHomecard() {
           history.push("programme-screen");
         }}
       >
-
         <h3 className={classes.text}>Programme</h3>
         <div
           style={{

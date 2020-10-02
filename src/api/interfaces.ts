@@ -114,6 +114,25 @@ export interface SubGroupUpdateData {
   rooms: Options[];
 }
 
+export interface NotAvailableCreateData {
+  type: string;
+  typeId: string;
+  name: string;
+  day: string;
+  stime: string;
+  ltime: string;
+}
+
+export interface NotAvailableUpdateData {
+  _id: string;
+  type: string;
+  typeId: string;
+  name: string;
+  day: string;
+  stime: string;
+  ltime: string;
+}
+
 export interface TagsCreateData {
   name: string;
 }
@@ -236,4 +255,20 @@ export interface SessionCreateData {
   subjectCode: string;
   noOfStudents: number;
   duration: number;
+}
+
+export interface TimeslotCreateData {
+  startTime: string;
+  endTime: string;
+  day: string;
+  session: string;
+}
+
+export interface TimetableGenerateData {
+  workingDay: string;
+  groups: string[];
+}
+
+export interface PSessionCreateData {
+  psessions: string[];
 }
