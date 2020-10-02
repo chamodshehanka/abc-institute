@@ -25,6 +25,7 @@ import AvatarSection from "../components/Common/Sidebar/AvatarSection/AvatarSect
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import BookIcon from "@material-ui/icons/LibraryBooks";
 import NotificationsOffIcon from "@material-ui/icons/NotificationsOff";
+import AssessmentIcon from "@material-ui/icons/Assessment";
 
 interface ListItemLinkProps {
   icon?: React.ReactElement;
@@ -127,6 +128,13 @@ const SidePanel: React.FC = () => {
                 primary="Sessions"
                 icon={<WatchLaterIcon />}
               />
+
+              <ListItemLink
+                to="/SessionManage-screen"
+                primary="Manage Sessions"
+                icon={<AssessmentIcon />}
+              />
+
               <ListItemLink
                 to="/not-available-screen"
                 primary="Not Available"
