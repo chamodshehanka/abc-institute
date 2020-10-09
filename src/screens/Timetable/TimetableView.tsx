@@ -94,24 +94,26 @@ const TimetableView: React.FC<TimetableViewProps> = (props) => {
     console.log("TT DATA : ", timetableData);
 
     return (
-      <tbody>
+      <>
         {timetableData?.map((t) => (
-          <tr>
-            <td>{t?.startTime}</td>
-            <td>{t?.subject}</td>
-          </tr>
+          <tbody>
+            <tr>
+              <td>
+                {timePeriods.map((p) => (
+                  <b>{p}</b>
+                ))}
+              </td>
+              <td>{t?.day === "Monday" && t?.subject}</td>
+              <td>{t?.day === "Tuesday" && t?.subject}</td>
+              <td>{t?.day === "Wednesday" && t?.subject}</td>
+              <td>{t?.day === "Thursday" && t?.subject}</td>
+              <td>{t?.day === "Friday" && t?.subject}</td>
+              <td>{t?.day === "Saturday" && t?.subject}</td>
+              <td>{t?.day === "Sunday" && t?.subject}</td>
+            </tr>
+          </tbody>
         ))}
-
-        {/* {timePeriods.map((tp) => (
-          <tr>
-            <td>{tp}</td>
-            <td>
-              Monday <br />
-              IT2030 OOP
-            </td>
-          </tr>
-        ))} */}
-      </tbody>
+      </>
     );
   }
 
