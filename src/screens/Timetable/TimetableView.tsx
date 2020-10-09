@@ -30,16 +30,6 @@ const TimetableView: React.FC<TimetableViewProps> = (props) => {
     return filteredTimeslots;
   }
 
-  // function getTimeslotByTimeAndDate(startTime: string, day: string) {
-  //   console.log(
-  //     "Result",
-  //     timeslotData?.find((t) => startTime === t?.startTime && day === t?.day)
-  //   );
-  //   return timeslotData?.find(
-  //     (t) => startTime === t?.startTime && day === t?.day
-  //   );
-  // }
-
   function loadLecturerTable() {
     const lecturerTimeslots: Timeslot[] = getTimeslotsByLecturerName(
       props?.selectedData
@@ -103,8 +93,6 @@ const TimetableView: React.FC<TimetableViewProps> = (props) => {
       }
     });
 
-    console.log("SSSS 10:30", timetableData1030);
-
     return (
       <tbody>
         <TimetableRow data={timetableData830} startTime={"08:30"} />
@@ -121,12 +109,16 @@ const TimetableView: React.FC<TimetableViewProps> = (props) => {
     );
   }
 
+  function loadGroupTable() {
+    return <></>;
+  }
+
   function generateContent() {
     switch (props.type) {
       case "Lecturer":
         return loadLecturerTable();
       case "Group":
-        break;
+        return loadGroupTable();
       case "Room":
         break;
       default:
