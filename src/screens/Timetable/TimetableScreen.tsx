@@ -98,7 +98,7 @@ const TimetableScreen: React.FC = () => {
                       >
                         <option selected>Select Lecturer</option>
                         {lecturersData?.map((l) => (
-                          <option> {l?.name}</option>
+                          <option value={l?.name}> {l?.name}</option>
                         ))}
                       </select>
                     </>
