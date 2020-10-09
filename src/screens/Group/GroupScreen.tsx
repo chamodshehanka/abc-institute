@@ -326,7 +326,7 @@ const GroupScreen: React.SFC = () => {
                                     p={2}
                                     style={{
                                       width: "45rem",
-                                      height: "15rem",
+                                      height: "20rem",
                                       borderRadius: 8,
                                     }}
                                   >
