@@ -34,11 +34,22 @@ const TimetableView: React.FC<TimetableViewProps> = (props) => {
     return filteredTimeslots;
   }
 
-  function getTimeslotsByStudentGroup(studentGroup: string) {
+  // function getTimeslotsByStudentGroup(studentGroup: string) {
+  //   const filteredTimeslots: Timeslot[] = [];
+
+  //   timeslotData.forEach((t) => {
+  //     if (getSessionById(t?.session)?.studentGroup === studentGroup)
+  //       filteredTimeslots.push(t);
+  //   });
+
+  //   return filteredTimeslots;
+  // }
+
+  function getTimeslotsByRoom(room: string) {
     const filteredTimeslots: Timeslot[] = [];
 
     timeslotData.forEach((t) => {
-      if (getSessionById(t?.session)?.studentGroup === studentGroup)
+      if (getSessionById(t?.session)?.rooms[0].name === room)
         filteredTimeslots.push(t);
     });
 
@@ -132,7 +143,7 @@ const TimetableView: React.FC<TimetableViewProps> = (props) => {
   }
 
   function loadRoomTable() {
-    const lecturerTimeslots: Timeslot[] = getTimeslotsByStudentGroup(
+    const lecturerTimeslots: Timeslot[] = getTimeslotsByRoom(
       props?.selectedData
     );
 
@@ -149,14 +160,13 @@ const TimetableView: React.FC<TimetableViewProps> = (props) => {
 
     lecturerTimeslots.forEach((t) => {
       const session: Session = getSessionById(t.session) as Session;
-      const room: Rooms = session.rooms[0];
 
       const ttData: RoomTimetableCell | null = {
         id: t._id,
         day: t.day,
         subject: session.subject as string,
         subjectCode: session?.subjectCode as string,
-        room: room?.name || "N/A",
+        studentGroup: session.studentGroup || "N/A",
         startTime: t.startTime,
         endTime: t.endTime,
         lecturer: session.lecturers[0],

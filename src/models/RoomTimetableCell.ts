@@ -3,7 +3,7 @@ export interface RoomTimetableCell {
   day: string;
   subject: string;
   subjectCode: string;
-  room: string;
+  studentGroup: string;
   startTime: string;
   endTime: string;
   lecturer: string;

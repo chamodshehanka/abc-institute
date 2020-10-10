@@ -16,7 +16,10 @@ const TimetableRoomRow: React.FC<TimetableRoomRowProps> = (props) => {
         <br />
         <span className="badge rounded-pill bg-primary">{t.lecturer}</span>
         <br />
-        <span className="badge rounded-pill bg-secondary"> {t?.room}</span>
+        <span className="badge rounded-pill bg-secondary">
+          {" "}
+          {t?.studentGroup}
+        </span>
       </>
     );
   }
