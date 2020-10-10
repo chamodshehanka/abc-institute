@@ -20,6 +20,7 @@ import { Tags } from "../../models/Tags";
 import { Lecturer } from "../../models/Lecturer";
 import { Group } from "../../models/Group";
 import { SubGroup } from "../../models/SubGroup";
+import { Subject } from "../../models/Subject";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -83,8 +84,19 @@ const RoomManagementScreen: React.FC = () => {
     number: "",
     rooms: [],
   });
+  const [subject, setSubject] = React.useState<Subject>({
+    _id: "",
+    subjectName: "",
+    subjectCode: "",
+    offeredYear: "",
+    offeredSemester: "",
+    lectureHours: "",
+    labHours: "",
+    tutorialHours: "",
+    evaluationHours: "",
+  });
 
-  const { register, handleSubmit, errors } = useForm();
+  const { register } = useForm();
 
   return (
     <>
@@ -174,6 +186,25 @@ const RoomManagementScreen: React.FC = () => {
                       aria-label="tags"
                       name="tags"
                       ref={register({ required: true })}
+                      value={tag.name}
+                      onChange={(event) => {
+                        const selectedValue = event.target.value;
+
+                        let selectedTag: Tags = {
+                          _id: "",
+                          name: "",
+                          rooms: [],
+                        };
+
+                        // eslint-disable-next-line no-unused-expressions
+                        tags?.forEach((t) => {
+                          if (t.name === selectedValue) {
+                            selectedTag = t;
+                          }
+                        });
+
+                        setTag(selectedTag);
+                      }}
                     >
                       {tags?.map((t) => {
                         return <option value={t.name}>{t.name}</option>;
@@ -189,6 +220,31 @@ const RoomManagementScreen: React.FC = () => {
                       aria-label="tags"
                       name="tags"
                       ref={register({ required: true })}
+                      value={subject.subjectName}
+                      onChange={(event) => {
+                        const selectedValue = event.target.value;
+
+                        let selectedSubject: Subject = {
+                          _id: "",
+                          subjectName: "",
+                          subjectCode: "",
+                          offeredYear: "",
+                          offeredSemester: "",
+                          lectureHours: "",
+                          labHours: "",
+                          tutorialHours: "",
+                          evaluationHours: "",
+                        };
+
+                        // eslint-disable-next-line no-unused-expressions
+                        subjects?.forEach((s) => {
+                          if (s.subjectName === selectedValue) {
+                            selectedSubject = s;
+                          }
+                        });
+
+                        setSubject(selectedSubject);
+                      }}
                     >
                       {subjects?.map((s) => {
                         return (
@@ -199,7 +255,10 @@ const RoomManagementScreen: React.FC = () => {
                   </Grid>
                   <div style={{ float: "right", marginTop: "-45px" }}>
                     <br />
-                    <RoomsForSubject tagID={tag._id} tagName={tag.name} />
+                    <RoomsForSubject
+                      tagName={tag.name}
+                      subjectName={subject.subjectName}
+                    />
                   </div>
                 </Container>
               </div>
@@ -399,7 +458,7 @@ const RoomManagementScreen: React.FC = () => {
                   </h5>
                   <br />
                   <h6 style={{ color: "gray", fontSize: "14px" }}>
-                    Add time period that con not be reserved
+                    Add time period that can not be reserved
                   </h6>
                   <RoomsNotAvailableTime />
                 </Container>
