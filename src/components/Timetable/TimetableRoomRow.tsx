@@ -1,22 +1,25 @@
 import React from "react";
-import { TimetableCell } from "../../models/TimetableCell";
+import { RoomTimetableCell } from "../../models/RoomTimetableCell";
 
-export interface TimetableRowProps {
-  data: TimetableCell[];
+export interface TimetableRoomRowProps {
+  data: RoomTimetableCell[];
   startTime: string;
 }
 
-const TimetableRow: React.FC<TimetableRowProps> = (props) => {
-  function loadStyledCell(t: TimetableCell) {
+const TimetableRoomRow: React.FC<TimetableRoomRowProps> = (props) => {
+  function loadStyledCell(t: RoomTimetableCell) {
     return (
       <>
         {t.subjectCode}
         {" - "}
         {t.subject}
         <br />
-        <span className="badge rounded-pill bg-primary">{t.studentGroup}</span>
+        <span className="badge rounded-pill bg-primary">{t.lecturer}</span>
         <br />
-        <span className="badge rounded-pill bg-secondary"> {t?.room}</span>
+        <span className="badge rounded-pill bg-secondary">
+          {" "}
+          {t?.studentGroup}
+        </span>
       </>
     );
   }
@@ -45,4 +48,4 @@ const TimetableRow: React.FC<TimetableRowProps> = (props) => {
   );
 };
 
-export default TimetableRow;
+export default TimetableRoomRow;

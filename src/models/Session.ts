@@ -1,3 +1,5 @@
+import { Rooms } from "./Rooms";
+
 export interface Session {
   _id: string;
   lecturers: string[];
@@ -7,5 +9,5 @@ export interface Session {
   subjectCode: string;
   noOfStudents: number;
   duration: number;
-  rooms: string[];
+  rooms: Rooms[];
 }
