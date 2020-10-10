@@ -74,7 +74,6 @@ const ManageSessionsScreen: React.SFC = () => {
     });
   }
 
-
   function handleSortByChange(sortBy: string) {
     setSortBy(sortBy);
   }
@@ -176,20 +175,18 @@ const ManageSessionsScreen: React.SFC = () => {
 
       <div className="row mb-3">
         <div className="col-9"></div>
-        <div className="col-2">
+        <div className="col-3" style={{ paddingRight: "30px" }}>
           <select
             className="form-select"
             aria-label="Default select example"
             name="sortBy"
+            value={sortBy}
             onChange={(e) => {
               handleSortByChange(e.target.value);
               handleSortByChange(e.target.value);
-              console.log(sortBy + "1");
             }}
           >
-            <option selected value="Subject">
-              Filter by Subject
-            </option>
+            <option value="Subject">Filter by Subject</option>
             <option value="Lecturer">Filter by Lecturer</option>
             <option value="Group">Filter by Group</option>
             <option value="Tag">Filter by Tag</option>

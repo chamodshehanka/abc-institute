@@ -21,7 +21,6 @@ import {
   Checkbox,
   TextField,
 } from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
@@ -57,7 +56,7 @@ export interface ManageSessionsTableProps {
   searchVal: string;
   sortBy: string;
 }
-
+//const [sort, setSortBy] = useState("");
 function filterData(tableData: Session[], searchText = "", sortBy = "") {
   console.log(sortBy);
   if (searchText === "") return tableData;
@@ -65,8 +64,8 @@ function filterData(tableData: Session[], searchText = "", sortBy = "") {
     if (sortBy === "Subject") {
       return tableData.filter(
         (dataObj) =>
-          dataObj.subject &&
-          dataObj.subject.toLowerCase().startsWith(searchText)
+          dataObj.subjectCode &&
+          dataObj.subjectCode.toLowerCase().startsWith(searchText)
       );
     }
     if (sortBy === "Tag") {
@@ -75,17 +74,15 @@ function filterData(tableData: Session[], searchText = "", sortBy = "") {
           dataObj.tags && dataObj.tags.toLowerCase().startsWith(searchText)
       );
     }
-    if (sortBy === "Group") {
+    if (sortBy === "Lecture") {
+      return tableData.filter((dataObj) => {
+        console.log(dataObj.lecturers.includes(searchText));
+      });
+    } else {
       return tableData.filter(
         (dataObj) =>
           dataObj.studentGroup &&
           dataObj.studentGroup.toLowerCase().startsWith(searchText)
-      );
-    } else {
-      return tableData.filter(
-        (dataObj) =>
-          dataObj.subject &&
-          dataObj.subject.toLowerCase().startsWith(searchText)
       );
     }
   }
@@ -98,11 +95,13 @@ const ManageSessionsTable: React.SFC<ManageSessionsTableProps> = ({
 }: ManageSessionsTableProps) => {
   const { pageData, tableFooterProps, noMatchingItems } = useFilterRowsSessions(
     searchVal,
-    sortBy,
     sessions,
+    sortBy,
     filterData
   );
   const history = useHistory();
+
+  //setSortBy(sortBy);
   return (
     <>
       <TableContainer className="table-container expandable-table-container">

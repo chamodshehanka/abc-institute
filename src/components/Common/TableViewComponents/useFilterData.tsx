@@ -2,6 +2,11 @@ import { useMemo } from "react";
 import { usePagination } from "./usePagination";
 
 export type FilterRowsFn<T> = (rows: T[], searchText: string) => T[];
+export type FilterRowsSessionFn<T> = (
+  rows: T[],
+  searchText: string,
+  sortBy: string
+) => T[];
 
 /**
  *
@@ -30,16 +35,14 @@ export function useFilterRows<T>(
 
 export function useFilterRowsSessions<T>(
   searchText = "",
-  sortBy: string,
   rows: T[],
-  filterFn: FilterRowsFn<T>
+  sortBy: string,
+  filterFn: FilterRowsSessionFn<T>
 ) {
-  const filteredData = useMemo(() => filterFn(rows, searchText.toLowerCase()), [
-    filterFn,
-    rows,
-    searchText,
-    sortBy,
-  ]);
+  const filteredData = useMemo(
+    () => filterFn(rows, searchText.toLowerCase(), sortBy),
+    [filterFn, rows, searchText, sortBy]
+  );
   const { pageData, tableFooterProps } = usePagination(
     filteredData,
     10,
