@@ -21,6 +21,9 @@ const TimetableScreen: React.FC = () => {
 
   const handleViewChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setViewBy(event.target.value as string);
+    setSelectedLecturer("");
+    setSelectedGroup("");
+    setselectedRoom("");
   };
 
   const handleLecturerChange = (
