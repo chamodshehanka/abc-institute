@@ -13,12 +13,15 @@ import React, { useState } from "react";
 import { useGetWorkingDays } from "../../queries/useGetWorkingDays";
 import { generateTimetable } from "../../api/timetable/timetable.request";
 import { TimetableGenerateData } from "../../api/interfaces";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { useHistory } from "react-router-dom";
 // import { Page, Text, View, Document, PDFViewer } from "@react-pdf/renderer";
 
 const GenerateTimetableScreen: React.FC = () => {
   const [workingDate, setWorkingDate] = useState("");
   const [group, setGroup] = useState("");
   const [viewTimetable, setViewTimetable] = useState(false);
+  const history = useHistory();
 
   const { data: wdData = [], status: wdStatus } = useGetWorkingDays();
   const { data: gData = [], status: gStatus } = useGenerateGroupId();
@@ -65,6 +68,21 @@ const GenerateTimetableScreen: React.FC = () => {
   return (
     <>
       <h4 className="title mb-4">Generate Timetable</h4>
+
+      <Grid container>
+        <Grid item xs={12}>
+          <div className="container mb-2">
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                history.push("/manage-timetables");
+              }}
+            >
+              Back <ArrowBackIcon />
+            </button>
+          </div>
+        </Grid>
+      </Grid>
 
       <Container className="top-container">
         <Card>
