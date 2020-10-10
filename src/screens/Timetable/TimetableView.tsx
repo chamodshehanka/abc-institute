@@ -8,6 +8,8 @@ import { Rooms } from "../../models/Rooms";
 import { Session } from "../../models/Session";
 import { RoomTimetableCell } from "../../models/RoomTimetableCell";
 import TimetableRoomRow from "../../components/Timetable/TimetableRoomRow";
+import { SGTimetableCell } from "../../models/SGTimetableCell";
+import TimetableStudentGroupRow from "../../components/Timetable/TimetableStudentGroupRow";
 
 export interface TimetableViewProps {
   timeslotData: Timeslot[];
@@ -34,16 +36,16 @@ const TimetableView: React.FC<TimetableViewProps> = (props) => {
     return filteredTimeslots;
   }
 
-  // function getTimeslotsByStudentGroup(studentGroup: string) {
-  //   const filteredTimeslots: Timeslot[] = [];
+  function getTimeslotsByStudentGroup(studentGroup: string) {
+    const filteredTimeslots: Timeslot[] = [];
 
-  //   timeslotData.forEach((t) => {
-  //     if (getSessionById(t?.session)?.studentGroup === studentGroup)
-  //       filteredTimeslots.push(t);
-  //   });
+    timeslotData.forEach((t) => {
+      if (getSessionById(t?.session)?.studentGroup === studentGroup)
+        filteredTimeslots.push(t);
+    });
 
-  //   return filteredTimeslots;
-  // }
+    return filteredTimeslots;
+  }
 
   function getTimeslotsByRoom(room: string) {
     const filteredTimeslots: Timeslot[] = [];
@@ -139,7 +141,107 @@ const TimetableView: React.FC<TimetableViewProps> = (props) => {
   }
 
   function loadGroupTable() {
-    return <></>;
+    const sgTimeslots: Timeslot[] = getTimeslotsByStudentGroup(
+      props?.selectedData
+    );
+
+    const timetableData830: SGTimetableCell[] = [];
+    const timetableData930: SGTimetableCell[] = [];
+    const timetableData1030: SGTimetableCell[] = [];
+    const timetableData1130: SGTimetableCell[] = [];
+    const timetableData1230: SGTimetableCell[] = [];
+    const timetableData1330: SGTimetableCell[] = [];
+    const timetableData1430: SGTimetableCell[] = [];
+    const timetableData1530: SGTimetableCell[] = [];
+    const timetableData1630: SGTimetableCell[] = [];
+    const timetableData1730: SGTimetableCell[] = [];
+
+    sgTimeslots.forEach((t) => {
+      const session: Session = getSessionById(t.session) as Session;
+
+      const ttData: SGTimetableCell | null = {
+        id: t._id,
+        day: t.day,
+        subject: session.subject as string,
+        subjectCode: session?.subjectCode as string,
+        room: session.rooms[0].name,
+        startTime: t.startTime,
+        endTime: t.endTime,
+        lecturer: session.lecturers[0],
+      };
+
+      switch (t.startTime) {
+        case "08:30":
+          timetableData830.push(ttData);
+          break;
+        case "09:30":
+          timetableData930.push(ttData);
+          break;
+        case "10:30":
+          timetableData1030.push(ttData);
+          break;
+        case "11:30":
+          timetableData1130.push(ttData);
+          break;
+        case "12:30":
+          timetableData1230.push(ttData);
+          break;
+        case "13:30":
+          timetableData1330.push(ttData);
+          break;
+        case "14:30":
+          timetableData1430.push(ttData);
+          break;
+        case "15:30":
+          timetableData1530.push(ttData);
+          break;
+        case "16:30":
+          timetableData1630.push(ttData);
+          break;
+        case "17:30":
+          timetableData1730.push(ttData);
+          break;
+      }
+    });
+
+    return (
+      <tbody>
+        <TimetableStudentGroupRow data={timetableData830} startTime={"08:30"} />
+        <TimetableStudentGroupRow data={timetableData930} startTime={"09:30"} />
+        <TimetableStudentGroupRow
+          data={timetableData1030}
+          startTime={"10:30"}
+        />
+        <TimetableStudentGroupRow
+          data={timetableData1130}
+          startTime={"11:30"}
+        />
+        <TimetableStudentGroupRow
+          data={timetableData1230}
+          startTime={"12:30"}
+        />
+        <TimetableStudentGroupRow
+          data={timetableData1330}
+          startTime={"13:30"}
+        />
+        <TimetableStudentGroupRow
+          data={timetableData1430}
+          startTime={"14:30"}
+        />
+        <TimetableStudentGroupRow
+          data={timetableData1530}
+          startTime={"15:30"}
+        />
+        <TimetableStudentGroupRow
+          data={timetableData1630}
+          startTime={"16:30"}
+        />
+        <TimetableStudentGroupRow
+          data={timetableData1730}
+          startTime={"17:30"}
+        />
+      </tbody>
+    );
   }
 
   function loadRoomTable() {
