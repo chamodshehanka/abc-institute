@@ -57,10 +57,10 @@ const WorkingDaysViewModal: React.FC<WorkingDaysViewModalProps> = ({
             <TableRow>
               <TableCell>Working Hours</TableCell>
               <TableCell>
-                {workingDays?.workingHours?.hours +
+                {/* {workingDays?.workingHours?.hours +
                   " hours " +
                   workingDays?.workingHours?.mins +
-                  " mins"}
+                  " mins"} */}
               </TableCell>
             </TableRow>
 
