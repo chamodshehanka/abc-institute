@@ -30,43 +30,13 @@ const TimetableRow: React.FC<TimetableRowProps> = (props) => {
           <>
             <td>{props.startTime}</td>
 
-            <td>
-              {t === null ? "x" : t?.day === "Monday" ? loadStyledCell(t) : "x"}
-            </td>
-            <td>
-              {t === null
-                ? "x"
-                : t?.day === "Tuesday"
-                ? loadStyledCell(t)
-                : "x"}
-            </td>
-            <td>
-              {t === null
-                ? "x"
-                : t?.day === "Wednesday"
-                ? loadStyledCell(t)
-                : "x"}
-            </td>
-            <td>
-              {t === null
-                ? "x"
-                : t?.day === "Thursday"
-                ? loadStyledCell(t)
-                : "x"}
-            </td>
-            <td>
-              {t === null ? "x" : t?.day === "Friday" ? loadStyledCell(t) : "x"}
-            </td>
-            <td>
-              {t === null
-                ? "x"
-                : t?.day === "Saturday"
-                ? loadStyledCell(t)
-                : "x"}
-            </td>
-            <td>
-              {t === null ? "x" : t?.day === "Sunday" ? loadStyledCell(t) : "x"}
-            </td>
+            {t?.day === "Monday" && <td>{loadStyledCell(t)}</td>}
+            {t?.day === "Tuesday" && <td>{loadStyledCell(t)}</td>}
+            {t?.day === "Wednesday" && <td>{loadStyledCell(t)}</td>}
+            {t?.day === "Thursday" && <td>{loadStyledCell(t)}</td>}
+            {t?.day === "Friday" && <td>{loadStyledCell(t)}</td>}
+            {t?.day === "Saturday" && <td>{loadStyledCell(t)}</td>}
+            {t?.day === "Sunday" && <td>{loadStyledCell(t)}</td>}
           </>
         ))
       )}

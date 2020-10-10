@@ -92,7 +92,7 @@ const TimetableView: React.FC<TimetableViewProps> = (props) => {
           break;
       }
     });
-
+    console.log("1030 - ", timetableData1030);
     return (
       <tbody>
         <TimetableRow data={timetableData830} startTime={"08:30"} />
