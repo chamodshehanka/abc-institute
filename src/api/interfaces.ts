@@ -1,4 +1,4 @@
-import { WorkingDays } from "../models/WorkingDays";
+import { DAYS, WorkingDays } from "../models/WorkingDays";
 import { YearSemester } from "../models/yearSemester";
 import { Buildings } from "../models/Buildings";
 import { Rooms } from "../models/Rooms";
@@ -6,19 +6,8 @@ import { Options } from "electron";
 
 export interface WorkingDaysCreateData {
   name: string;
-  workingHours: {
-    hours: number;
-    mins: number;
-  };
-  selectedDays: {
-    monday: boolean;
-    tuesday: boolean;
-    wednesday: boolean;
-    thursday: boolean;
-    friday: boolean;
-    saturday: boolean;
-    sunday: boolean;
-  };
+  workingHours: Record<DAYS, { hours: number; mins: number }>;
+  selectedDays: Record<DAYS, boolean>;
   prefferedTimeSlots: {
     thirty: boolean;
     sixty: boolean;
@@ -28,19 +17,8 @@ export interface WorkingDaysCreateData {
 export interface WorkingDaysUpdateData {
   _id: string;
   name: string;
-  workingHours: {
-    hours: number;
-    mins: number;
-  };
-  selectedDays: {
-    monday: boolean;
-    tuesday: boolean;
-    wednesday: boolean;
-    thursday: boolean;
-    friday: boolean;
-    saturday: boolean;
-    sunday: boolean;
-  };
+  workingHours: Record<DAYS, { hours: number; mins: number }>;
+  selectedDays: Record<DAYS, boolean>;
   prefferedTimeSlots: {
     thirty: boolean;
     sixty: boolean;
