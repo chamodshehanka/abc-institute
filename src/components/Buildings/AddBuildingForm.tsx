@@ -49,7 +49,7 @@ export default function AddBuildingForm() {
       <AddCircleIcon
         onClick={handleClickOpen}
         style={{
-          color: "0075FF",
+          color: "#2A4BA5",
           float: "right",
           fontSize: "40",
         }}

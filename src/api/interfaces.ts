@@ -133,26 +133,6 @@ export interface NotAvailableUpdateData {
   ltime: string;
 }
 
-export interface NotAvailableCreateData {
-  type: string;
-  typeId: string;
-  name: string;
-  day: string;
-  stime: string;
-  ltime: string;
-}
-
-export interface NotAvailableUpdateData {
-  _id: string;
-  type: string;
-  typeId: string;
-  name: string;
-  day: string;
-  stime: string;
-  ltime: string;
-}
-
-
 export interface TagsCreateData {
   name: string;
 }
@@ -301,4 +281,8 @@ export interface TimetableGenerateData {
   groups: string[];
 }
 
-
+export interface SubjectWithTagsCreateData {
+  tag: string;
+  subject: string;
+  rooms: Options[];
+}

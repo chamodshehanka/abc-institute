@@ -12,8 +12,9 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import { useForm, NestedValue } from "react-hook-form";
 import { Options } from "electron";
-import { TagsUpdateData } from "../../api/interfaces";
-import { updateTags } from "../../api/student/tags.request";
+import { SessionUpdateData } from "../../api/interfaces";
+import { updateSession } from "../../api/sessions/sessions.request";
+import AddIcon from "@material-ui/icons/Add";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -45,15 +46,43 @@ const BootstrapButton = withStyles({
   },
 })(Button);
 
-export interface RoomsForTagsProps {
-  tagID: string;
-  tagName: string;
+export interface AddRoomForConsecutiveProps {
+  ID1: string;
+  lecturers1: string[];
+  tags1: string;
+  group1: string;
+  subject1: string;
+  sCode1: string;
+  noOfStd1: number;
+  duration1: number;
+  ID2: string;
+  lecturers2: string[];
+  tags2: string;
+  group2: string;
+  subject2: string;
+  sCode2: string;
+  noOfStd2: number;
+  duration2: number;
 }
 
-const RoomsForTags: React.SFC<RoomsForTagsProps> = ({
-  tagID,
-  tagName,
-}: RoomsForTagsProps) => {
+const AddRoomForConsecutive: React.SFC<AddRoomForConsecutiveProps> = ({
+  ID1,
+  lecturers1,
+  tags1,
+  group1,
+  subject1,
+  sCode1,
+  noOfStd1,
+  duration1,
+  ID2,
+  lecturers2,
+  tags2,
+  group2,
+  subject2,
+  sCode2,
+  noOfStd2,
+  duration2,
+}: AddRoomForConsecutiveProps) => {
   const [open, setOpen] = React.useState(false);
   const rooms = useGetRooms().data;
   const [selectedRoom, setSelectedRoom] = React.useState([]);
@@ -73,17 +102,42 @@ const RoomsForTags: React.SFC<RoomsForTagsProps> = ({
   };
 
   const onSubmit = handleSubmit((data) => {
-    const Tags: TagsUpdateData = {
-      _id: tagID as string,
-      name: tagName,
+    const Session1: SessionUpdateData = {
+      _id: ID1 as string,
+      lecturers: lecturers1,
+      tags: tags1,
+      studentGroup: group1,
+      subject: subject1,
+      subjectCode: sCode1,
+      noOfStudents: noOfStd1,
+      duration: duration1,
       rooms: data.selectedRoom,
     };
-    console.log("values2", Tags);
-    updateTags(Tags)
+
+    const Session2: SessionUpdateData = {
+      _id: ID2 as string,
+      lecturers: lecturers2,
+      tags: tags2,
+      studentGroup: group2,
+      subject: subject2,
+      subjectCode: sCode2,
+      noOfStudents: noOfStd2,
+      duration: duration2,
+      rooms: data.selectedRoom,
+    };
+
+    updateSession(Session1)
       .then((res) => {
         console.log(res);
       })
       .catch((err) => console.error(err));
+
+    updateSession(Session2)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.error(err));
+    handleClose();
   });
 
   React.useEffect(() => {
@@ -97,8 +151,9 @@ const RoomsForTags: React.SFC<RoomsForTagsProps> = ({
       <BootstrapButton
         size="small"
         onClick={handleClickOpen}
-        style={{ color: "white", float: "right" }}
+        style={{ color: "white" }}
       >
+        <AddIcon />
         <h5
           style={{
             color: "white",
@@ -107,7 +162,7 @@ const RoomsForTags: React.SFC<RoomsForTagsProps> = ({
             backgroundColor: "0075FF",
           }}
         />
-        Add Rooms
+        Room
       </BootstrapButton>
 
       <Dialog
@@ -167,4 +222,4 @@ const RoomsForTags: React.SFC<RoomsForTagsProps> = ({
   );
 };
 
-export default RoomsForTags;
+export default AddRoomForConsecutive;
