@@ -4,6 +4,8 @@ import { TimetableCell } from "../../models/TimetableCell";
 import { useGetSessions } from "../../queries/useGetSessions";
 import { useGetTimeslots } from "../../queries/useGetTimeslots";
 import TimetableRow from "../../components/Timetable/TimetableRow";
+import { Rooms } from "../../models/Rooms";
+import { Session } from "../../models/Session";
 
 export interface TimetableViewProps {
   timeslotData: Timeslot[];
@@ -47,13 +49,16 @@ const TimetableView: React.FC<TimetableViewProps> = (props) => {
     const timetableData1730: TimetableCell[] = [];
 
     lecturerTimeslots.forEach((t) => {
+      const session: Session = getSessionById(t.session) as Session;
+      const room: Rooms = session.rooms[0];
+
       //  Without condtions
       const ttData: TimetableCell | null = {
         id: t._id,
         day: t.day,
         subject: getSessionById(t.session)?.subject as string,
         subjectCode: getSessionById(t.session)?.subjectCode as string,
-        room: getSessionById(t.session)?.rooms[0] || "N/A",
+        room: room?.name || "N/A",
         startTime: t.startTime,
         endTime: t.endTime,
         studentGroup: getSessionById(t.session)?.studentGroup || "N/A",
@@ -92,7 +97,7 @@ const TimetableView: React.FC<TimetableViewProps> = (props) => {
           break;
       }
     });
-    console.log("1030 - ", timetableData1030);
+
     return (
       <tbody>
         <TimetableRow data={timetableData830} startTime={"08:30"} />
