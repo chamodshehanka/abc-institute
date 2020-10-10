@@ -3,6 +3,8 @@ import {
   Container,
   Grid,
   InputLabel,
+  LinearProgress,
+  makeStyles,
   MenuItem,
   Select,
   Toolbar,
@@ -15,7 +17,13 @@ import { generateTimetable } from "../../api/timetable/timetable.request";
 import { TimetableGenerateData } from "../../api/interfaces";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useHistory } from "react-router-dom";
-// import { Page, Text, View, Document, PDFViewer } from "@react-pdf/renderer";
+import GeneratedViewModal from "../../components/Timetable/GeneratedViewModal/GeneratedViewModal";
+
+const useStyles = makeStyles({
+  root: {
+    width: "100%",
+  },
+});
 
 const GenerateTimetableScreen: React.FC = () => {
   const [workingDate, setWorkingDate] = useState("");
@@ -38,6 +46,50 @@ const GenerateTimetableScreen: React.FC = () => {
     setGroup(event.target.value as string);
   };
 
+  const [openView, setOpenView] = React.useState(false);
+
+  const handleViewClose = () => {
+    setOpenView(false);
+  };
+
+  const handleViewOpen = () => {
+    setOpenView(true);
+  };
+
+  const [viewSpinner, setViewSpinner] = useState(false);
+  const classes = useStyles();
+  const [progress, setProgress] = React.useState(0);
+  const [buffer, setBuffer] = React.useState(10);
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const progressRef = React.useRef(() => {});
+  React.useEffect(() => {
+    progressRef.current = () => {
+      if (progress > 100) {
+        setProgress(0);
+        setBuffer(10);
+        setViewSpinner(false);
+        handleViewOpen();
+
+        history.push("/manage-timetables");
+      } else {
+        const diff = Math.random() * 10;
+        const diff2 = Math.random() * 10;
+        setProgress(progress + diff);
+        setBuffer(progress + diff + diff2);
+      }
+    };
+  });
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      progressRef.current();
+    }, 500);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+
   const generateTimetableAction = async () => {
     const requestData: TimetableGenerateData = {
       workingDay: workingDate,
@@ -48,22 +100,6 @@ const GenerateTimetableScreen: React.FC = () => {
       setViewTimetable(true);
     }
   };
-
-  // Create Document Component
-  //   const MyDocument = () => (
-  //     <Document>
-  //       <Page size="A4" style={{ flexDirection: "row", width: "100%" }}>
-  //         <View style={{ margin: 10, padding: 10, flexGrow: 1 }}>
-  //           <Text>Section #1</Text>
-
-  //           {timeslotData.map((t) => t?.session)}
-  //         </View>
-  //         <View>
-  //           <Text>Section #2</Text>
-  //         </View>
-  //       </Page>
-  //     </Document>
-  //   );
 
   return (
     <>
@@ -148,6 +184,10 @@ const GenerateTimetableScreen: React.FC = () => {
                         className="btn btn-primary"
                         onClick={() => {
                           generateTimetableAction();
+
+                          setProgress(0);
+                          setBuffer(10);
+                          setViewSpinner(true);
                         }}
                       >
                         Generate
@@ -160,6 +200,21 @@ const GenerateTimetableScreen: React.FC = () => {
           </Toolbar>
         </Card>
       </Container>
+
+      <div className="container">
+        <br />
+        {viewSpinner && (
+          <div className={classes.root}>
+            <LinearProgress
+              variant="buffer"
+              value={progress}
+              valueBuffer={buffer}
+            />
+          </div>
+        )}
+      </div>
+
+      <GeneratedViewModal isOpen={openView} onClose={handleViewClose} />
     </>
   );
 };
