@@ -8,6 +8,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import { useGetSessions } from "../../queries/useGetSessions";
+import { useGetCSessions } from "../../queries/useGetConsecutive";
+import { Session } from "../../models/Session";
 import { withStyles } from "@material-ui/core/styles";
 import {
   TableContainer,
@@ -18,6 +20,7 @@ import {
   TableRow,
 } from "@material-ui/core";
 import AddRoomForSession from "./AddRoomForSession";
+import AddRoomForConsecutive from "./AddRoomForConsecutive";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,9 +38,24 @@ const useStyles = makeStyles((theme: Theme) =>
       borderWidth: "1px",
       height: "100%",
     },
+    table: {
+      height: "510px",
+    },
     divStyle: {
       width: "570px",
       height: "560px",
+    },
+    tableRowTop: {
+      borderRight: "solid",
+      borderTop: "solid",
+      BorderLeft: "solid",
+      borderWidth: "0.25px",
+    },
+    tableRowBottom: {
+      borderRight: "solid",
+      borderBottom: "solid",
+      BorderLeft: "solid",
+      borderWidth: "0.25px",
     },
   })
 );
@@ -72,7 +90,10 @@ const BootstrapButton = withStyles({
 export default function RoomsForSession() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const sessions = useGetSessions().data;
+  const { data: sessions = [] } = useGetSessions();
+  const { data: consecutive = [] } = useGetCSessions();
+  const [session] = React.useState<Session>();
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -80,6 +101,10 @@ export default function RoomsForSession() {
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  function getSession(passedSession) {
+    return sessions.find((a) => passedSession === a._id);
+  }
 
   return (
     <>
@@ -121,7 +146,7 @@ export default function RoomsForSession() {
                     Sessions
                   </h5>
 
-                  <TableContainer className={classes.container}>
+                  <TableContainer className={classes.table}>
                     <Table aria-label="collapsible table">
                       <TableHead>
                         <TableRow>
@@ -163,6 +188,98 @@ export default function RoomsForSession() {
                   <h5 style={{ fontFamily: "Roboto", marginTop: "10px" }}>
                     Consecutive Sessions
                   </h5>
+
+                  <TableContainer className={classes.table}>
+                    <Table aria-label="collapsible table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Lecturer</TableCell>
+                          <TableCell style={{ width: 100 }}>Subjects</TableCell>
+                          <TableCell style={{ width: 100 }}>GroupID</TableCell>
+                          <TableCell></TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {consecutive?.map((s) => (
+                          <>
+                            <TableRow className={classes.tableRowTop}>
+                              <TableCell key={session?._id}>
+                                {getSession(s.csessions[0])?.lecturers.join(
+                                  ", "
+                                )}
+                              </TableCell>
+                              <TableCell key={session?._id}>
+                                {getSession(s.csessions[0])?.subject}
+                              </TableCell>
+                              <TableCell key={session?._id}>
+                                {getSession(s.csessions[0])?.studentGroup}
+                              </TableCell>
+                              <TableCell></TableCell>
+                            </TableRow>
+                            <TableRow className={classes.tableRowBottom}>
+                              <TableCell key={session?._id}>
+                                {getSession(s.csessions[1])?.lecturers.join(
+                                  ", "
+                                )}
+                              </TableCell>
+                              <TableCell key={session?._id}>
+                                {getSession(s.csessions[1])?.subject}
+                              </TableCell>
+                              <TableCell key={session?._id}>
+                                {getSession(s.csessions[1])?.studentGroup}
+                              </TableCell>
+                              <TableCell>
+                                <AddRoomForConsecutive
+                                  ID1={getSession(s.csessions[0])?._id!}
+                                  lecturers1={
+                                    getSession(s.csessions[0])?.lecturers!
+                                  }
+                                  tags1={getSession(s.csessions[0])?.tags!}
+                                  group1={
+                                    getSession(s.csessions[0])?.studentGroup!
+                                  }
+                                  subject1={
+                                    getSession(s.csessions[0])?.subject!
+                                  }
+                                  sCode1={
+                                    getSession(s.csessions[0])?.subjectCode!
+                                  }
+                                  noOfStd1={
+                                    getSession(s.csessions[0])?.noOfStudents!
+                                  }
+                                  duration1={
+                                    getSession(s.csessions[0])?.duration!
+                                  }
+                                  ID2={getSession(s.csessions[1])?._id!}
+                                  lecturers2={
+                                    getSession(s.csessions[1])?.lecturers!
+                                  }
+                                  tags2={getSession(s.csessions[1])?.tags!}
+                                  group2={
+                                    getSession(s.csessions[1])?.studentGroup!
+                                  }
+                                  subject2={
+                                    getSession(s.csessions[1])?.subject!
+                                  }
+                                  sCode2={
+                                    getSession(s.csessions[1])?.subjectCode!
+                                  }
+                                  noOfStd2={
+                                    getSession(s.csessions[1])?.noOfStudents!
+                                  }
+                                  duration2={
+                                    getSession(s.csessions[1])?.duration!
+                                  }
+                                />
+                              </TableCell>
+                            </TableRow>
+
+                            <br />
+                          </>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
                 </Container>
               </div>
             </Grid>
@@ -170,9 +287,6 @@ export default function RoomsForSession() {
 
           <DialogActions></DialogActions>
           <DialogActions>
-            <Button type="submit" color="primary">
-              Save
-            </Button>
             <Button onClick={handleClose} color="primary">
               Close
             </Button>

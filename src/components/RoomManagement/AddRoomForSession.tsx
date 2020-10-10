@@ -1,5 +1,4 @@
 import React from "react";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -19,22 +18,6 @@ import AddIcon from "@material-ui/icons/Add";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      margin: "auto",
-    },
-    paper: {
-      width: 200,
-      height: 230,
-      overflow: "auto",
-    },
-    button: {
-      margin: theme.spacing(0.5, 0),
-    },
-  })
-);
 
 const BootstrapButton = withStyles({
   root: {
@@ -84,12 +67,11 @@ const AddRoomForSession: React.SFC<AddRoomForSessionProps> = ({
   noOfStd,
   duration,
 }: AddRoomForSessionProps) => {
-  const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const rooms = useGetRooms().data;
   const [selectedRoom, setSelectedRoom] = React.useState([]);
 
-  const { register, handleSubmit, setValue, errors } = useForm<{
+  const { register, handleSubmit, setValue } = useForm<{
     selectedRoom: NestedValue<Options[]>;
   }>({
     defaultValues: { selectedRoom: [] },
@@ -115,12 +97,13 @@ const AddRoomForSession: React.SFC<AddRoomForSessionProps> = ({
       duration: duration,
       rooms: data.selectedRoom,
     };
-    console.log("values2", Session);
+
     updateSession(Session)
       .then((res) => {
         console.log(res);
       })
       .catch((err) => console.error(err));
+    handleClose();
   });
 
   React.useEffect(() => {

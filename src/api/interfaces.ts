@@ -258,3 +258,9 @@ export interface TimetableGenerateData {
   workingDay: string;
   groups: string[];
 }
+
+export interface SubjectWithTagsCreateData {
+  tag: string;
+  subject: string;
+  rooms: Options[];
+}
