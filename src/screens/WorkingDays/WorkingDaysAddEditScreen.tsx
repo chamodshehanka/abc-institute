@@ -11,9 +11,13 @@ import {
   WorkingDaysUpdateData,
 } from "../../api/interfaces";
 import { useHistory, useLocation } from "react-router-dom";
-import { WorkingDays } from "../../models/WorkingDays";
+import {
+  days,
+  WorkingDays,
+  WorkingDaysFormData,
+} from "../../models/WorkingDays";
 
-const WorkingDaysAddEditScreen: React.SFC = () => {
+const WorkingDaysAddEditScreen: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
 
@@ -26,30 +30,35 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
     return location?.state as WorkingDays | undefined;
   });
 
-  const { register, handleSubmit, errors } = useForm({
+  const { register, handleSubmit, watch, errors } = useForm({
     defaultValues: editWorkingDay,
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: WorkingDaysFormData) => {
     // console.log(data);
+
+    // const wh: WORKING_HOURS = Object.entries(data.workingHours).map((d) => {
+    //   const [day, { hours, mins }] = d;
+
+    //   return [day as DAYS, { hours: parseInt(hours), mins: parseInt(mins) }];
+    // });
+
+    const workingHours: Partial<WorkingDays["workingHours"]> = {};
+    days.forEach((day) => {
+      const time = data?.workingHours?.[day];
+      if (time?.hours && time?.mins)
+        workingHours[day] = {
+          hours: parseInt(time?.hours),
+          mins: parseInt(time?.mins),
+        };
+    });
 
     if (isEdit) {
       const workingDays: WorkingDaysUpdateData = {
         _id: editWorkingDay?._id as string,
         name: data?.name,
-        workingHours: {
-          hours: parseInt(data?.workingHours?.hours),
-          mins: parseInt(data?.workingHours?.mins),
-        },
-        selectedDays: {
-          monday: data?.selectedDays?.monday,
-          tuesday: data?.selectedDays?.tuesday,
-          wednesday: data?.selectedDays?.wednesday,
-          thursday: data?.selectedDays?.thursday,
-          friday: data?.selectedDays?.friday,
-          saturday: data?.selectedDays?.saturday,
-          sunday: data?.selectedDays?.sunday,
-        },
+        workingHours: workingHours as WorkingDays["workingHours"],
+        selectedDays: data?.selectedDays,
         prefferedTimeSlots: {
           thirty: data?.prefferedTimeSlots?.thirty,
           sixty: data?.prefferedTimeSlots?.sixty,
@@ -65,25 +74,13 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
     } else {
       const workingDays: WorkingDaysCreateData = {
         name: data?.name,
-        workingHours: {
-          hours: parseInt(data?.workingHours?.hours),
-          mins: parseInt(data?.workingHours?.mins),
-        },
-        selectedDays: {
-          monday: data?.selectedDays?.monday,
-          tuesday: data?.selectedDays?.tuesday,
-          wednesday: data?.selectedDays?.wednesday,
-          thursday: data?.selectedDays?.thursday,
-          friday: data?.selectedDays?.friday,
-          saturday: data?.selectedDays?.saturday,
-          sunday: data?.selectedDays?.sunday,
-        },
+        workingHours: workingHours as WorkingDays["workingHours"],
+        selectedDays: data?.selectedDays,
         prefferedTimeSlots: {
           thirty: data?.prefferedTimeSlots?.thirty,
           sixty: data?.prefferedTimeSlots?.sixty,
         },
       };
-
       addWorkingDays(workingDays)
         .then((res) => {
           console.log(res);
@@ -92,6 +89,8 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
         .catch((err) => console.error(err));
     }
   };
+
+  const dayWatch = watch("selectedDays");
 
   return (
     <>
@@ -238,40 +237,53 @@ const WorkingDaysAddEditScreen: React.SFC = () => {
             <div className="container mt-3">
               <label htmlFor="">Working Hours per Day</label>
             </div>
-            <Grid item xs={3}>
-              <div>
-                <label htmlFor="txtName" className="form-label">
-                  Hours
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="txtName"
-                  name="workingHours.hours"
-                  ref={register({ required: true })}
-                />
-                {errors?.workingHours?.hours && (
-                  <span style={{ color: "red" }}>This Field is Required</span>
-                )}
-              </div>
-            </Grid>
+            <Grid container>
+              {days.map((d) => {
+                if (!dayWatch?.[d]) return null;
+                return (
+                  <Grid container item xs={12}>
+                    <Grid item xs={3}>
+                      <div>
+                        <label htmlFor="txtName" className="form-label">
+                          Hours
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="txtName"
+                          name={`workingHours.${d}.hours`}
+                          ref={register({ required: true })}
+                        />
+                        {errors?.workingHours?.[d]?.hours && (
+                          <span style={{ color: "red" }}>
+                            This Field is Required
+                          </span>
+                        )}
+                      </div>
+                    </Grid>
 
-            <Grid item xs={3}>
-              <div>
-                <label htmlFor="txtName" className="form-label">
-                  Mins
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="txtName"
-                  name="workingHours.mins"
-                  ref={register({ required: true })}
-                />
-                {errors?.workingHours?.mins && (
-                  <span style={{ color: "red" }}>This Field is Required</span>
-                )}
-              </div>
+                    <Grid item xs={3}>
+                      <div>
+                        <label htmlFor="txtName" className="form-label">
+                          Mins
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="txtName"
+                          name={`workingHours.${d}.mins`}
+                          ref={register({ required: true })}
+                        />
+                        {errors?.workingHours?.[d]?.mins && (
+                          <span style={{ color: "red" }}>
+                            This Field is Required
+                          </span>
+                        )}
+                      </div>
+                    </Grid>
+                  </Grid>
+                );
+              })}
             </Grid>
 
             <Grid item xs={6}>

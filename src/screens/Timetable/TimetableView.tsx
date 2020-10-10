@@ -1,7 +1,15 @@
 import React from "react";
 import { Timeslot } from "../../models/Timeslot";
+import { TimetableCell } from "../../models/TimetableCell";
 import { useGetSessions } from "../../queries/useGetSessions";
 import { useGetTimeslots } from "../../queries/useGetTimeslots";
+import TimetableRow from "../../components/Timetable/TimetableRow";
+import { Rooms } from "../../models/Rooms";
+import { Session } from "../../models/Session";
+import { RoomTimetableCell } from "../../models/RoomTimetableCell";
+import TimetableRoomRow from "../../components/Timetable/TimetableRoomRow";
+import { SGTimetableCell } from "../../models/SGTimetableCell";
+import TimetableStudentGroupRow from "../../components/Timetable/TimetableStudentGroupRow";
 
 export interface TimetableViewProps {
   timeslotData: Timeslot[];
@@ -17,59 +25,301 @@ const TimetableView: React.FC<TimetableViewProps> = (props) => {
     return sessionData.find((s) => id === s._id);
   }
 
-  function getTimeslotByTimeAndDate(startTime: string, day: string) {
-    console.log(
-      "Result",
-      timeslotData?.find((t) => startTime === t?.startTime && day === t?.day)
+  function getTimeslotsByLecturerName(lecturerName: string) {
+    const filteredTimeslots: Timeslot[] = [];
+
+    timeslotData.forEach((t) => {
+      if (getSessionById(t?.session)?.lecturers.includes(lecturerName))
+        filteredTimeslots.push(t);
+    });
+
+    return filteredTimeslots;
+  }
+
+  function getTimeslotsByStudentGroup(studentGroup: string) {
+    const filteredTimeslots: Timeslot[] = [];
+
+    timeslotData.forEach((t) => {
+      if (getSessionById(t?.session)?.studentGroup === studentGroup)
+        filteredTimeslots.push(t);
+    });
+
+    return filteredTimeslots;
+  }
+
+  function getTimeslotsByRoom(room: string) {
+    const filteredTimeslots: Timeslot[] = [];
+
+    timeslotData.forEach((t) => {
+      if (getSessionById(t?.session)?.rooms[0].name === room)
+        filteredTimeslots.push(t);
+    });
+
+    return filteredTimeslots;
+  }
+
+  function loadLecturerTable() {
+    const lecturerTimeslots: Timeslot[] = getTimeslotsByLecturerName(
+      props?.selectedData
     );
-    return timeslotData?.find(
-      (t) => startTime === t?.startTime && day === t?.day
+
+    const timetableData830: TimetableCell[] = [];
+    const timetableData930: TimetableCell[] = [];
+    const timetableData1030: TimetableCell[] = [];
+    const timetableData1130: TimetableCell[] = [];
+    const timetableData1230: TimetableCell[] = [];
+    const timetableData1330: TimetableCell[] = [];
+    const timetableData1430: TimetableCell[] = [];
+    const timetableData1530: TimetableCell[] = [];
+    const timetableData1630: TimetableCell[] = [];
+    const timetableData1730: TimetableCell[] = [];
+
+    lecturerTimeslots.forEach((t) => {
+      const session: Session = getSessionById(t.session) as Session;
+      const room: Rooms = session.rooms[0];
+
+      //  Without condtions
+      const ttData: TimetableCell | null = {
+        id: t._id,
+        day: t.day,
+        subject: session?.subject as string,
+        subjectCode: session?.subjectCode as string,
+        room: room?.name || "N/A",
+        startTime: t.startTime,
+        endTime: t.endTime,
+        studentGroup: session?.studentGroup || "N/A",
+      };
+
+      switch (t.startTime) {
+        case "08:30":
+          timetableData830.push(ttData);
+          break;
+        case "09:30":
+          timetableData930.push(ttData);
+          break;
+        case "10:30":
+          timetableData1030.push(ttData);
+          break;
+        case "11:30":
+          timetableData1130.push(ttData);
+          break;
+        case "12:30":
+          timetableData1230.push(ttData);
+          break;
+        case "13:30":
+          timetableData1330.push(ttData);
+          break;
+        case "14:30":
+          timetableData1430.push(ttData);
+          break;
+        case "15:30":
+          timetableData1530.push(ttData);
+          break;
+        case "16:30":
+          timetableData1630.push(ttData);
+          break;
+        case "17:30":
+          timetableData1730.push(ttData);
+          break;
+      }
+    });
+
+    return (
+      <tbody>
+        <TimetableRow data={timetableData830} startTime={"08:30"} />
+        <TimetableRow data={timetableData930} startTime={"09:30"} />
+        <TimetableRow data={timetableData1030} startTime={"10:30"} />
+        <TimetableRow data={timetableData1130} startTime={"11:30"} />
+        <TimetableRow data={timetableData1230} startTime={"12:30"} />
+        <TimetableRow data={timetableData1330} startTime={"13:30"} />
+        <TimetableRow data={timetableData1430} startTime={"14:30"} />
+        <TimetableRow data={timetableData1530} startTime={"15:30"} />
+        <TimetableRow data={timetableData1630} startTime={"16:30"} />
+        <TimetableRow data={timetableData1730} startTime={"17:30"} />
+      </tbody>
     );
   }
 
-  getSessionById("");
+  function loadGroupTable() {
+    const sgTimeslots: Timeslot[] = getTimeslotsByStudentGroup(
+      props?.selectedData
+    );
 
-  async function makeLecturerTable() {
+    const timetableData830: SGTimetableCell[] = [];
+    const timetableData930: SGTimetableCell[] = [];
+    const timetableData1030: SGTimetableCell[] = [];
+    const timetableData1130: SGTimetableCell[] = [];
+    const timetableData1230: SGTimetableCell[] = [];
+    const timetableData1330: SGTimetableCell[] = [];
+    const timetableData1430: SGTimetableCell[] = [];
+    const timetableData1530: SGTimetableCell[] = [];
+    const timetableData1630: SGTimetableCell[] = [];
+    const timetableData1730: SGTimetableCell[] = [];
+
+    sgTimeslots.forEach((t) => {
+      const session: Session = getSessionById(t.session) as Session;
+
+      const ttData: SGTimetableCell | null = {
+        id: t._id,
+        day: t.day,
+        subject: session.subject as string,
+        subjectCode: session?.subjectCode as string,
+        room: session.rooms[0].name,
+        startTime: t.startTime,
+        endTime: t.endTime,
+        lecturer: session.lecturers[0],
+      };
+
+      switch (t.startTime) {
+        case "08:30":
+          timetableData830.push(ttData);
+          break;
+        case "09:30":
+          timetableData930.push(ttData);
+          break;
+        case "10:30":
+          timetableData1030.push(ttData);
+          break;
+        case "11:30":
+          timetableData1130.push(ttData);
+          break;
+        case "12:30":
+          timetableData1230.push(ttData);
+          break;
+        case "13:30":
+          timetableData1330.push(ttData);
+          break;
+        case "14:30":
+          timetableData1430.push(ttData);
+          break;
+        case "15:30":
+          timetableData1530.push(ttData);
+          break;
+        case "16:30":
+          timetableData1630.push(ttData);
+          break;
+        case "17:30":
+          timetableData1730.push(ttData);
+          break;
+      }
+    });
+
     return (
       <tbody>
-        <tr>
-          <td>08:30</td>
-          <td>
-            {getTimeslotByTimeAndDate("08:30", "Monday")?._id !== undefined
-              ? getTimeslotByTimeAndDate("08:30", "Monday")?._id[0]
-              : "X"}
-            gggg
-          </td>
-          <td></td>
-        </tr>
+        <TimetableStudentGroupRow data={timetableData830} startTime={"08:30"} />
+        <TimetableStudentGroupRow data={timetableData930} startTime={"09:30"} />
+        <TimetableStudentGroupRow
+          data={timetableData1030}
+          startTime={"10:30"}
+        />
+        <TimetableStudentGroupRow
+          data={timetableData1130}
+          startTime={"11:30"}
+        />
+        <TimetableStudentGroupRow
+          data={timetableData1230}
+          startTime={"12:30"}
+        />
+        <TimetableStudentGroupRow
+          data={timetableData1330}
+          startTime={"13:30"}
+        />
+        <TimetableStudentGroupRow
+          data={timetableData1430}
+          startTime={"14:30"}
+        />
+        <TimetableStudentGroupRow
+          data={timetableData1530}
+          startTime={"15:30"}
+        />
+        <TimetableStudentGroupRow
+          data={timetableData1630}
+          startTime={"16:30"}
+        />
+        <TimetableStudentGroupRow
+          data={timetableData1730}
+          startTime={"17:30"}
+        />
+      </tbody>
+    );
+  }
 
-        <tr>
-          <td>09:30</td>
-        </tr>
+  function loadRoomTable() {
+    const lecturerTimeslots: Timeslot[] = getTimeslotsByRoom(
+      props?.selectedData
+    );
 
-        <tr>
-          <td>10:30</td>
-        </tr>
+    const timetableData830: RoomTimetableCell[] = [];
+    const timetableData930: RoomTimetableCell[] = [];
+    const timetableData1030: RoomTimetableCell[] = [];
+    const timetableData1130: RoomTimetableCell[] = [];
+    const timetableData1230: RoomTimetableCell[] = [];
+    const timetableData1330: RoomTimetableCell[] = [];
+    const timetableData1430: RoomTimetableCell[] = [];
+    const timetableData1530: RoomTimetableCell[] = [];
+    const timetableData1630: RoomTimetableCell[] = [];
+    const timetableData1730: RoomTimetableCell[] = [];
 
-        <tr>
-          <td>11:30</td>
-        </tr>
+    lecturerTimeslots.forEach((t) => {
+      const session: Session = getSessionById(t.session) as Session;
 
-        <tr>
-          <td>12:30</td>
-        </tr>
+      const ttData: RoomTimetableCell | null = {
+        id: t._id,
+        day: t.day,
+        subject: session.subject as string,
+        subjectCode: session?.subjectCode as string,
+        studentGroup: session.studentGroup || "N/A",
+        startTime: t.startTime,
+        endTime: t.endTime,
+        lecturer: session.lecturers[0],
+      };
 
-        <tr>
-          <td>13:30</td>
-        </tr>
+      switch (t.startTime) {
+        case "08:30":
+          timetableData830.push(ttData);
+          break;
+        case "09:30":
+          timetableData930.push(ttData);
+          break;
+        case "10:30":
+          timetableData1030.push(ttData);
+          break;
+        case "11:30":
+          timetableData1130.push(ttData);
+          break;
+        case "12:30":
+          timetableData1230.push(ttData);
+          break;
+        case "13:30":
+          timetableData1330.push(ttData);
+          break;
+        case "14:30":
+          timetableData1430.push(ttData);
+          break;
+        case "15:30":
+          timetableData1530.push(ttData);
+          break;
+        case "16:30":
+          timetableData1630.push(ttData);
+          break;
+        case "17:30":
+          timetableData1730.push(ttData);
+          break;
+      }
+    });
 
-        <tr>
-          <td>14:30</td>
-        </tr>
-
-        <tr>
-          <td>15:30</td>
-        </tr>
+    return (
+      <tbody>
+        <TimetableRoomRow data={timetableData830} startTime={"08:30"} />
+        <TimetableRoomRow data={timetableData930} startTime={"09:30"} />
+        <TimetableRoomRow data={timetableData1030} startTime={"10:30"} />
+        <TimetableRoomRow data={timetableData1130} startTime={"11:30"} />
+        <TimetableRoomRow data={timetableData1230} startTime={"12:30"} />
+        <TimetableRoomRow data={timetableData1330} startTime={"13:30"} />
+        <TimetableRoomRow data={timetableData1430} startTime={"14:30"} />
+        <TimetableRoomRow data={timetableData1530} startTime={"15:30"} />
+        <TimetableRoomRow data={timetableData1630} startTime={"16:30"} />
+        <TimetableRoomRow data={timetableData1730} startTime={"17:30"} />
       </tbody>
     );
   }
@@ -77,14 +327,12 @@ const TimetableView: React.FC<TimetableViewProps> = (props) => {
   function generateContent() {
     switch (props.type) {
       case "Lecturer":
-        makeLecturerTable();
-        break;
+        return loadLecturerTable();
       case "Group":
-        break;
+        return loadGroupTable();
       case "Room":
-        break;
+        return loadRoomTable();
       default:
-      //  return tempData();
     }
   }
 
@@ -98,6 +346,8 @@ const TimetableView: React.FC<TimetableViewProps> = (props) => {
           <td>Wednesday</td>
           <td>Thursday</td>
           <td>Friday</td>
+          <td>Saturday</td>
+          <td>Sunday</td>
         </thead>
 
         {generateContent()}
