@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles } from "@material-ui/core/styles";
@@ -84,7 +84,9 @@ const SubGroup: React.SFC = () => {
   const { data: programme = [] } = useGetProgramme();
   const { data: generatedId = [] } = useGenerateSubGroupId();
 
-  const { register, handleSubmit } = useForm();
+  const [searchText] = useState("");
+
+  const { register, handleSubmit,errors } = useForm();
   const history = useHistory();
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -155,11 +157,6 @@ const SubGroup: React.SFC = () => {
             <Container fixed>
               <Typography
                 component="div"
-                style={{
-                  backgroundColor: "#cfe8fc",
-                  height: 600,
-                  borderRadius: 30,
-                }}
               >
                 <div style={{ width: "100%", marginLeft: 200, marginTop: 20 }}>
                   <Box display="flex" p={1}>
@@ -224,7 +221,7 @@ const SubGroup: React.SFC = () => {
                                           fontSize: 15,
                                         }}
                                       >
-                                        Add new Groups
+                                        Add new Sub-Groups
                                       </p>
                                     </div>
                                     <div>
@@ -244,8 +241,14 @@ const SubGroup: React.SFC = () => {
                                             placeholder="Enter Group Number"
                                             style={{ width: 250, height: 30 }}
                                             name="number"
-                                            ref={register}
+                                            ref={register({ required: true })}
                                           />
+                                          <br/>
+                                       {errors.number && (
+                                              <span style={{ color: "red" }}>
+                                                This Field is Required
+                                              </span>
+                                           )}
                                         </div>
                                         <div style={{ marginTop: 15 }}>
                                           <button
@@ -491,6 +494,7 @@ const SubGroup: React.SFC = () => {
                   >
                     <ManageGenerateSubGroupTable
                       generatesubgroup={generatedId}
+                      searchVal={searchText}
                     />
                   </div>
                 </div>

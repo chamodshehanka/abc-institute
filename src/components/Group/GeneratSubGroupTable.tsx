@@ -7,6 +7,9 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import { useFilterRows } from "../Common/TableViewComponents/useFilterData";
+import { TableFooterPagination } from "../Common/TableViewComponents/TableFooterPagination";
+import Alert from "@material-ui/lab/Alert";
 import Paper from "@material-ui/core/Paper";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
@@ -30,11 +33,29 @@ const useStyles = makeStyles({
 
 export interface ManageGenerateSubGroupProps {
   generatesubgroup: GenerateSubGroupId[];
+  searchVal: string;
+}
+
+function filterData(tableData: GenerateSubGroupId[], searchText = "") {
+  if (searchText === "") return tableData;
+  return tableData.filter(
+    (dataObj) =>
+      dataObj._id &&
+      dataObj.groupId.toLowerCase().startsWith(searchText)
+  );
 }
 
 const ManageGenerateSubGroupTable: React.SFC<ManageGenerateSubGroupProps> = ({
   generatesubgroup,
+  searchVal,
 }: ManageGenerateSubGroupProps) => {
+
+  const { pageData, tableFooterProps, noMatchingItems } = useFilterRows(
+    searchVal,
+    generatesubgroup,
+    filterData
+  );
+
   const classes = useStyles();
   const history = useHistory();
 
@@ -63,7 +84,7 @@ const ManageGenerateSubGroupTable: React.SFC<ManageGenerateSubGroupProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {generatesubgroup.map((w: GenerateSubGroupId) => (
+            {pageData.map((w: GenerateSubGroupId) => (
               <TableRow key={w._id}>
                 <TableCell component="th" scope="row">
                   {w.groupId}
@@ -79,6 +100,10 @@ const ManageGenerateSubGroupTable: React.SFC<ManageGenerateSubGroupProps> = ({
           </TableBody>
         </Table>
       </TableContainer>
+      {noMatchingItems && (
+        <Alert severity="info">No Matching Subject Found</Alert>
+      )}
+      <TableFooterPagination {...tableFooterProps} />
     </>
   );
 };

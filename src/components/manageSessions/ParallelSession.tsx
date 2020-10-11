@@ -17,6 +17,7 @@ import { PSessionCreateData } from "../../api/interfaces";
 import { useGetPSessions } from "../../queries/useGetParallelSession";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import ManagePsessiontbl from "./ParallelSessionTbl";
+import { useHistory } from "react-router-dom";
 
 export interface ManageParallelProps {
   psession: Session[];
@@ -25,9 +26,9 @@ export interface ManageParallelProps {
 const ParallelSession: React.SFC<ManageParallelProps> = ({
   psession,
 }: ManageParallelProps) => {
-  const [id, setId] = useState("");
-  const [addDialog, setAddDialog] = useState(false);
 
+  const [addDialog, setAddDialog] = useState(false);
+  const history = useHistory();
   const handleAddDialogOpen = () => {
     setAddDialog(true);
   };
@@ -36,9 +37,9 @@ const ParallelSession: React.SFC<ManageParallelProps> = ({
     setAddDialog(false);
   };
 
-  //let l: string[];
-  const values = [""];
-  values.pop();
+
+  var values:string[]; 
+  values = [];
 
   const { register, handleSubmit } = useForm();
   console.log(register);
@@ -54,6 +55,8 @@ const ParallelSession: React.SFC<ManageParallelProps> = ({
     addPSession(psession)
       .then((res) => {
         console.log(res);
+        history.push("student-home-screen");
+        history.push("SessionManage-screen");
       })
       .catch((err) => console.error(err));
   };
@@ -114,9 +117,7 @@ const ParallelSession: React.SFC<ManageParallelProps> = ({
                     id="cbSixtyMin"
                     name="check"
                     onClick={() => {
-                      setId(s._id);
-                      values.push(id);
-                      console.log("arry value", values);
+                      values.push(s._id);
                     }}
                   />
                 </TableCell>

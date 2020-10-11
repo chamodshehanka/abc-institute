@@ -27,7 +27,7 @@ export function TableFooterPagination<T>({
           component="div"
           count={totalRecordCount}
           rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[10, 20, 50, 100]}
+          rowsPerPageOptions={[3,10, 20, 50, 100]}
           onChangeRowsPerPage={handleChangeRowsPerPage}
           page={page}
           onChangePage={handleChangePage}

@@ -50,7 +50,7 @@ const ManageGenerateGroupTable: React.SFC<ManageGenerateGroupProps> = ({
   generategroup,
   searchVal,
 }: ManageGenerateGroupProps) => {
-  const { tableFooterProps, noMatchingItems } = useFilterRows(
+  const { pageData, tableFooterProps, noMatchingItems } = useFilterRows(
     searchVal,
     generategroup,
     filterData
@@ -70,7 +70,7 @@ const ManageGenerateGroupTable: React.SFC<ManageGenerateGroupProps> = ({
             <TableCell>Options</TableCell>
           </TableHead>
           <TableBody>
-            {generategroup?.map((l: GenerateGroupId) => (
+            {pageData?.map((l: GenerateGroupId) => (
               <TableRow key={l._id}>
                 <TableCell>{l.groupId}</TableCell>
                 <TableCell style={{ width: "5rem" }}>

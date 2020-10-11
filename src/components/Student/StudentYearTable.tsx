@@ -87,7 +87,7 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
     deleteYearSemester(e)
       .then((res) => {
         console.log(res);
-        history.push("/student-home-screen");
+        history.push("/student-home-screen"); 
         history.push("/student-year-screen");
       })
       .catch((err) => console.error(err));
@@ -96,7 +96,7 @@ const ManageYearTable: React.SFC<ManageYearProps> = ({
   return (
     <>
       <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
+        <Table className={classes.table} size="small" aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell className={classes.tablerow}>

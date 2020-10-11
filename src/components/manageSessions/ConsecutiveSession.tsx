@@ -17,6 +17,7 @@ import { CSessionCreateData } from "../../api/interfaces";
 import { useGetCSessions } from "../../queries/useGetConsecutive";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import ManageCsessiontbl from "./ConsecutiveSessionTbl";
+import { useHistory } from "react-router-dom";
 
 export interface ManageConProps {
   csession: Session[];
@@ -25,8 +26,8 @@ export interface ManageConProps {
 const ConsecutiveSession: React.SFC<ManageConProps> = ({
   csession,
 }: ManageConProps) => {
-  const [id, setId] = useState("");
   const [addDialog, setAddDialog] = useState(false);
+  const history = useHistory();
 
   const handleAddDialogOpen = () => {
     setAddDialog(true);
@@ -36,12 +37,11 @@ const ConsecutiveSession: React.SFC<ManageConProps> = ({
     setAddDialog(false);
   };
 
-  //let l: string[];
-  const values = [""];
-  values.pop();
+
+  var values:string[]; 
+  values = [];
 
   const { register, handleSubmit } = useForm();
-
   console.log(register);
   const { data = [] } = useGetCSessions();
 
@@ -50,11 +50,15 @@ const ConsecutiveSession: React.SFC<ManageConProps> = ({
 
     const csession: CSessionCreateData = {
       csessions: values,
+      
     };
+    console.log("arry value", values);
 
     addCSession(csession)
       .then((res) => {
         console.log(res);
+        history.push("student-home-screen");
+        history.push("SessionManage-screen");
       })
       .catch((err) => console.error(err));
   };
@@ -115,9 +119,7 @@ const ConsecutiveSession: React.SFC<ManageConProps> = ({
                     id="cbSixtyMin"
                     name="check"
                     onClick={() => {
-                      setId(s._id);
-                      values.push(id);
-                      console.log("arry value", values);
+                      values.push(s._id);
                     }}
                   />
                 </TableCell>
