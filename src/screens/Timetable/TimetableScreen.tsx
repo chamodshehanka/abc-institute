@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Container, Card, Toolbar } from "@material-ui/core";
+import { Container, Card, Toolbar, Grid } from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { useHistory } from "react-router-dom";
 import { useGetLecturers } from "../../queries/useGetLecturers";
 import { useGenerateGroupId } from "../../queries/useGenerateGroupId";
 import { useGetRooms } from "../../queries/useGetRooms";
 import TimetableView from "./TimetableView";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import download from "downloadjs";
 
 const TimetableScreen: React.FC = () => {
   const [viewBy, setViewBy] = useState("");
@@ -51,6 +53,26 @@ const TimetableScreen: React.FC = () => {
     }
 
     return value;
+  }
+
+  async function createPdf() {
+    const pdfDoc = await PDFDocument.create();
+    const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+
+    const page = pdfDoc.addPage();
+    const { height } = page.getSize();
+    const fontSize = 20;
+    page.drawText("ABC Institute Timetable 2020", {
+      x: 50,
+      y: height - 4 * fontSize,
+      size: fontSize,
+      font: timesRomanFont,
+      color: rgb(0, 0.53, 0.71),
+    });
+
+    const pdfBytes = await pdfDoc.save();
+
+    download(pdfBytes, "timetable.pdf", "application/pdf");
   }
 
   return (
@@ -174,8 +196,20 @@ const TimetableScreen: React.FC = () => {
         <div className="container">
           {viewTimetable && (
             <>
-              <button className="btn btn-primary">Download</button>{" "}
-              <button className="btn btn-primary">Print</button>
+              <br />
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => {
+                      createPdf();
+                    }}
+                  >
+                    Download
+                  </button>{" "}
+                  <button className="btn btn-primary">Print</button>
+                </Grid>
+              </Grid>
             </>
           )}
         </div>
