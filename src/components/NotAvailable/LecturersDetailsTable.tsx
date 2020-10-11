@@ -52,7 +52,7 @@ const ManageLecturersTable: React.SFC<ManageLecturerTableProps> = ({
   lecturers,
   searchVal,
 }: ManageLecturerTableProps) => {
-  const { tableFooterProps, noMatchingItems } = useFilterRows(
+  const {pageData, tableFooterProps, noMatchingItems } = useFilterRows(
     searchVal,
     lecturers,
     filterData
@@ -63,7 +63,6 @@ const ManageLecturersTable: React.SFC<ManageLecturerTableProps> = ({
       <TableContainer className="table-container expandable-table-container">
         <Table
           size="small"
-          stickyHeader
           aria-label="sticky table"
           className="table-first-cell-padded"
         >
@@ -76,7 +75,7 @@ const ManageLecturersTable: React.SFC<ManageLecturerTableProps> = ({
             <TableCell>Options</TableCell>
           </TableHead>
           <TableBody>
-            {lecturers?.map((l: Lecturer) => (
+            {pageData?.map((l: Lecturer) => (
               <TableRow key={l._id}>
                 <TableCell>{l.name}</TableCell>
                 <TableCell>{l.employeeId}</TableCell>

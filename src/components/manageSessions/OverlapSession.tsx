@@ -17,6 +17,7 @@ import { OSessionCreateData } from "../../api/interfaces";
 import { useGetOSessions } from "../../queries/useGetOverlap";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import ManageOsessiontbl from "./OverlapSessionTbl";
+import { useHistory } from "react-router-dom";
 
 export interface ManageOverlapProps {
   osession: Session[];
@@ -25,8 +26,9 @@ export interface ManageOverlapProps {
 const OverlapSession: React.SFC<ManageOverlapProps> = ({
   osession,
 }: ManageOverlapProps) => {
-  const [id, setId] = useState("");
+
   const [addDialog, setAddDialog] = useState(false);
+  const history = useHistory();
 
   const handleAddDialogOpen = () => {
     setAddDialog(true);
@@ -36,9 +38,8 @@ const OverlapSession: React.SFC<ManageOverlapProps> = ({
     setAddDialog(false);
   };
 
-  //let l: string[];
-  const values = [""];
-  values.pop();
+  var values:string[]; 
+  values = [];
 
   const { register, handleSubmit } = useForm();
   console.log(register);
@@ -54,6 +55,8 @@ const OverlapSession: React.SFC<ManageOverlapProps> = ({
     addOSession(osession)
       .then((res) => {
         console.log(res);
+        history.push("student-home-screen");
+        history.push("SessionManage-screen");
       })
       .catch((err) => console.error(err));
   };
@@ -114,9 +117,7 @@ const OverlapSession: React.SFC<ManageOverlapProps> = ({
                     id="cbSixtyMin"
                     name="check"
                     onClick={() => {
-                      setId(s._id);
-                      values.push(id);
-                      console.log("arry value", values);
+                      values.push(s._id);
                     }}
                   />
                 </TableCell>

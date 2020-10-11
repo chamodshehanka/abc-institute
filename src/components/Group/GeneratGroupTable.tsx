@@ -7,6 +7,9 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import { useFilterRows } from "../Common/TableViewComponents/useFilterData";
+import { TableFooterPagination } from "../Common/TableViewComponents/TableFooterPagination";
+import Alert from "@material-ui/lab/Alert";
 import Paper from "@material-ui/core/Paper";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
@@ -30,11 +33,30 @@ const useStyles = makeStyles({
 
 export interface ManageGenerateGroupProps {
   generategroup: GenerateGroupId[];
+  searchVal: string;
+
+}
+
+function filterData(tableData: GenerateGroupId[], searchText = "") {
+  if (searchText === "") return tableData;
+  return tableData.filter(
+    (dataObj) =>
+      dataObj._id &&
+      dataObj.groupId.toLowerCase().startsWith(searchText)
+  );
 }
 
 const ManageGenerateGroupTable: React.SFC<ManageGenerateGroupProps> = ({
   generategroup,
+  searchVal,
+
 }: ManageGenerateGroupProps) => {
+  const { pageData, tableFooterProps, noMatchingItems } = useFilterRows(
+    searchVal,
+    generategroup,
+    filterData
+  );
+
   const classes = useStyles();
   const history = useHistory();
 
@@ -63,7 +85,7 @@ const ManageGenerateGroupTable: React.SFC<ManageGenerateGroupProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {generategroup.map((w: GenerateGroupId) => (
+            {pageData.map((w: GenerateGroupId) => (
               <TableRow key={w._id}>
                 <TableCell component="th" scope="row">
                   {w.groupId}
@@ -79,6 +101,10 @@ const ManageGenerateGroupTable: React.SFC<ManageGenerateGroupProps> = ({
           </TableBody>
         </Table>
       </TableContainer>
+      {noMatchingItems && (
+        <Alert severity="info">No Matching Subject Found</Alert>
+      )}
+      <TableFooterPagination {...tableFooterProps} />
     </>
   );
 };

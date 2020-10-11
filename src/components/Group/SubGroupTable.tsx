@@ -44,7 +44,7 @@ const ManageSubGroupTable: React.SFC<ManageSubGroupProps> = ({
       .then((res) => {
         console.log(res);
         history.push("student-home-screen");
-        history.push("group-screen");
+        history.push("subgroup-screen");
       })
       .catch((err) => console.error(err));
   };

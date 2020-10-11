@@ -21,7 +21,7 @@ export function useFilterRows<T>(
   ]);
   const { pageData, tableFooterProps } = usePagination(
     filteredData,
-    10,
+    3,
     searchText
   );
   const noMatchingItems = pageData.length === 0 && searchText !== "";
@@ -42,7 +42,7 @@ export function useFilterRowsSessions<T>(
   ]);
   const { pageData, tableFooterProps } = usePagination(
     filteredData,
-    10,
+    3,
     searchText
   );
   const noMatchingItems = pageData.length === 0 && searchText !== "";

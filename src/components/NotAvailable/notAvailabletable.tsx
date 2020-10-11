@@ -120,7 +120,7 @@ const ManageNotAvailabletbl: React.SFC<ManageNotAvailabletblProps> = ({
             {notabl.map((w: NotAvailable) => (
               <TableRow key={w._id}>
                 <TableCell component="th" scope="row">
-                  {w.name}
+                  {w.type}
                 </TableCell>
                 <TableCell component="th" scope="row">
                   {w.typeId}

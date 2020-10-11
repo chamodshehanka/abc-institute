@@ -1,19 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 
 import { useGetRooms } from "../../queries/useGetRooms";
+import { Rooms } from "../../models/Rooms";
 import { withStyles } from "@material-ui/core/styles";
 
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import { useForm } from "react-hook-form";
+import {
+  addNotAvailable,
+} from "../../api/student/notAvailable.requets";
+import { NotAvailableCreateData } from "../../api/interfaces";
+import { useHistory } from "react-router-dom";
 
 import { DialogTitle, Dialog, DialogContent, Grid } from "@material-ui/core";
-import PopupState from "material-ui-popup-state";
 
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -61,21 +64,11 @@ const BootstrapButton = withStyles({
 export interface RoomsNotAvailableTimeProps {}
 
 const RoomsNotAvailableTime: React.SFC<RoomsNotAvailableTimeProps> = ({}: RoomsNotAvailableTimeProps) => {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const rooms = useGetRooms().data;
-  const [selectedRoom, setSelectedRoom] = React.useState([]);
-
+  const { data: rooms = [] } = useGetRooms();
+  const history = useHistory();
   const { register, handleSubmit } = useForm();
-  const handleClose = () => {
-    setOpen(false);
-  };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const [allocateDialog, setAllocateDialog] = React.useState(false);
+  const [allocateDialog, setAllocateDialog] = useState(false);
 
   const handleAllocateDialogOpen = () => {
     setAllocateDialog(true);
@@ -85,21 +78,41 @@ const RoomsNotAvailableTime: React.SFC<RoomsNotAvailableTimeProps> = ({}: RoomsN
     setAllocateDialog(false);
   };
 
-  const onSubmit = handleSubmit((data) => {
-    handleClose();
-  });
+  const onSubmit = (data: any) => {
+    console.log(data);
+    const room: NotAvailableCreateData = {
+      type: data?.type,
+      typeId: data?.typeId,
+      name: data?.name,
+      day: data?.day,
+      stime: data?.stime,
+      ltime: data?.ltime,
+    };
 
-  React.useEffect(() => {
-    register("selectedRoom", {
-      validate: (value) => value.length || "This is required.",
-    });
-  }, [register]);
+    addNotAvailable(room)
+      .then((res) => {
+        console.log(res);
+        history.push("student-year-screen");
+        history.push("rooms-screen");
+      })
+      .catch((err) => console.error(err));
+  };
+
+  // React.useEffect(() => {
+  //   register("selectedRoom", {
+  //     validate: (value) => value.length || "This is required.",
+  //   });
+  // }, [register]);
+
+
 
   return (
     <>
       <BootstrapButton
         size="small"
-        onClick={handleClickOpen}
+        onClick={() => {
+          handleAllocateDialogOpen();
+        }}
         style={{ color: "white", float: "right" }}
       >
         <h5
@@ -121,21 +134,38 @@ const RoomsNotAvailableTime: React.SFC<RoomsNotAvailableTimeProps> = ({}: RoomsN
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            {"Allocate Not Available Time for Lecturers"}
+            {"Allocate Not Available Time for Rooms"}
           </DialogTitle>
 
           <DialogContent>
-            <form onSubmit={onSubmit} noValidate={false}>
+            <form onSubmit={handleSubmit(onSubmit)} noValidate={false}>
               <Grid container spacing={2} className="form-row">
                 <input
                   type="hidden"
                   id="type"
                   name="type"
-                  value="SubGroup"
+                  value="Room"
                   ref={register}
                 />
 
+              <select
+                  id="room"
+                  className="form-select"
+                  name="typeId"
+                  ref={register}
+                >
+                  {rooms.map((g) => (
+                    <option
+                      key={g._id}
+                      value={g._id}
+                    >
+                      {g.name}
+                    </option>
+                  ))}
+                </select>
+
                 <input type="hidden" id="name" name="name" ref={register} />
+
                 <Grid item xs={6}>
                   <div>
                     <label htmlFor="name" className="form-label">
