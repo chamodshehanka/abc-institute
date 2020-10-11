@@ -63,18 +63,18 @@ const AddRoom: React.SFC<ManageAddRoomProps> = ({
       padding: "5px 10px",
       border: "1px solid",
       lineHeight: 1.5,
-      backgroundColor: "#0075FF",
-      borderColor: "#0075FF",
+      backgroundColor: "#2A4BA5",
+      borderColor: "#2A4BA5",
       borderRadius: "30px",
       "&:hover": {
-        backgroundColor: "#0075FF",
-        borderColor: "#0075FF",
+        backgroundColor: "#2A4BA5",
+        borderColor: "#2A4BA5",
         boxShadow: "none",
       },
       "&:active": {
         boxShadow: "none",
-        backgroundColor: "#0075FF",
-        borderColor: "#0075FF",
+        backgroundColor: "#2A4BA5",
+        borderColor: "#2A4BA5",
       },
       "&:focus": {
         boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
@@ -93,7 +93,7 @@ const AddRoom: React.SFC<ManageAddRoomProps> = ({
             color: "white",
             float: "right",
             fontSize: "20",
-            backgroundColor: "0075FF",
+            backgroundColor: "#2A4BA5",
           }}
         />
         Room

@@ -17,6 +17,7 @@ import NotAvailableScreen from "../screens/NotAvailable/NotAvailableScreen";
 import SessionManageScreen from "../screens/ManageSessions/SessionManageScreen";
 import ManageSessionsScreen from "../screens/Sessions/ManageSessionsScreen";
 import RoomManagementScreen from "../screens/Locations/RoomManagementScreen";
+import GenerateTimetableScreen from "../screens/Timetable/GenerateTimetableScreen";
 
 export const routes = [
   { path: "/", component: HomeScreen },
@@ -37,5 +38,6 @@ export const routes = [
   { path: "/rooms-screen", component: RoomManagementScreen },
   { path: "/statistic-screen", component: StatisticScreen },
   { path: "/SessionManage-screen", component: SessionManageScreen },
+  { path: "/generate-timetable", component: GenerateTimetableScreen },
   { path: "/test", component: TestPage },
 ];

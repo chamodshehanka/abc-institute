@@ -21,6 +21,9 @@ const TimetableScreen: React.FC = () => {
 
   const handleViewChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setViewBy(event.target.value as string);
+    setSelectedLecturer("");
+    setSelectedGroup("");
+    setselectedRoom("");
   };
 
   const handleLecturerChange = (
@@ -98,7 +101,7 @@ const TimetableScreen: React.FC = () => {
                       >
                         <option selected>Select Lecturer</option>
                         {lecturersData?.map((l) => (
-                          <option> {l?.name}</option>
+                          <option value={l?.name}> {l?.name}</option>
                         ))}
                       </select>
                     </>
