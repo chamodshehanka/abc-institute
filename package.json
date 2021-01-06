@@ -106,7 +106,7 @@
     "@react-pdf/renderer": "^1.6.11",
     "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.8",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "chart.js": "^2.9.3",
     "downloadjs": "^1.4.7",
     "electron-squirrel-startup": "^1.0.0",
