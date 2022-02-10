@@ -93,7 +93,7 @@
     "eslint-plugin-react": "^7.20.6",
     "fork-ts-checker-webpack-plugin": "^3.1.1",
     "node-loader": "^0.6.0",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "style-loader": "^0.23.1",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.0"
